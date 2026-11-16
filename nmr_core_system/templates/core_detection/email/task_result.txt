@@ -1,0 +1,33 @@
+任务处理完成
+
+尊敬的用户，
+
+您好！
+
+您的任务已完成处理。
+
+任务信息：
+- 任务ID：{{ task.task_id }}
+- 任务名称：{{ task.task_name }}
+- 完成时间：{{ completion_time }}
+- 处理时长：{{ processing_duration }}
+- 任务状态：{{ task.get_status_display }}
+- 检测结果：{{ task.positive_count }}/{{ task.total_count }} 样本检测为喹诺酮类物质
+
+结果文件已随此邮件附上，请查收。
+
+您可以通过以下链接查看详细结果页面：
+{{ site_url }}task/{{ task.task_id }}/
+
+如需重新下载或查看更多任务信息，请访问：{{ site_url }}queue/
+
+如有任何问题，请通过以下方式联系我们：
+- 邮箱：{{ site_url }}contact/
+
+谢谢使用！
+
+---
+喹诺酮类物质智慧检测系统
+{{ site_url }}
+
+此邮件由系统自动发送，请勿直接回复。

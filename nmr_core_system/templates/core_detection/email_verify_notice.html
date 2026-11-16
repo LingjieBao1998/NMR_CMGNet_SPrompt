@@ -1,0 +1,33 @@
+{% extends 'core_detection/base.html' %}
+
+{% block title %}Verify Your Email - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-white mb-0" data-i18n="check_email_header">📧 Check Your Email</h4>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="bi bi-envelope-check" style="font-size: 4rem; color: #05998B;"></i>
+                </div>
+                <h5 data-i18n="verification_sent">A verification link has been sent to:</h5>
+                <p><code style="font-size: 1.1em;">{{ email }}</code></p>
+                <p data-i18n="click_link_instructions">
+                    Please click the link in the email to verify your address.
+                    The link is valid for 48 hours.
+                </p>
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-envelope-exclamation"></i>
+                    <span data-i18n="check_spam_folder">If you don't see the email, please check your spam folder.</span>
+                </div>
+                <a href="{% url 'core_detection:home' %}" class="submit_mol_button">
+                    <i class="bi bi-house"></i> <span data-i18n="back_home">Back to Home</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

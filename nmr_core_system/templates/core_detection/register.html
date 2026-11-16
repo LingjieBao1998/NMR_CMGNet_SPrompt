@@ -1,0 +1,141 @@
+{% extends 'core_detection/base.html' %}
+
+{% block title %}Register - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div="d-flex justify-content-between align-items-center mb-3">
+            <h2 data-i18n="register_title">Create Account</h2>
+            <a href="{% url 'core_detection:login' %}" class="submit_mol_button">
+                <i class="bi bi-box-arrow-in-right"></i> <span data-i18n="have_account_login">Have an account? Login</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-white mb-0" data-i18n="register_header">Register</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle"></i>
+                    <span data-i18n="register_flow_notice">After registration: 1) Verify your email 2) Wait for administrator approval 3) Login to use the system. Your data will be private to your account.</span>
+                </div>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label" style="font-weight: 600;" data-i18n="username">👤 Username</label>
+                        <input type="text" class="form-control enhanced-input" id="username" name="username"
+                               value="{{ form_data.username|default:'' }}" required
+                               data-i18n-placeholder="username_placeholder" placeholder="Choose a username">
+                        <div class="form-text" data-i18n="username_display_help">Display name (can be the same as others). You will log in with your email.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label" style="font-weight: 600;" data-i18n="email_address">📧 Email Address</label>
+                        <input type="email" class="form-control enhanced-input" id="email" name="email"
+                               value="{{ form_data.email|default:'' }}" required
+                               data-i18n-placeholder="email_placeholder" placeholder="your.email@example.com">
+                        <div class="form-text" data-i18n="register_email_help">A verification link will be sent to this address.</div>
+                        <div id="email-check-result" class="form-text mt-1" style="display: none;"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="institution" class="form-label" style="font-weight: 600;" data-i18n="institution">🏢 Institution (Optional)</label>
+                        <input type="text" class="form-control enhanced-input" id="institution" name="institution"
+                               value="{{ form_data.institution|default:'' }}"
+                               data-i18n-placeholder="institution_placeholder" placeholder="Your university / company / lab">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password1" class="form-label" style="font-weight: 600;" data-i18n="password">🔒 Password</label>
+                        <input type="password" class="form-control enhanced-input" id="password1" name="password1"
+                               required minlength="8"
+                               data-i18n-placeholder="password_placeholder" placeholder="At least 8 characters">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password2" class="form-label" style="font-weight: 600;" data-i18n="confirm_password">🔒 Confirm Password</label>
+                        <input type="password" class="form-control enhanced-input" id="password2" name="password2"
+                               required minlength="8"
+                               data-i18n-placeholder="confirm_password_placeholder" placeholder="Repeat your password">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="submit_mol_button" id="register-submit-btn">
+                            <i class="bi bi-person-plus"></i> <span data-i18n="register_button">Register</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const emailInput = document.getElementById('email');
+    const resultDiv = document.getElementById('email-check-result');
+    const submitBtn = document.getElementById('register-submit-btn');
+    let lastChecked = '';
+    let checkTimer = null;
+    let pendingRequest = null;
+
+    function showResult(ok, text, checking) {
+        resultDiv.style.display = 'block';
+        if (checking) {
+            resultDiv.innerHTML = '<span style="color:#6c757d;">⏳ ' + text + '</span>';
+        } else if (ok) {
+            resultDiv.innerHTML = '<span style="color:#198754;">✅ ' + text + '</span>';
+        } else {
+            resultDiv.innerHTML = '<span style="color:#dc3545;">❌ ' + text + '</span>';
+        }
+    }
+
+    function hideResult() {
+        resultDiv.style.display = 'none';
+    }
+
+    function checkEmail() {
+        const email = emailInput.value.trim();
+        if (!email || !email.includes('@')) { hideResult(); return; }
+        if (email === lastChecked) return;
+        lastChecked = email;
+
+        showResult(null, '正在验证邮箱...', true);
+
+        if (pendingRequest) pendingRequest.abort();
+        pendingRequest = fetch("{% url 'core_detection:api_check_email' %}?email=" + encodeURIComponent(email))
+            .then(r => r.json())
+            .then(data => {
+                if (email !== emailInput.value.trim()) return;  // 输入已变,丢弃
+                if (data.available) {
+                    showResult(true, data.verified ? '邮箱有效' : (data.reason || '有效'));
+                } else {
+                    showResult(false, data.reason || '邮箱不可用');
+                }
+            })
+            .catch(() => {
+                if (email === emailInput.value.trim()) hideResult();  // 网络错误不阻断,交给后端
+            });
+    }
+
+    // 失焦立即校验 + 输入防抖 800ms
+    emailInput.addEventListener('blur', checkEmail);
+    emailInput.addEventListener('input', () => {
+        hideResult();
+        lastChecked = '';
+        if (checkTimer) clearTimeout(checkTimer);
+        checkTimer = setTimeout(checkEmail, 800);
+    });
+})();
+</script>
+{% endblock %}

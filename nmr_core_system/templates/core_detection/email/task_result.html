@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务处理完成</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #28a745;
+        }
+        .header h1 {
+            color: #28a745;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .task-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .task-info p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .task-info strong {
+            color: #28a745;
+            display: inline-block;
+            width: 100px;
+        }
+        .result-highlight {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .result-highlight h2 {
+            color: #28a745;
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+        .result-highlight p {
+            margin: 5px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .attachment-notice {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>✅ 任务处理完成</h1>
+        </div>
+        
+        <div class="content">
+            <p>尊敬的用户，您好！</p>
+            <p>您的任务已完成处理。</p>
+            
+            <div class="task-info">
+                <p><strong>任务ID：</strong>{{ task.task_id }}</p>
+                <p><strong>任务名称：</strong>{{ task.task_name }}</p>
+                <p><strong>完成时间：</strong>{{ completion_time }}</p>
+                <p><strong>处理时长：</strong>{{ processing_duration }}</p>
+                <p><strong>任务状态：</strong>{{ task.get_status_display }}</p>
+            </div>
+            
+            <div class="result-highlight">
+                <h2>检测结果</h2>
+                <p>{{ task.positive_count }}/{{ task.total_count }} 样本检测为喹诺酮类物质</p>
+            </div>
+
+            <div class="attachment-notice">
+                <p><strong>📎 附件说明：</strong></p>
+                <p>结果文件已随此邮件附上，请查收。附件包含详细的检测结果数据。</p>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="{{ site_url }}task/{{ task.task_id }}/" class="btn">查看详细结果页面</a>
+                <a href="{{ site_url }}queue/" class="btn" style="background-color: #6c757d;">查看任务队列</a>
+            </p>
+
+            <p>您也可以点击上面的"查看详细结果页面"按钮直接查看任务结果，或者访问任务队列页面查看所有任务。</p>
+            
+            <p>如有任何问题，请通过以下方式联系我们：</p>
+            <ul>
+                <li>邮箱：<a href="mailto:{{ site_url }}contact/">联系我们</a></li>
+                <li>网站：<a href="{{ site_url }}contact/">{{ site_url }}contact/</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>谢谢使用！</p>
+            <p><strong>喹诺酮类物质智慧检测系统</strong></p>
+            <p><a href="{{ site_url }}">{{ site_url }}</a></p>
+            <p>此邮件由系统自动发送，请勿直接回复。</p>
+        </div>
+    </div>
+</body>
+</html>

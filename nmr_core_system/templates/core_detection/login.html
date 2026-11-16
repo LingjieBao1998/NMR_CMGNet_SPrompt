@@ -1,0 +1,56 @@
+{% extends 'core_detection/base.html' %}
+
+{% block title %}Login - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 data-i18n="login_title">Login</h2>
+            <a href="{% url 'core_detection:register' %}" class="submit_mol_button">
+                <i class="bi bi-person-plus"></i> <span data-i18n="need_account_register">Need an account? Register</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-5 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-white mb-0" data-i18n="login_header">Sign In</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}">
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label" style="font-weight: 600;" data-i18n="login_identifier">👤 Email</label>
+                        <input type="email" class="form-control enhanced-input" id="username" name="username"
+                               required autofocus
+                               data-i18n-placeholder="login_identifier_placeholder" placeholder="Enter your email address">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label" style="font-weight: 600;" data-i18n="password">🔒 Password</label>
+                        <input type="password" class="form-control enhanced-input" id="password" name="password"
+                               required
+                               data-i18n-placeholder="password_placeholder" placeholder="Your password">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="submit_mol_button">
+                            <i class="bi bi-box-arrow-in-right"></i> <span data-i18n="login_button">Login</span>
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'core_detection:forgot_password' %}" data-i18n="forgot_password_link">Forgot password?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

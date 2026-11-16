@@ -1,0 +1,1136 @@
+{% extends 'core_detection/base.html' %}
+{% load math_filters %}
+
+{% block title %}Analysis Results - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="text-white mb-0" data-i18n="analysis_results">Analysis Results #{{ prediction_result.id }}</h4>
+                    <a href="/task/{{ task.task_id }}/" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-arrow-left"></i> <span data-i18n="all_results">All Results</span>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if prediction_result %}
+                <!-- NMR Shift Analysis with Chart -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="text-white mb-0" data-i18n="nmr_shift_analysis">NMR Shift Analysis</h5>
+                            </div>
+                            <div class="card-body">
+                                <h6 data-i18n="ensemble_prediction">Ensemble Prediction</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm" style="width: 100%; table-layout: fixed;">
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="task_name">Task Name:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            <strong>{{ task.task_name }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="task_id">Task ID:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            <strong>{{ task.task_id }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="data_id">Data ID:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            <strong>{{ prediction_result.id }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="result_classification">Result:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            {% if prediction_result.ensemble_result.is_core_molecule %}
+                                                <span class="badge bg-success" data-i18n="core_molecule">Core Molecule</span>
+                                            {% else %}
+                                                <span class="badge bg-danger" data-i18n="not_core_molecule">Not Core Molecule</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="voting">Voting:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            {% if prediction_result.ensemble_result.confidence %}
+                                                {% with votes=prediction_result.positive_votes %}
+                                                    {% if votes >= 2 %}
+                                                        <strong style="color: green;">{{ votes|mul:33 }}%（{{ votes }}/3）</strong>
+                                                    {% else %}
+                                                        <strong style="color: red;">{{ votes|mul:33 }}%（{{ votes }}/3）</strong>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="xgboost_probability">XGBoost Probability:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            {% if prediction_result.xgboost_result.probability %}
+                                                <div class="progress" style="height: 25px;">
+                                                    <div class="progress-bar bg-{% if prediction_result.xgboost_result.probability >= 0.5 %}success{% else %}danger{% endif %}"
+                                                         role="progressbar"
+                                                         style="width: {{ prediction_result.xgboost_result.probability|mul:100 }}%"
+                                                         aria-valuenow="{{ prediction_result.xgboost_result.probability|mul:100 }}"
+                                                         aria-valuemin="0" aria-valuemax="100">
+                                                        {{ prediction_result.xgboost_result.probability|mul:100|floatformat:1 }}%
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="cmgnet_frag_prediction">CMGNet-Frag Prediction:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            {% if prediction_result.cmgnet_frag_result.predictions %}
+                                                {% if prediction_result.cmgnet_frag_result.predictions.0.has_core_structure %}
+                                                    <span class="badge bg-success" data-i18n="yes_core_found">Yes (Core Found)</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary" data-i18n="no_core">No Core</span>
+                                                {% endif %}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 30%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-i18n="cmgnet_smiles_prediction">CMGNet-SMILES Prediction:</th>
+                                        <td style="width: 70%; word-break: break-all;">
+                                            {% if prediction_result.cmgnet_smiles_result %}
+                                                {% if prediction_result.cmgnet_smiles_result.predictions %}
+                                                    {% with first_pred=prediction_result.cmgnet_smiles_result.predictions.0 %}
+                                                        {% if first_pred.has_core_structure %}
+                                                            <span class="badge bg-success" data-i18n="yes_core_found">Yes (Core Found)</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary" data-i18n="no_core">No Core</span>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                {% else %}
+                                                    N/A
+                                                {% endif %}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="text-white mb-0" data-i18n="nmr_spectrum_visualization">NMR Spectrum Visualization</h5>
+                            </div>
+                            <div class="card-body d-flex align-items-center justify-content-center">
+                                <div id="nmrSpectrumChart" style="width:100%;height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if task.status == 'completed' %}
+                    <div class="results-section">
+                        <h5 class="mb-4" data-i18n="quinolone_scaffold_detection_results">AI-Powered Quinolone Detection System Results</h5>
+                        
+                        {% if results %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th data-i18n="core_structure">Core Structure</th>
+                                            <th data-i18n="confidence_score">Confidence Score</th>
+                                            <th data-i18n="nmr_match">NMR Match</th>
+                                            <th data-i18n="detection_method">Detection Method</th>
+                                            <th data-i18n="additional_notes">Additional Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for result in results %}
+                                        <tr>
+                                            <td><strong>{{ result.core_name }}</strong></td>
+                                            <td>
+                                                <div class="progress" style="height: 20px;">
+                                                    <div class="progress-bar bg-success" role="progressbar" 
+                                                         style="width: {{ result.confidence }}%"
+                                                         aria-valuenow="{{ result.confidence }}" 
+                                                         aria-valuemin="0" aria-valuemax="100">
+                                                        {{ result.confidence }}%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ result.nmr_match }}</td>
+                                            <td>{{ result.method }}</td>
+                                            <td>{{ result.notes|default:"N/A" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- CMGNet Prediction Results with Tab Switching -->
+                    {% if prediction_result and prediction_result.cmgnet_frag_result.predictions %}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="text-white mb-0" data-i18n="cmgnet_prediction_results">CMGNet Prediction Results (Valid Molecules)</h6>
+                                        <button class="btn btn-success btn-sm" onclick="downloadSingleResult()">
+                                            <i class="bi bi-download"></i> <span data-i18n="download_result">Download Result</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Tab Buttons -->
+                                    <div class="mb-3">
+                                        <div class="btn-group w-100" role="group">
+                                            <button type="button" class="btn btn-outline-primary cmgnet-tab-btn" id="smilesTabBtn" onclick="switchCmgnetTab('smiles')">
+                                                <span data-i18n="cmgnet_smiles_prediction">CMGNet-SMILES</span>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary cmgnet-tab-btn" id="fragTabBtn" onclick="switchCmgnetTab('frag')">
+                                                <span data-i18n="cmgnet_frag_prediction">CMGNet-Frag</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- SMILES Table -->
+                                    <div id="smilesTableContainer" class="cmgnet-table-container">
+                                        <div class="table-responsive">
+                                            <table id="cmgnetSmilesTable" class="table table-striped table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-i18n="rank">Rank</th>
+                                                        <th data-i18n="smiles_structure">SMILES Structure</th>
+                                                        <th data-i18n="has_core">Has Core</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% if prediction_result.cmgnet_smiles_result.predictions %}
+                                                        {% for pred in prediction_result.cmgnet_smiles_result.predictions %}
+                                                        {% if pred.is_valid %}
+                                                        <tr data-smiles="{{ pred.smiles }}" 
+                                                            data-core-indices="{{ pred.core_atom_indices|join:',' }}"
+                                                            data-has-core="{% if pred.has_core_structure %}true{% else %}false{% endif %}">
+                                                            <td>{{ pred.rank }}</td>
+                                                            <td>
+                                                                <div class="smiles-container">
+                                                                    <div class="smiles-svg" id="smiles-svg-{{ pred.rank }}-smiles"></div>
+                                                                    <div class="smiles-text">
+                                                                        <code style="font-size: 16px; word-break: break-all; font-weight: bold;">{{ pred.smiles }}</code>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                {% if pred.has_core_structure %}
+                                                                    <span class="badge bg-success" data-i18n="yes_core_found">Yes (Core Found)</span>
+                                                                {% else %}
+                                                                    <span class="badge bg-secondary" data-i18n="no_core">No Core</span>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <tr>
+                                                            <td colspan="3" class="text-center" data-i18n="no_smiles_available">No SMILES predictions available</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Frag Table -->
+                                    <div id="fragTableContainer" class="cmgnet-table-container" style="display: none;">
+                                        <div class="table-responsive">
+                                            <table id="cmgnetFragTable" class="table table-striped table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-i18n="rank">Rank</th>
+                                                        <th data-i18n="smiles_structure">SMILES Structure</th>
+                                                        <th data-i18n="has_core">Has Core</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for pred in prediction_result.cmgnet_frag_result.predictions %}
+                                                    {% if pred.is_valid %}
+                                                    <tr data-smiles="{{ pred.smiles }}" 
+                                                        data-core-indices="{{ pred.core_atom_indices|join:',' }}"
+                                                        data-has-core="{% if pred.has_core_structure %}true{% else %}false{% endif %}">
+                                                        <td>{{ pred.rank }}</td>
+                                                        <td>
+                                                            <div class="smiles-container">
+                                                                <div class="smiles-svg" id="smiles-svg-{{ pred.rank }}-frag"></div>
+                                                                <div class="smiles-text">
+                                                                    <code style="font-size: 16px; word-break: break-all; font-weight: bold;">{{ pred.smiles }}</code>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            {% if pred.has_core_structure %}
+                                                                <span class="badge bg-success" data-i18n="yes_core_found">Yes (Core Found)</span>
+                                                            {% else %}
+                                                                <span class="badge bg-secondary" data-i18n="no_core">No Core</span>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% elif task.status == 'processing' %}
+                    <div class="alert alert-warning" role="alert">
+                        <h5 data-i18n="analysis_in_progress">Analysis in Progress</h5>
+                        <p><span data-i18n="current_status">This study is currently being processed. Current status:</span> {{ task.current_step|default:"Initializing" }}</p>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" 
+                                 style="width: {{ task.progress_percentage }}%"
+                                 aria-valuenow="{{ task.progress_percentage }}" 
+                                 aria-valuemin="0" aria-valuemax="100">
+                                {{ task.progress_percentage }}%
+                            </div>
+                        </div>
+                    </div>
+                {% elif task.status == 'failed' %}
+                    <div class="alert alert-danger" role="alert">
+                        <h5 data-i18n="analysis_failed">Analysis Failed</h5>
+                        <p data-i18n="review_error_logs">This analysis could not be completed successfully. Please review the error logs or contact support.</p>
+                    </div>
+                {% else %}
+                    <div class="alert alert-secondary" role="alert">
+                        <h5 data-i18n="analysis_pending">Analysis Pending</h5>
+                        <p data-i18n="queued_processing">This study is queued for processing and will be processed shortly.</p>
+                    </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{% url 'core_detection:task_queue' %}" class="submit_mol_button">
+                        <i class="bi bi-arrow-left"></i> <span data-i18n="back_to_queue">Back to Queue</span>
+                    </a>
+                    <a href="{% url 'core_detection:home' %}" class="detail_button">
+                        <i class="bi bi-house"></i> Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+{% if prediction_result %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="/static/datatables/dataTables.bootstrap5.min.css" type="text/css"/>
+
+<style>
+.cmgnet-tab-btn.active {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+/* Fix DataTable column widths */
+.table-responsive {
+    overflow-x: auto;
+}
+
+#cmgnetSmilesTable, #cmgnetFragTable {
+    width: 100% !important;
+    table-layout: fixed;
+    min-width: 600px;
+    font-size: 14px;
+}
+
+#cmgnetSmilesTable th, #cmgnetFragTable th,
+#cmgnetSmilesTable td, #cmgnetFragTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#cmgnetSmilesTable th, #cmgnetFragTable th {
+    text-align: center;
+    font-weight: bold;
+}
+
+#cmgnetSmilesTable td, #cmgnetFragTable td {
+    text-align: center;
+}
+
+#cmgnetSmilesTable td:nth-child(2), #cmgnetFragTable td:nth-child(2),
+#cmgnetSmilesTable th:nth-child(2), #cmgnetFragTable th:nth-child(2) {
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+#cmgnetSmilesTable td:nth-child(5), #cmgnetFragTable td:nth-child(5),
+#cmgnetSmilesTable th:nth-child(5), #cmgnetFragTable th:nth-child(5) {
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+    margin-bottom: 10px;
+}
+
+/* SMILES container styles */
+.smiles-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 300px;
+}
+
+/* Table centering */
+#cmgnetSmilesTable_wrapper, #cmgnetFragTable_wrapper {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#cmgnetSmilesTable, #cmgnetFragTable {
+    margin: 0 auto;
+}
+
+.dataTables_wrapper {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    text-align: center !important;
+}
+
+.smiles-svg {
+    width: 250px;
+    height: 200px;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    background-image: none;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.smiles-text {
+    text-align: center;
+    max-width: 300px;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+/* Loading indicator for RDKit */
+.smiles-svg.loading::after {
+    content: "Loading...";
+    color: #666;
+    font-size: 12px;
+}
+
+/* SVG styling */
+.smiles-svg svg {
+    width: 100%;
+    height: 100%;
+}
+
+.smiles-svg .smiles-svg-container {
+    width: 100%;
+    height: 100%;
+}
+</style>
+
+<!-- jQuery Library -->
+<script src="/static/js/jquery.min.js"></script>
+
+<!-- RDKit.js for chemical structure visualization -->
+<script src="/static/rdkit/RDKit_minimal.js"></script>
+
+<!-- Plotly.js Library -->
+<script src="/static/plotly/plotly.min.js"></script>
+
+<!-- DataTables Library -->
+<script src="/static/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/datatables/dataTables.bootstrap5.min.js"></script>
+
+<script>
+// Simple test to check if JavaScript is working
+console.log("🚀 Script loaded successfully");
+console.log("🚀 Current time:", new Date().toISOString());
+
+// Global variables for DataTables
+let fragDataTable = null;
+let smilesDataTable = null;
+
+// Create NMR spectrum bar chart using Plotly.js
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 DOMContentLoaded fired");
+    console.log("🚀 jQuery available:", typeof $);
+    console.log("🚀 Plotly available:", typeof Plotly);
+    const nmrShifts = {{ prediction_result.all_nmr_shifts|safe }};
+    const currentShift = {{ prediction_result.nmr_shift }};
+    
+    // Prepare data for Plotly bar chart
+    const yValues = nmrShifts.map(() => 1.0); // Uniform height of 1
+    
+    // Create trace for bar chart
+    const trace1 = {
+        x: nmrShifts,
+        y: yValues,
+        type: 'bar',
+        width: 0.5,  // Bar width
+        marker: {
+            color: 'green'  // Green color as requested
+        },
+        name: 'NMR Shifts',
+        hovertemplate: '%{x:.2f} ppm<extra></extra>'  // Show only x-axis value, hide y-axis
+    };
+    
+    // Create layout for the chart
+    const layout = {
+        title: 'NMR Chemical Shifts Distribution',
+        xaxis: {
+            title: 'Chemical Shift (ppm)',
+            range: [-10, 230],  // X-axis range from -10 to 230
+            showgrid: true,
+            zeroline: true,
+            showline: true,  // Show x-axis line
+            showticklabels: true,  // Show x-axis tick labels
+            side: 'bottom',  // Position x-axis on the bottom
+            anchor: 'y',  // Anchor to y-axis
+            position: 0  // Position at y=0
+        },
+        yaxis: {
+            title: 'Intensity',
+            showgrid: true,
+            zeroline: false,  // Hide y-axis zero line
+            showticklabels: true,  // Show y-axis tick labels
+            range: [-0.1, 1.2],  // Y-axis range from -0.1 to 1.2
+            showline: true  // Show y-axis line
+        },
+        plot_bgcolor: 'rgba(243, 243, 243, 0.8)',
+        paper_bgcolor: 'rgba(0, 0, 0, 0)',
+        margin: {
+            l: 50,  // Restore left margin for y-axis labels
+            r: 50,
+            t: 50,
+            b: 50
+        }
+    };
+    
+    // Create config for the chart
+    const config = {
+        responsive: true,
+        displayModeBar: true,
+        displaylogo: false,
+        modeBarButtonsToRemove: ['lasso2d', 'select2d']
+    };
+    
+    // Create the chart
+    Plotly.newPlot('nmrSpectrumChart', [trace1], layout, config);
+    
+    console.log("✅ NMR spectrum chart created successfully");
+    console.log("🔬 Total NMR shifts:", nmrShifts.length);
+    
+    // Initialize DataTables for both CMGNet tables
+    const cmgnetFragTable = document.getElementById('cmgnetFragTable');
+    const cmgnetSmilesTable = document.getElementById('cmgnetSmilesTable');
+
+    if (cmgnetFragTable) {
+        fragDataTable = $('#cmgnetFragTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+            order: [[0, 'asc']], // Sort by Rank ascending
+            autoWidth: false,
+            columns: [
+                { width: '8%' },    // Rank
+                { width: '77%' },   // SMILES Structure (needs more space for SVG)
+                { width: '15%' }    // Has Core
+            ],
+            columnDefs: [
+                { className: 'text-center', targets: '_all' }  // Center align all columns
+            ]
+        });
+        console.log("✅ CMGNet-Frag DataTable initialized");
+    }
+
+    if (cmgnetSmilesTable) {
+        smilesDataTable = $('#cmgnetSmilesTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+            order: [[0, 'asc']], // Sort by Rank ascending
+            autoWidth: false,
+            columns: [
+                { width: '8%' },    // Rank
+                { width: '77%' },   // SMILES Structure (needs more space for SVG)
+                { width: '15%' }    // Has Core
+            ],
+            columnDefs: [
+                { className: 'text-center', targets: '_all' }  // Center align all columns
+            ]
+        });
+        console.log("✅ CMGNet-SMILES DataTable initialized");
+    }
+    
+    // Determine default tab based on prediction results
+    // Default logic: Show SMILES if both are positive, otherwise show the positive one
+    const ensembleResult = {{ prediction_result.ensemble_result|to_json|safe }};
+    const smilesResult = {{ prediction_result.cmgnet_smiles_result|to_json|safe }};
+    const fragResult = {{ prediction_result.cmgnet_frag_result|to_json|safe }};
+    
+    let defaultTab = 'smiles'; // Default to SMILES
+    
+    // Check if ensemble result is positive (core molecule)
+    if (ensembleResult.is_core_molecule) {
+        // Both are positive, default to SMILES as requested
+        defaultTab = 'smiles';
+    } else {
+        // Not positive, check individual model results
+        const smilesHasCore = smilesResult.top1_has_core || false;
+        const fragHasCore = fragResult.top1_has_core || false;
+        
+        if (smilesHasCore && !fragHasCore) {
+            defaultTab = 'smiles';
+        } else if (fragHasCore && !smilesHasCore) {
+            defaultTab = 'frag';
+        } else {
+            // Both negative or both positive, default to SMILES
+            defaultTab = 'smiles';
+        }
+    }
+    
+    // Initialize the default tab
+    switchCmgnetTab(defaultTab);
+    
+    console.log("🎯 Default tab set to:", defaultTab);
+    
+    // Test if JavaScript is working
+    console.log("🧪 JavaScript test - Date:", new Date().toISOString());
+    console.log("🧪 jQuery test:", typeof $);
+    console.log("🧪 DataTable test:", typeof $.fn.DataTable);
+    
+    // Render chemical structures using RDKit.js
+    renderChemicalStructures();
+    
+    // Immediate visual test
+    setTimeout(function() {
+        console.log("🧪 Starting immediate visual test...");
+        const testContainer = document.getElementById('smiles-svg-1-smiles');
+        console.log("🧪 Test container element:", testContainer);
+        
+        if (testContainer) {
+            console.log("🧪 Found test container, current content:", testContainer.innerHTML);
+            console.log("🧪 Container innerHTML length:", testContainer.innerHTML.length);
+            
+            if (testContainer.innerHTML.trim() === '') {
+                console.log("🧪 Container is empty, adding test content");
+                testContainer.innerHTML = '<div style="color: blue; font-size: 12px; padding: 10px;">✅ JavaScript Works!</div>';
+                console.log("🧪 Test content added, new content:", testContainer.innerHTML);
+            } else {
+                console.log("🧪 Container already has content:", testContainer.innerHTML);
+            }
+        } else {
+            console.error("❌ Test container not found! Looking for alternatives...");
+            const allContainers = document.querySelectorAll('.smiles-svg');
+            console.log("❌ Found", allContainers.length, "SMILES containers total");
+            
+            if (allContainers.length > 0) {
+                console.log("❌ Trying first container:", allContainers[0].id);
+                allContainers[0].innerHTML = '<div style="color: red; font-size: 12px; padding: 10px;">Fallback Test</div>';
+            }
+        }
+    }, 500);
+    
+    // Additional test: directly manipulate DOM
+    console.log("🧪 Performing direct DOM test...");
+    const allSmilesContainers = document.querySelectorAll('.smiles-svg');
+    console.log("🧪 Found", allSmilesContainers.length, "SMILES containers in total");
+    
+    allSmilesContainers.forEach(function(container, index) {
+        console.log(`🧪 Container ${index + 1}: ${container.id}, content length: ${container.innerHTML.length}`);
+        if (container.innerHTML.trim() === '' && index < 2) { // Only test first 2
+            container.innerHTML = `<div style="color: green; font-size: 10px; padding: 5px;">Test ${index + 1} - Updated!</div>`;
+        }
+    });
+    
+    console.log("🧪 Template compilation test - this line should show in console");
+    console.log("🧪 Current timestamp:", new Date().getTime());
+    
+});
+
+// Tab switching function
+function switchCmgnetTab(tabName) {
+    const smilesContainer = document.getElementById('smilesTableContainer');
+    const fragContainer = document.getElementById('fragTableContainer');
+    const smilesBtn = document.getElementById('smilesTabBtn');
+    const fragBtn = document.getElementById('fragTabBtn');
+
+    console.log(`🔄 Switching to ${tabName} tab`);
+    console.log(`🔄 Current state - SMILES container: ${smilesContainer ? 'found' : 'not found'}, Frag container: ${fragContainer ? 'found' : 'not found'}`);
+
+    if (tabName === 'smiles') {
+        // Show SMILES tab
+        if (smilesContainer) {
+            smilesContainer.style.display = 'block';
+            console.log("✅ SMILES container set to display: block");
+        }
+        if (fragContainer) {
+            fragContainer.style.display = 'none';
+            console.log("✅ Frag container set to display: none");
+        }
+        if (smilesBtn) smilesBtn.classList.add('active');
+        if (fragBtn) fragBtn.classList.remove('active');
+        console.log("🔄 Switched to CMGNet-SMILES tab");
+
+        // Adjust SMILES table after showing
+        setTimeout(function() {
+            if (smilesDataTable) {
+                smilesDataTable.columns.adjust().draw();
+            }
+        }, 50);
+
+    } else if (tabName === 'frag') {
+        // Show Frag tab
+        if (smilesContainer) {
+            smilesContainer.style.display = 'none';
+            console.log("✅ SMILES container set to display: none");
+        }
+        if (fragContainer) {
+            fragContainer.style.display = 'block';
+            console.log("✅ Frag container set to display: block");
+        }
+        if (smilesBtn) smilesBtn.classList.remove('active');
+        if (fragBtn) fragBtn.classList.add('active');
+        console.log("🔄 Switched to CMGNet-Frag tab");
+
+        // Adjust Frag table after showing
+        setTimeout(function() {
+            if (fragDataTable) {
+                fragDataTable.columns.adjust().draw();
+            }
+        }, 50);
+    }
+}
+
+// Function to render chemical structures using RDKit.js SVG
+function renderChemicalStructures() {
+    console.log("🔬 Starting chemical structure SVG rendering...");
+    console.log("🔍 Checking if initRDKitModule is available:", typeof initRDKitModule);
+    
+    // Check if we have any SMILES containers to render
+    const smilesContainers = document.querySelectorAll('.smiles-svg');
+    console.log(`📊 Found ${smilesContainers.length} SMILES containers`);
+    
+    if (smilesContainers.length === 0) {
+        console.warn("⚠️ No SMILES containers found - skipping RDKit rendering");
+        return;
+    }
+    
+    // Show immediate loading state
+    smilesContainers.forEach(function(container, index) {
+        console.log(`📋 Container ${index + 1}: ${container.id}`);
+        container.innerHTML = '<span style="color: #666; font-size: 11px;">Initializing RDKit...</span>';
+    });
+    
+    // Wait for RDKit to load
+    let checkCount = 0;
+    const checkRDKit = setInterval(function() {
+        checkCount++;
+        console.log(`🔍 RDKit check attempt ${checkCount}, initRDKitModule:`, typeof initRDKitModule);
+        
+        if (typeof initRDKitModule !== 'undefined') {
+            clearInterval(checkRDKit);
+            console.log("✅ RDKit.js loaded successfully");
+            
+            // Update all containers to show loading
+            smilesContainers.forEach(function(container) {
+                container.innerHTML = '<span style="color: #666; font-size: 11px;">Loading WASM...</span>';
+            });
+            
+            // Configure RDKit to load WASM from the correct location
+            const rdkitConfig = {
+                locateFile: function(file) {
+                    console.log(`📁 Loading RDKit WASM file: ${file}`);
+                    return `/static/rdkit/${file}`;
+                }
+            };
+            
+            initRDKitModule(rdkitConfig).then(function(RDKit) {
+                console.log("✅ RDKit module initialized");
+                console.log("🧪 RDKit object:", RDKit);
+                console.log("🧪 Testing get_mol method:", typeof RDKit.get_mol);
+                
+                // Test RDKit with a simple molecule
+                try {
+                    const testMol = RDKit.get_mol("CCO");
+                    console.log("🧪 Test molecule created:", testMol);
+                    console.log("🧪 Molecule type:", typeof testMol);
+                    console.log("🧪 Molecule methods:", Object.getOwnPropertyNames(Object.getPrototypeOf(testMol)));
+
+                    // Check if molecule object exists before using methods
+                    if (!testMol || typeof testMol !== 'object') {
+                        console.error("❌ Test molecule creation failed - invalid object");
+                    } else {
+                        // Generate a test SVG to verify RDKit works
+                        try {
+                            const testSvg = testMol.get_svg();
+                            console.log("🧪 Test SVG generated, length:", testSvg.length);
+
+                            // Show test SVG in first container
+                            if (smilesContainers.length > 0) {
+                                smilesContainers[0].innerHTML = '<div style="color: green; font-size: 10px;">✅ RDKit Working!</div>' + testSvg;
+                            }
+                        } catch (svgError) {
+                            console.error("❌ Test SVG generation failed:", svgError);
+                        }
+                    }
+                } catch (testError) {
+                    console.error("❌ RDKit test failed:", testError);
+                }
+                
+                // Render SMILES table structures
+                renderTableStructuresSVG(RDKit, 'smiles');
+                
+                // Render Frag table structures  
+                renderTableStructuresSVG(RDKit, 'frag');
+                
+            }).catch(function(error) {
+                console.error("❌ RDKit initialization failed:", error);
+                smilesContainers.forEach(function(container) {
+                    container.innerHTML = `<span style="color: #dc3545; font-size: 10px;">RDKit Error: ${error.message}</span>`;
+                });
+            });
+        }
+        
+        // Stop checking after 30 seconds
+        if (checkCount >= 300) {
+            clearInterval(checkRDKit);
+            console.log("⏰ RDKit loading timeout after 30 seconds - skipping chemical rendering");
+            
+            // Show error in the SVG containers
+            smilesContainers.forEach(function(container) {
+                container.innerHTML = '<span style="color: #dc3545; font-size: 12px; text-align: center; padding: 20px;">RDKit.js Failed to Load<br>Please refresh the page</span>';
+            });
+        }
+    }, 100);
+    
+    // Immediate backup check
+    console.log("🔍 Immediate check - initRDKitModule:", typeof initRDKitModule);
+    
+    // Also show initial data check
+    document.querySelectorAll('tr[data-smiles]').forEach(function(row, index) {
+        const smiles = row.getAttribute('data-smiles');
+        const coreIndices = row.getAttribute('data-core-indices');
+        console.log(`📋 Row ${index + 1} data: SMILES="${smiles}", Core="${coreIndices}"`);
+    });
+}
+
+// Function to render SVG structures for a specific table
+function renderTableStructuresSVG(RDKit, tableType) {
+    const table = tableType === 'smiles' ? document.getElementById('cmgnetSmilesTable') : document.getElementById('cmgnetFragTable');
+    if (!table) {
+        console.warn(`⚠️ Table not found: ${tableType}`);
+        return;
+    }
+    
+    const rows = table.querySelectorAll('tbody tr');
+    console.log(`📊 Processing ${tableType} table with ${rows.length} rows`);
+    
+    if (rows.length === 0) {
+        console.warn(`⚠️ No rows found in ${tableType} table`);
+        return;
+    }
+    
+    rows.forEach(function(row, rowIndex) {
+        const smiles = row.getAttribute('data-smiles');
+        const coreIndicesStr = row.getAttribute('data-core-indices');
+        const hasCore = row.getAttribute('data-has-core') === 'true';
+        const svgContainerId = row.querySelector('.smiles-svg')?.id;
+        
+        console.log(`📋 Row ${rowIndex + 1}: SMILES="${smiles}", Container="${svgContainerId}", Core indices="${coreIndicesStr}"`);
+        
+        if (!smiles || !svgContainerId) {
+            console.warn(`⚠️ Row ${rowIndex + 1}: Missing SMILES or container ID`);
+            return;
+        }
+        
+        try {
+            const container = document.getElementById(svgContainerId);
+            if (!container) {
+                console.warn(`⚠️ Container not found: ${svgContainerId}`);
+                return;
+            }
+            
+            // Add loading state
+            container.classList.add('loading');
+            container.innerHTML = '<span style="color: #666; font-size: 11px;">Loading...</span>';
+            
+            // Parse core atom indices
+            let coreAtomIndices = [];
+            if (hasCore && coreIndicesStr && coreIndicesStr.trim() !== '') {
+                coreAtomIndices = coreIndicesStr.split(',').map(function(idx) { 
+                    return parseInt(idx.trim()); 
+                }).filter(function(idx) { 
+                    return !isNaN(idx); 
+                });
+            }
+            
+            console.log(`🔬 Processing ${svgContainerId}: SMILES="${smiles}", Core indices=[${coreAtomIndices.join(',')}]`);
+            
+            // Generate molecule from SMILES
+            const mol = RDKit.get_mol(smiles);
+            
+            console.log(`🔬 Molecule object for ${svgContainerId}:`, mol);
+            console.log(`🔬 Molecule type:`, typeof mol);
+            
+            // Check if molecule object exists and is valid
+            if (!mol || typeof mol !== 'object') {
+                container.innerHTML = '<span style="color: #dc3545; font-size: 10px;">Invalid SMILES</span>';
+                container.classList.remove('loading');
+                console.warn(`⚠️ Invalid SMILES or molecule creation failed: ${smiles}`);
+                return;
+            }
+            
+            console.log(`✅ Molecule created for ${svgContainerId}`);
+            
+            // Simple SVG generation without complex highlighting first
+            let svgOptions = {
+                width: 250,
+                height: 200,
+                bondWidth: 1.5,
+                bondLineWidth: 1.5,
+                atomLabelFontSize: 14,
+                bondStereo: true
+            };
+
+            // Create SVG drawing options
+            let drawOptions = null;
+            try {
+                drawOptions = RDKit.get_draw_options();
+
+                // Configure drawing options for better alignment
+                drawOptions.set_width(300);
+                drawOptions.set_height(300);
+                drawOptions.set_bondWidth(1.5);
+                drawOptions.set_atomLabelFontSize(14);
+
+                // Add alignment options to keep core structures oriented consistently
+                try {
+                    drawOptions.set_addAtomIndices(false);  // Don't show atom indices
+                    drawOptions.set_addStereoAnnotation(true);  // Show stereochemistry
+
+                    // Try to set molecule to be centered and aligned
+                    try {
+                        // Try to use 2D coordinates for better alignment
+                        drawOptions.set_centreAtoms(true);
+                        drawOptions.set_rotate(0);  // No rotation by default
+                        console.log("🎨 Enhanced draw options configured with rotation control");
+                    } catch (rotError) {
+                        console.warn("⚠️ Rotation control not available:", rotError);
+                    }
+
+                    console.log("🎨 Enhanced draw options configured");
+                } catch (alignError) {
+                    console.warn("⚠️ Some alignment options not available:", alignError);
+                }
+
+                console.log("🎨 Draw options created:", drawOptions);
+            } catch (e) {
+                console.warn("⚠️ Could not create draw options:", e);
+            }
+            
+            // Try basic SVG generation first
+            try {
+                let svg;
+
+                if (coreAtomIndices.length > 0) {
+                    console.log(`🎨 Core atom indices: [${coreAtomIndices.join(',')}]`);
+
+                    // Try to use draw options with configuration
+                    try {
+                        if (drawOptions) {
+                            svg = mol.get_svg_with_highlights(drawOptions);
+                            console.log("🎨 Generated SVG with configured draw options");
+                        } else {
+                            // Fallback to molecule details method
+                            var mdetails = {};
+                            mdetails['atoms'] = coreAtomIndices;
+                            mdetails['explicitMethyl'] = true;
+                            mdetails['addAtomIndices'] = false;
+
+                            console.log("🎨 Molecule details for highlighting:", JSON.stringify(mdetails));
+                            svg = mol.get_svg_with_highlights(JSON.stringify(mdetails));
+                            console.log("🎨 Generated SVG with molecule details");
+                        }
+                    } catch (highlightError) {
+                        console.warn(`⚠️ Highlight method failed: ${highlightError.message}, falling back to basic SVG`);
+                        svg = mol.get_svg();
+                    }
+
+                    // Parse the SVG to make background transparent
+                    const parser = new DOMParser();
+                    const svgDoc = parser.parseFromString(svg, 'image/svg+xml');
+                    const svgElement = svgDoc.documentElement;
+
+                    // Set SVG element to transparent
+                    svgElement.style.backgroundColor = 'transparent';
+
+                    // Remove or modify white background rectangles
+                    const whiteRects = svgDoc.querySelectorAll('rect[style*="fill:#FFFFFF"]');
+                    whiteRects.forEach(function(rect) {
+                        rect.style.fill = 'none';
+                        rect.style.stroke = 'none';
+                    });
+
+                    // Remove any other white background elements
+                    const allRects = svgDoc.querySelectorAll('rect');
+                    allRects.forEach(function(rect) {
+                        if (rect.style.fill === '#FFFFFF' || rect.style.fill === 'white' ||
+                            rect.style.fill === 'rgb(255, 255, 255)') {
+                            rect.style.fill = 'none';
+                            rect.style.stroke = 'none';
+                        }
+                    });
+
+                    const styleElement = svgDoc.createElement('style');
+                    styleElement.textContent = `
+                        .background { fill: none; }
+                        svg { background-color: transparent; }
+                        rect[fill="#FFFFFF"] { fill: none; stroke: none; }
+                        rect[fill="white"] { fill: none; stroke: none; }
+                    `;
+                    svgElement.insertBefore(styleElement, svgElement.firstChild);
+
+                    svg = svgElement.outerHTML;
+                    console.log(`🎨 Highlighting applied to ${coreAtomIndices.length} atoms`);
+                } else {
+                    console.log(`🎨 Basic SVG generation (no core atoms)`);
+                    svg = mol.get_svg();
+                }
+                
+                if (!svg || svg.trim() === '') {
+                    throw new Error("Empty SVG generated");
+                }
+                
+                console.log(`✅ SVG generated, length: ${svg.length} chars`);
+                
+                // Set transparent background
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svg, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+                
+                // Set SVG element to transparent
+                svgElement.style.backgroundColor = 'transparent';
+                svgElement.setAttribute('style', 'opacity:1.0;fill:none;stroke:none;background-color:transparent');
+                
+                // Remove or modify white background rectangles
+                const whiteRects = svgDoc.querySelectorAll('rect[style*="fill:#FFFFFF"]');
+                whiteRects.forEach(function(rect) {
+                    rect.style.fill = 'none';
+                    rect.style.stroke = 'none';
+                });
+                
+                // Remove any other white background elements
+                const allRects = svgDoc.querySelectorAll('rect');
+                allRects.forEach(function(rect) {
+                    if (rect.style.fill === '#FFFFFF' || rect.style.fill === 'white' || 
+                        rect.style.fill === 'rgb(255, 255, 255)') {
+                        rect.style.fill = 'none';
+                        rect.style.stroke = 'none';
+                    }
+                });
+                
+                const styleElement = svgDoc.createElement('style');
+                styleElement.textContent = `
+                    .background { fill: none; }
+                    svg { background-color: transparent; }
+                    rect[fill="#FFFFFF"] { fill: none; stroke: none; }
+                    rect[fill="white"] { fill: none; stroke: none; }
+                `;
+                svgElement.insertBefore(styleElement, svgElement.firstChild);
+                
+                svg = svgElement.outerHTML;
+                
+                // Display SVG
+                container.innerHTML = svg;
+                container.classList.remove('loading');
+                
+                console.log(`✅ Successfully rendered ${svgContainerId}`);
+                
+            } catch (svgError) {
+                console.error(`❌ SVG generation failed for ${svgContainerId}:`, svgError);
+                container.innerHTML = '<span style="color: #dc3545; font-size: 10px;">SVG Error</span>';
+                container.classList.remove('loading');
+            }
+            
+        } catch (error) {
+            console.error(`❌ Failed to render ${svgContainerId}:`, error);
+            const container = document.getElementById(svgContainerId);
+            if (container) {
+                container.innerHTML = `<span style="color: #dc3545; font-size: 10px;">Error: ${error.message}</span>`;
+                container.classList.remove('loading');
+            }
+        }
+    });
+}
+
+// Function to download single result
+function downloadSingleResult() {
+    const taskId = '{{ task.task_id }}';
+    const resultId = '{{ prediction_result.id }}';
+
+    // Construct download URL
+    const downloadUrl = `/task/${taskId}/result/${resultId}/download/`;
+
+    // Create hidden link and trigger download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `result_${taskId}_id${resultId}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    console.log(`Downloading result for task ${taskId}, result ID ${resultId}`);
+}
+</script>
+{% endif %}
+
+{% endblock %}

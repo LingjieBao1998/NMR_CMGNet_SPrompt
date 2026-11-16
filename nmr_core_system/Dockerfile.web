@@ -1,0 +1,8 @@
+# 薄层镜像：在 my-nmr-service:v1.0 基础上补齐 Web 应用缺失依赖
+# 版本与 requirements.txt 锁版一致
+FROM my-nmr-service:v1.0
+# 镜像自带 setuptools>=82 已移除 pkg_resources，
+# 而 pytorch_lightning 2.1.0 (lightning_fabric) import 时需要它 → 降级恢复
+RUN /opt/conda/envs/py310/bin/pip install --no-cache-dir \
+    "setuptools<81" \
+    dnspython==2.8.0 py3-validate-email==1.0.5.post2 python-dotenv==1.0.1

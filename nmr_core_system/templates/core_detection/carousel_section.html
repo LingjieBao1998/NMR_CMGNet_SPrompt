@@ -1,0 +1,32 @@
+{% load static %}
+<!-- Image Carousel Section (Hidden) -->
+<div class="carousel-section" style="display: none;">
+    <div class="carousel-container">
+        <div class="carousel-content">
+            <div class="carousel-tabs">
+                <button type="button" aria-pressed="true" class="carousel-tab active" data-index="0">
+                    <span class="tab-background"></span>
+                    <span class="tab-text">Page 1</span>
+                </button>
+                <button type="button" aria-pressed="false" class="carousel-tab" data-index="1">
+                    <span class="tab-background"></span>
+                    <span class="tab-text">Page 2</span>
+                </button>
+            </div>
+            
+            <div class="carousel-slides-wrapper">
+                <div class="carousel-slides">
+                    <!-- Slide 1 - Image #3 -->
+                    <div class="carousel-slide active" style="background: white; padding: 0; border-radius: 0;">
+                        <img src="{% static 'images/page1.png' %}" alt="NMR Core Detection System Page 1" class="carousel-image" style="width: 100%; height: auto; border-radius: 0; box-shadow: none;">
+                    </div>
+                    
+                    <!-- Slide 2 - Image #4 -->
+                    <div class="carousel-slide" style="background: white; padding: 0; border-radius: 0;">
+                        <img src="{% static 'images/page2.png' %}" alt="NMR Core Detection System Page 2" class="carousel-image" style="width: 100%; height: auto; border-radius: 0; box-shadow: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

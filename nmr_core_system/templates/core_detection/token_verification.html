@@ -1,0 +1,129 @@
+{% extends 'core_detection/base.html' %}
+
+{% block title %}Token Verification - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Token Verification Required</h2>
+            <a href="{% url 'core_detection:task_queue' %}" class="submit_mol_button">
+                <i class="bi bi-arrow-left"></i> Back to Queue
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-white mb-0">Verify Task Access</h4>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Error:</strong> {{ error }}
+                </div>
+                {% endif %}
+                
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle"></i> 
+                    <strong>Security Notice:</strong> This task requires token verification. Please upload the task token file you received when creating this task.
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Task Information</h5>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Task ID:</th>
+                            <td><code>{{ task.task_id }}</code></td>
+                        </tr>
+                        <tr>
+                            <th>Task Name:</th>
+                            <td>{{ task.task_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status:</th>
+                            <td>
+                                <span class="badge bg-{% if task.status == 'completed' %}success{% elif task.status == 'processing' %}warning{% elif task.status == 'failed' %}danger{% else %}secondary{% endif %}">
+                                    {{ task.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <form method="post" enctype="multipart/form-data" id="tokenVerificationForm">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="token_file" class="form-label fw-bold">Task Token File *</label>
+                        <input type="file" class="form-control" id="token_file" name="token_file" 
+                               accept=".token" required>
+                        <div class="form-text">Upload the token file (e.g., <code>task_{{ task.task_id }}.token</code>)</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="submit_mol_button">
+                            <i class="bi bi-shield-check"></i> Verify & View Task
+                        </button>
+                        <a href="{% url 'core_detection:task_queue' %}" class="detail_button">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="text-white mb-0">Help & Information</h5>
+            </div>
+            <div class="card-body">
+                <h6>Why is token verification required?</h6>
+                <p>To protect the privacy and security of your task data, we require token verification to view task details. This ensures that only the task creator can access sensitive information.</p>
+                
+                <h6>I don't have my token file</h6>
+                <p>Unfortunately, if you have lost your token file, you cannot access this task. Please make sure to save your token file in a secure location when creating new tasks.</p>
+                
+                <h6>Security Features</h6>
+                <ul>
+                    <li>✅ Encrypted token generation using asymmetric encryption algorithms</li>
+                    <li>✅ One-time verification per session</li>
+                    <li>✅ Secure file upload validation</li>
+                    <li>✅ Protection against unauthorized access</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('tokenVerificationForm').addEventListener('submit', function(e) {
+    const fileInput = document.getElementById('token_file');
+    const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
+    
+    if (!file) {
+        e.preventDefault();
+        alert('Please select a token file to verify your identity.');
+        return false;
+    }
+    
+    // Check file extension
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith('.token')) {
+        e.preventDefault();
+        alert('Please upload a .token file only.');
+        return false;
+    }
+    
+    // Show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verifying...';
+});
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+# data (large binaries, delivered separately)
+data/_source/
+data/**/data.mdb
+data/**/lock.mdb
+data/*.lmdb/
+
+# model weights
+checkpoints/*.ckpt
+checkpoints/bart_base_0910/
+checkpoints/cress/
+models/xgboost/*.pkl
+models/cmgnet/
+
+# docker image
+docker/*.tar.gz
+
+# runtime artefacts
+output/
+logs/
+viz_tmp/
+__pycache__/
+*.pyc
+*.log
+.DS_Store

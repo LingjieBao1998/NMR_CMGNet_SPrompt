@@ -1,0 +1,482 @@
+{% extends 'core_detection/base.html' %}
+
+{% block title %}Queue - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% with request.GET.lang|default:'en' as current_lang %}
+<!-- Enhanced Header Section -->
+<div class="queue-header mb-4" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); padding: 40px; border-radius: 16px; text-align: center; box-shadow: 0 8px 24px rgba(5, 153, 139, 0.2); margin-bottom: 30px;">
+    <div style="color: white;">
+        <h2 style="font-weight: 700; margin-bottom: 10px;" data-i18n="queue_header_title">📊 Analysis Task Queue</h2>
+        <p style="margin: 0; opacity: 0.9;" data-i18n="queue_header_subtitle">Monitor your AI-Powered Quinolone Detection System Tasks in Real-Time</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 style="color: #05998B; font-weight: 700;" data-i18n="task_management">📋 Task Management</h3>
+            <a href="{% url 'core_detection:submit_task' %}?lang={{ current_lang|default:'en' }}" class="btn btn-success" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border: none; border-radius: 25px; font-weight: 600; padding: 12px 24px; box-shadow: 0 4px 15px rgba(5, 153, 139, 0.3);" data-i18n="new_submission">
+                🧬 New Submission
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Statistics Overview -->
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="stat-card-enhanced" style="background: white; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 4px solid #007bff; transition: transform 0.3s, box-shadow 0.3s;">
+            <div class="stat-icon" style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+            <h6 style="color: #6c757d; margin-bottom: 8px; font-weight: 600;" data-i18n="all_tasks">All Tasks</h6>
+            <h3 style="color: #007bff; font-weight: 700; margin: 0;">{{ stats.all }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card-enhanced" style="background: white; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 4px solid #6c757d; transition: transform 0.3s, box-shadow 0.3s;">
+            <div class="stat-icon" style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
+            <h6 style="color: #6c757d; margin-bottom: 8px; font-weight: 600;" data-i18n="pending">Pending</h6>
+            <h3 style="color: #6c757d; font-weight: 700; margin: 0;">{{ stats.pending }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card-enhanced" style="background: white; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 4px solid #ffc107; transition: transform 0.3s, box-shadow 0.3s;">
+            <div class="stat-icon" style="font-size: 2rem; margin-bottom: 10px;">🔄</div>
+            <h6 style="color: #6c757d; margin-bottom: 8px; font-weight: 600;" data-i18n="processing">Processing</h6>
+            <h3 style="color: #ffc107; font-weight: 700; margin: 0;">{{ stats.processing }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card-enhanced" style="background: white; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 4px solid #28a745; transition: transform 0.3s, box-shadow 0.3s;">
+            <div class="stat-icon" style="font-size: 2rem; margin-bottom: 10px;">✅</div>
+            <h6 style="color: #6c757d; margin-bottom: 8px; font-weight: 600;" data-i18n="completed">Completed</h6>
+            <h3 style="color: #28a745; font-weight: 700; margin: 0;">{{ stats.completed }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card-enhanced" style="background: white; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 4px solid #dc3545; transition: transform 0.3s, box-shadow 0.3s;">
+            <div class="stat-icon" style="font-size: 2rem; margin-bottom: 10px;">❌</div>
+            <h6 style="color: #6c757d; margin-bottom: 8px; font-weight: 600;" data-i18n="failed">Failed</h6>
+            <h3 style="color: #dc3545; font-weight: 700; margin: 0;">{{ stats.failed }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Filters and Search -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get" class="d-flex gap-2">
+            <select name="status" class="form-select enhanced-select" style="border-radius: 12px; border: 2px solid #e9ecef; font-weight: 600;">
+                <option value="all" {% if status_filter == 'all' %}selected{% endif %} data-i18n="queue_all_status">📊 All Status</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="search" class="form-control enhanced-input" 
+                   data-i18n-placeholder="search_tasks_placeholder"
+                   placeholder="🔍 Search tasks..." value="{{ search_query }}"
+                   style="border-radius: 12px; border: 2px solid #e9ecef; font-weight: 600;">
+            <button type="submit" class="btn btn-outline-info" style="border-radius: 12px; font-weight: 600; border-width: 2px; padding: 12px 48px; min-width: 140px;" data-i18n="filter_button">
+                Filter
+            </button>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <div class="pagination-info" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 12px 20px; border-radius: 12px; display: inline-block; border-left: 4px solid #05998B;">
+            <span style="color: #495057; font-weight: 600;" data-i18n="showing_tasks_info" data-start="{{ page_obj.start_index }}" data-end="{{ page_obj.end_index }}" data-total="{{ page_obj.paginator.count }}">📋 Showing _START_ to _END_ of _TOTAL_ tasks</span>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Tasks Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card enhanced-table-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none;">
+            <div class="card-header" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border-radius: 16px 16px 0 0; border: none; padding: 20px;">
+                <h5 class="text-white mb-0" style="font-weight: 600;" data-i18n="task_list">📝 Task List</h5>
+            </div>
+            <div class="card-body" style="padding: 24px;">
+                {% if page_obj %}
+                <div class="table-responsive enhanced-table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch; max-height: 60vh; overflow-y: auto; border-radius: 12px;">
+                    <table class="table table-hover" id="tasksTable" style="min-width: 900px; border-radius: 12px;">
+                        <thead style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                            <tr>
+                                <th style="font-weight: 700; color: #05998B;" data-i18n="task_id_header">🔖 Task ID</th>
+                                <th style="font-weight: 700; color: #05998B;" data-i18n="task_name_header">📝 Task Name</th>
+                                <th style="font-weight: 700; color: #05998B;" data-i18n="user_name_header">👤 User</th>
+                                <th style="font-weight: 700; color: #05998B;" data-i18n="status_header">📊 Status</th>
+                                <th style="font-weight: 700; color: #05998B;" data-i18n="progress_header">⏳ Progress</th>
+                                <th style="font-weight: 700; color: #05998B;" data-i18n="positive_total_header">🎯 Positive/Total</th>
+                                <th style="font-weight: 700; color: #05998B;" data-i18n="actions_header">⚡ Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in page_obj %}
+                            <tr class="task-row enhanced-row" data-task-id="{{ task.task_id }}" style="transition: all 0.3s; cursor: pointer;">
+                                <td><code style="background: #f8f9fa; padding: 4px 8px; border-radius: 6px; color: #05998B; font-weight: 600;">{{ task.task_id }}</code></td>
+                                <td>
+                                    <a href="{% url 'core_detection:task_detail' task.task_id %}?lang={{ current_lang|default:'en' }}" class="text-decoration-none">
+                                        <strong style="color: #05998B;">{{ task.task_name }}</strong>
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if task.user_name %}
+                                        <span style="color: #6c757d;">{{ task.user_name }}</span>
+                                    {% else %}
+                                        <span style="color: #adb5bd; font-style: italic;">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge enhanced-badge bg-{% if task.status == 'completed' %}success{% elif task.status == 'processing' %}warning{% elif task.status == 'failed' %}danger{% else %}secondary{% endif %}" style="font-weight: 600; padding: 6px 12px; border-radius: 20px;">
+                                        {{ task.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress enhanced-progress" style="height: 24px; border-radius: 12px; background: #e9ecef; overflow: hidden;">
+                                        <div class="progress-bar {% if task.progress_percentage == 100 %}bg-success{% elif task.status == 'processing' %}progress-bar-striped progress-bar-animated bg-warning{% elif task.status == 'failed' %}bg-danger{% else %}bg-secondary{% endif %}" 
+                                             role="progressbar" 
+                                             style="width: {{ task.progress_percentage }}%; border-radius: 12px; font-weight: 600;"
+                                             aria-valuenow="{{ task.progress_percentage }}" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                            {{ task.progress_percentage }}%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if task.status == 'completed' %}
+                                    <span class="badge enhanced-badge bg-info" style="font-weight: 600; padding: 6px 12px; border-radius: 20px;">
+                                        {{ task.positive_count }}/{{ task.total_count }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted" style="font-style: italic;">
+                                        0/{{ task.total_count }}
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'core_detection:task_detail' task.task_id %}?lang={{ current_lang|default:'en' }}"
+                                       class="btn btn-sm btn-outline-primary me-1 enhanced-action-btn" style="border-radius: 20px; font-weight: 600; border-width: 2px;" data-i18n="view_task">👁️ View</a>
+                                    {% if task.status == 'completed' %}
+                                    <a href="{% url 'core_detection:download_task_result' task.task_id %}?lang={{ current_lang|default:'en' }}"
+                                       class="btn btn-sm btn-outline-success me-1 enhanced-action-btn" style="border-radius: 20px; font-weight: 600; border-width: 2px;" data-i18n="download_task">
+                                        ⬇️ Download
+                                    </a>
+                                    {% endif %}
+                                    <button class="btn btn-sm btn-outline-danger delete-task-btn enhanced-action-btn"
+                                            data-task-id="{{ task.task_id }}" data-task-name="{{ task.task_name }}" style="border-radius: 20px; font-weight: 600; border-width: 2px;" data-i18n="delete_task">
+                                        🗑️ Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}&search={{ search_query }}" data-i18n="previous_page">Previous</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link" data-i18n="previous_page">Previous</span>
+                        </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}&status={{ status_filter }}&search={{ search_query }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}&search={{ search_query }}" data-i18n="next_page">Next</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link" data-i18n="next_page">Next</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+                
+                {% else %}
+                <div class="text-center py-5">
+                    <h5 class="text-muted" data-i18n="no_tasks_found">No tasks found</h5>
+                    <p data-i18n="get_started_message">Get started by submitting your first task.</p>
+                    <a href="{% url 'core_detection:submit_task' %}" class="submit_mol_button" data-i18n="submission_button">
+                        Submission
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endwith %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Enhanced queue page interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to stat cards
+    const statCards = document.querySelectorAll('.stat-card-enhanced');
+    statCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+            this.style.boxShadow = '0 12px 32px rgba(0,0,0,0.15)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+        });
+    });
+    
+    // Add hover effects to table rows
+    const tableRows = document.querySelectorAll('.enhanced-row');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.background = 'rgba(5, 153, 139, 0.05)';
+            this.style.transform = 'scale(1.01)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.background = 'transparent';
+            this.style.transform = 'scale(1)';
+        });
+    });
+    
+    // Add focus effects to form inputs
+    const enhancedInputs = document.querySelectorAll('.enhanced-input, .enhanced-select');
+    enhancedInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.borderColor = '#05998B';
+            this.style.boxShadow = '0 0 0 3px rgba(5, 153, 139, 0.1)';
+        });
+        input.addEventListener('blur', function() {
+            this.style.borderColor = '#e9ecef';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // Add hover effects to action buttons
+    const actionButtons = document.querySelectorAll('.enhanced-action-btn');
+    actionButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+        });
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+});
+
+// DataTable and existing functionality
+$(document).ready(function() {
+    // Initialize DataTable
+    $('#tasksTable').DataTable({
+        "pageLength": 25,
+        "lengthMenu": [10, 25, 50, 100],
+        "order": [[0, "desc"]], // Sort by Task ID descending (column index 0)
+        "responsive": false, // Disable responsive column hiding
+        "autoWidth": false, // Disable automatic column width calculation
+        "columnDefs": [
+            { "orderable": false, "targets": [5] }, // Don't sort the Actions column (column index 5, updated)
+            { "width": "18%", "targets": [0] },    // Task ID column
+            { "width": "21%", "targets": [1] },    // Task Name column (reduced by 1/4: 28% * 0.75 = 21%)
+            { "width": "14%", "targets": [2] },    // Status column
+            { "width": "22%", "targets": [3] },    // Progress column
+            { "width": "12%", "targets": [4] },    // Positive/Total column
+            { "width": "23%", "targets": [5] }     // Actions column (increased from 16% to 23%)
+        ],
+        "language": {
+            "search": "Search studies:",
+            "lengthMenu": "Show _MENU_ studies per page",
+            "info": "Showing _START_ to _END_ of _TOTAL_ research studies",
+            "infoEmpty": "No studies found",
+            "infoFiltered": "(filtered from _MAX_ total studies)",
+            "paginate": {
+                "first": "First",
+                "last": "Last",
+                "next": "Next",
+                "previous": "Previous"
+            }
+        },
+        "dom": '<"top"f>rt<"bottom"lip><"clear">',
+        "stateSave": true
+    });
+});
+
+// Auto-refresh for processing tasks
+setInterval(function() {
+    $('.task-row').each(function() {
+        const taskId = $(this).data('task-id');
+        const row = $(this);
+        const badge = row.find('.badge');
+
+        if (badge.length === 0) return;
+
+        // Get current status from badge
+        const currentStatus = badge.text().trim().toLowerCase();
+        const badgeClasses = badge.attr('class').split(' ').filter(c => c.startsWith('bg-'));
+
+        $.getJSON('/api/task-status/' + taskId + '/', function(data) {
+            if (data.status === 'processing') {
+                // Update progress bar
+                const progressBar = row.find('.progress-bar');
+                if (progressBar.length > 0) {
+                    progressBar.css('width', data.progress + '%');
+                    progressBar.attr('aria-valuenow', data.progress);
+                    progressBar.text(data.progress + '%');
+                }
+
+                // Update current step
+                const stepText = row.find('.text-muted');
+                if (data.current_step && stepText.length > 0) {
+                    stepText.text(data.current_step);
+                }
+            } else {
+                // Check if status actually changed by comparing status values
+                // Map page status to API status
+                const statusMap = {
+                    'completed': 'completed',
+                    'processing': 'processing',
+                    'failed': 'failed',
+                    'pending': 'pending'
+                };
+
+                // Get current normalized status
+                let normalizedCurrentStatus = currentStatus;
+                Object.keys(statusMap).forEach(key => {
+                    if (currentStatus.includes(key)) {
+                        normalizedCurrentStatus = statusMap[key];
+                    }
+                });
+
+                // Only reload if status actually changed
+                if (data.status !== normalizedCurrentStatus && data.status !== 'processing') {
+                    console.log(`Status changed for task ${taskId}: ${normalizedCurrentStatus} -> ${data.status}. Reloading...`);
+                    location.reload();
+                }
+            }
+        });
+    });
+}, 20000); // Update every 20 seconds
+
+// Delete Task Functionality
+$(document).ready(function() {
+    // Delete button click
+    $('.delete-task-btn').click(function() {
+        const taskId = $(this).data('task-id');
+        const taskName = $(this).data('task-name');
+        
+        // Set modal content
+        $('#deleteTaskModal .modal-title').text('Delete Task: ' + taskName);
+        $('#deleteTaskModal #taskName').text(taskName);
+        $('#deleteTaskModal #taskId').val(taskId);
+        
+        // Show modal
+        $('#deleteTaskModal').modal('show');
+    });
+    
+    // Confirm delete
+    $('#confirmDeleteBtn').click(function() {
+        const taskId = $('#deleteTaskModal #taskId').val();
+        
+        // TODO: Enable token verification for production
+        // const tokenFile = $('#deleteTaskModal #tokenFile')[0].files[0];
+        // if (!tokenFile) {
+        //     alert('Please select your task token file to verify deletion.');
+        //     return;
+        // }
+        // 
+        // // Create form data
+        // const formData = new FormData();
+        // formData.append('token_file', tokenFile);
+        
+        // Send delete request (simplified for testing)
+        $.ajax({
+            url: '/task/' + taskId + '/delete/',
+            type: 'POST',
+            // data: formData,
+            // processData: false,
+            // contentType: false,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert('Task deleted successfully!');
+                    $('#deleteTaskModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function() {
+                alert('Error deleting task. Please try again.');
+            }
+        });
+    });
+});
+</script>
+
+<!-- Delete Task Modal -->
+<div class="modal fade" id="deleteTaskModal" tabindex="-1" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTaskModalLabel" data-i18n="delete_task_title">Delete Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <span data-i18n="warning_message"><strong>Warning:</strong> This action cannot be undone. Are you sure you want to delete this task?</span>
+                </div>
+                
+                <form id="deleteTaskForm">
+                    <input type="hidden" id="taskId" name="task_id">
+                    
+                    <div class="mb-3">
+                        <label data-i18n="task_name_label">Task Name:</label>
+                        <p id="taskName" class="form-control-static fw-bold"></p>
+                    </div>
+                    
+                    <!-- TODO: Enable token verification for production
+                    <div class="mb-3">
+                        <label for="tokenFile" class="form-label">Task Token File *</label>
+                        <input type="file" class="form-control" id="tokenFile" name="token_file" 
+                               accept=".token" required>
+                        <div class="form-text">Upload the task token file you received when creating this task.</div>
+                    </div>
+                    -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="cancel_button">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn" data-i18n="delete_task_button">
+                    <i class="bi bi-trash"></i> Delete Task
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

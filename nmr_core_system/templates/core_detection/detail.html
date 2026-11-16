@@ -1,0 +1,533 @@
+{% extends 'core_detection/base.html' %}
+{% load math_filters %}
+
+{% block title %}Task Detail - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header" style="background: #353C4B;">
+                <h4 class="text-white mb-0" data-i18n="task_details">Task Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="background: #353C4B;">
+                                <h5 class="text-white mb-0" data-i18n="task_information">Task Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <table class="table table-sm" style="table-layout: fixed; width: 100%;">
+                                            <tr>
+                                                <th data-i18n="task_name">Task Name:</th>
+                                                <td>{{ task.task_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th data-i18n="principal_investigator">Principal Investigator:</th>
+                                                <td>{{ task.submitted_by.username }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th data-i18n="submission_date">Submission Date:</th>
+                                                <td>{{ task.submitted_at|date:"M d, Y, g:i A" }}</td>
+                                            </tr>
+                                            {% if task.processing_start_time %}
+                                            <tr>
+                                                <th data-i18n="processing_start">Processing Start Time:</th>
+                                                <td>{{ task.processing_start_time|date:"M d, Y, g:i A" }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.processing_end_time %}
+                                            <tr>
+                                                <th data-i18n="processing_end">Processing End Time:</th>
+                                                <td>{{ task.processing_end_time|date:"M d, Y, g:i A" }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.completed_at %}
+                                            <tr>
+                                                <th data-i18n="completion_date">Completion Date:</th>
+                                                <td>{{ task.completed_at|date:"M d, Y, g:i A" }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <table class="table table-sm" style="table-layout: fixed; width: 100%;">
+                                            <tr>
+                                                <th data-i18n="status">Status:</th>
+                                                <td>
+                                                    <span class="badge bg-{% if task.status == 'completed' %}success{% elif task.status == 'processing' %}warning{% elif task.status == 'failed' %}danger{% else %}secondary{% endif %}">
+                                                        {{ task.get_status_display }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {% if task.processing_duration %}
+                                            <tr>
+                                                <th data-i18n="processing_duration">Processing Duration:</th>
+                                                <td>{{ task.processing_duration|floatformat:1 }} seconds</td>
+                                            </tr>
+                                            {% endif %}
+                                            <tr>
+                                                <th data-i18n="detection_results">Detection Results:</th>
+                                                <td>
+                                                    {% if task.status == 'completed' %}
+                                                    <span class="badge bg-info">
+                                                        Positive: {{ task.positive_count }} / Total: {{ task.total_count }}
+                                                    </span>
+                                                    {% else %}
+                                                    <span class="text-muted">
+                                                        Processing... ({{ task.total_count|default:1 }} samples)
+                                                    </span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th data-i18n="task_id">Task ID:</th>
+                                                <td><code style="word-break: break-all; display: block;">{{ task.task_id }}</code></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Batch Results DataTable -->
+                {% if task.result_data and task.result_data.batch_mode %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header" style="background: #353C4B;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="text-white mb-0" data-i18n="batch_results">Batch Processing Results ({{ task.result_data.total_samples }} samples)</h5>
+                                    <button class="btn btn-success btn-sm" onclick="downloadBatchResults()" data-i18n="download_all">
+                                        <i class="bi bi-download"></i> Download All Results
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="batchResultsTable" class="table table-striped dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th data-i18n="sample_id">Sample ID</th>
+                                                <th data-i18n="nmr_spectrum">NMR Spectrum</th>
+                                                <th data-i18n="result">Result</th>
+                                                <th data-i18n="details">Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for sample in task.result_data.sample_results %}
+                                            <tr>
+                                                <td><strong>{{ sample.sample_id }}</strong></td>
+                                                <td>
+                                                    <div class="nmr-spectrum-container">
+                                                        <div id="nmr-spectrum-{{ sample.sample_id }}" 
+                                                             class="nmr-spectrum-chart" 
+                                                             data-nmr-shifts="{{ sample.nmr_shifts|join:',' }}"
+                                                             style="width:100%;height:200px;">
+                                                        </div>
+                                                        <div class="nmr-values mt-2">
+                                                            <small class="text-muted">
+                                                                <strong data-i18n="values">Values:</strong> 
+                                                                {% for shift in sample.nmr_shifts %}
+                                                                    {{ shift }}{% if not forloop.last %}, {% endif %}
+                                                                {% endfor %}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {% if sample.integrated_decision.is_core_molecule %}
+                                                        <span class="badge bg-success" data-i18n="positive">Positive</span>
+                                                    {% else %}
+                                                        <span class="badge bg-danger" data-i18n="negative">Negative</span>
+                                                    {% endif %}
+
+                                                    <div class="mt-1">
+                                                        <small class="text-muted">
+                                                            <strong data-i18n="votes">Votes:</strong>
+                                                            {{ sample.integrated_decision.positive_votes }}/3
+                                                        </small>
+                                                    </div>
+
+                                                    {% if sample.integrated_decision.voting_details %}
+                                                        <div class="mt-1" style="font-size: 0.75rem;">
+                                                            {% with voting=sample.integrated_decision.voting_details %}
+                                                                {% if voting.xgboost is not None %}
+                                                                    {% if voting.xgboost %}
+                                                                        <span class="badge bg-success" style="font-size: 0.65rem;">XGB</span>
+                                                                    {% else %}
+                                                                        <span class="badge bg-secondary" style="font-size: 0.65rem;">XGB</span>
+                                                                    {% endif %}
+                                                                {% endif %}
+
+                                                                {% if voting.cmgnet_frag is not None %}
+                                                                    {% if voting.cmgnet_frag %}
+                                                                        <span class="badge bg-success" style="font-size: 0.65rem;">FRAG</span>
+                                                                    {% else %}
+                                                                        <span class="badge bg-secondary" style="font-size: 0.65rem;">FRAG</span>
+                                                                    {% endif %}
+                                                                {% endif %}
+
+                                                                {% if voting.cmgnet_smiles is not None %}
+                                                                    {% if voting.cmgnet_smiles %}
+                                                                        <span class="badge bg-success" style="font-size: 0.65rem;">SMILES</span>
+                                                                    {% else %}
+                                                                        <span class="badge bg-secondary" style="font-size: 0.65rem;">SMILES</span>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endwith %}
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a href="{% url 'core_detection:task_result' task.task_id %}?id={{ sample.sample_id }}" class="btn btn-sm btn-primary" data-i18n="details_view">
+                                                        View Details
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row mb-4" style="display: none;">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header" style="background: #353C4B;">
+                                <h5 class="text-white mb-0">Input Parameters</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Molecular Information</h6>
+                                        <table class="table table-sm">
+                                            {% if task.input_data.molecule_name %}
+                                            <tr>
+                                                <th>Molecule Name:</th>
+                                                <td>{{ task.input_data.molecule_name }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.input_data.smiles %}
+                                            <tr>
+                                                <th>SMILES:</th>
+                                                <td><code>{{ task.input_data.smiles }}</code></td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.input_data.molecular_formula %}
+                                            <tr>
+                                                <th>Molecular Formula:</th>
+                                                <td>{{ task.input_data.molecular_formula }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.input_data.molecular_weight %}
+                                            <tr>
+                                                <th>Molecular Weight:</th>
+                                                <td>{{ task.input_data.molecular_weight }} g/mol</td>
+                                            </tr>
+                                            {% endif %}
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Analysis Parameters</h6>
+                                        <table class="table table-sm">
+                                            {% if task.input_data.nmr_frequency %}
+                                            <tr>
+                                                <th>NMR Frequency:</th>
+                                                <td>{{ task.input_data.nmr_frequency }} MHz</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.input_data.solvent %}
+                                            <tr>
+                                                <th>Solvent:</th>
+                                                <td>{{ task.input_data.solvent }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.input_data.temperature %}
+                                            <tr>
+                                                <th>Temperature:</th>
+                                                <td>{{ task.input_data.temperature }} K</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if task.input_data.analysis_method %}
+                                            <tr>
+                                                <th>Analysis Method:</th>
+                                                <td>{{ task.input_data.analysis_method }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% if logs %}
+                <div class="row mb-4" style="display: none;">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header" style="background: #353C4B;">
+                                <h5 class="text-white mb-0">Processing Log</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="log-entries" style="max-height: 300px; overflow-y: auto;">
+                                    {% for log in logs %}
+                                    <div class="log-entry mb-2">
+                                        <small class="text-muted">{{ log.timestamp|date:"H:i:s" }}</small>
+                                        <span class="badge bg-{{ log.level }} ms-2">{{ log.level }}</span>
+                                        <p class="mb-0 mt-1">{{ log.message }}</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Navigation buttons removed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if task.result_data %}
+<!-- Local Libraries -->
+<link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css" type="text/css"/>
+<link rel="stylesheet" href="/static/datatables/dataTables.bootstrap5.min.css" type="text/css"/>
+
+<!-- CanvasXpress Library -->
+<link rel="stylesheet" href="/static/canvasxpress/canvasXpress.css" type="text/css"/>
+<script type="text/javascript" src="/static/canvasxpress/canvasXpress.min.js"></script>
+
+<!-- DataTables Library -->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/datatables/dataTables.bootstrap5.min.js"></script>
+<script src="/static/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- Plotly.js Library -->
+<script src="/static/plotly/plotly.min.js"></script>
+
+<style>
+.nmr-spectrum-container {
+    min-width: 400px;
+}
+
+/* Fix table width issues */
+.table-sm code {
+    word-break: break-all;
+    white-space: normal;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.table-sm th {
+    width: auto;
+    min-width: 120px;
+}
+
+.table-sm td {
+    max-width: 0; /* Allows flex-based width distribution */
+}
+
+.nmr-spectrum-chart {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.nmr-values {
+    font-size: 11px;
+    max-height: 60px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    padding: 5px;
+    border-radius: 3px;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    console.log("✅ Task detail page loaded successfully");
+
+    // Initialize DataTable for batch results
+    {% if task.result_data and task.result_data.batch_mode %}
+    if ($('#batchResultsTable').length) {
+        $('#batchResultsTable').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [[5, 10, 25, 50, 100], [5, 10, 25, 50, 100]],
+            "order": [[0, "asc"]],
+            "responsive": true,
+            "language": {
+                "search": "Search:",
+                "lengthMenu": "Show _MENU_ entries per page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ samples",
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": "Next",
+                    "previous": "Previous"
+                }
+            },
+            "drawCallback": function() {
+                // Re-initialize NMR charts after DataTable redraw
+                initializeNMRCharts();
+            }
+        });
+        console.log("✅ DataTable initialized for batch results");
+        
+        // Initialize NMR spectrum charts
+        initializeNMRCharts();
+    }
+    {% endif %}
+});
+
+function initializeNMRCharts() {
+    console.log("🚀 Initializing NMR spectrum charts...");
+    
+    // Find all NMR spectrum containers
+    $('.nmr-spectrum-chart').each(function() {
+        const chartId = $(this).attr('id');
+        const nmrShiftsStr = $(this).data('nmr-shifts');
+        
+        if (!nmrShiftsStr) {
+            console.warn(`⚠️ No NMR shifts data for ${chartId}`);
+            return;
+        }
+        
+        // Parse NMR shifts
+        const nmrShifts = nmrShiftsStr.split(',').map(function(shift) {
+            return parseFloat(shift.trim());
+        }).filter(function(shift) {
+            return !isNaN(shift);
+        });
+        
+        if (nmrShifts.length === 0) {
+            console.warn(`⚠️ Invalid NMR shifts data for ${chartId}`);
+            return;
+        }
+        
+        console.log(`📊 Creating chart for ${chartId} with ${nmrShifts.length} shifts`);
+        
+        // Prepare data for Plotly bar chart
+        const yValues = nmrShifts.map(() => 1.0); // Uniform height of 1
+        
+        // Create trace for bar chart
+        const trace1 = {
+            x: nmrShifts,
+            y: yValues,
+            type: 'bar',
+            width: 0.5,
+            marker: {
+                color: 'green'
+            },
+            name: 'NMR Shifts',
+            hovertemplate: '%{x:.2f} ppm<extra></extra>'
+        };
+        
+        // Create layout for the chart
+        const layout = {
+            title: {
+                text: 'NMR Chemical Shifts',
+                font: {
+                    size: 10
+                }
+            },
+            xaxis: {
+                title: 'Chemical Shift (ppm)',
+                titlefont: {
+                    size: 10
+                },
+                range: [-10, 230],
+                showgrid: true,
+                zeroline: true,
+                showline: true,
+                showticklabels: true,
+                tickfont: {
+                    size: 8
+                },
+                side: 'bottom',
+                anchor: 'y',
+                position: 0
+            },
+            yaxis: {
+                title: 'Intensity',
+                titlefont: {
+                    size: 10
+                },
+                showgrid: true,
+                zeroline: false,
+                showticklabels: false, // Hide y-axis labels for cleaner look
+                range: [-0.1, 1.2],
+                showline: true,
+                tickfont: {
+                    size: 8
+                }
+            },
+            plot_bgcolor: 'rgba(243, 243, 243, 0.8)',
+            paper_bgcolor: 'rgba(0, 0, 0, 0)',
+            margin: {
+                l: 30,  // Reduced left margin
+                r: 20,
+                t: 30,  // Reduced top margin
+                b: 40   // Reduced bottom margin
+            }
+        };
+        
+        // Create config for the chart
+        const config = {
+            responsive: true,
+            displayModeBar: false, // Hide mode bar for cleaner look in table
+            displaylogo: false
+        };
+        
+        // Create the chart
+        try {
+            Plotly.newPlot(chartId, [trace1], layout, config);
+            console.log(`✅ Chart created for ${chartId}`);
+        } catch (error) {
+            console.error(`❌ Error creating chart for ${chartId}:`, error);
+        }
+    });
+    
+    console.log("✅ NMR spectrum charts initialization completed");
+}
+
+// Function to download batch results
+function downloadBatchResults() {
+    const taskId = '{{ task.task_id }}';
+    
+    // Construct download URL for batch results
+    const downloadUrl = `/task/${taskId}/download-batch-results/`;
+    
+    // Create hidden link and trigger download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `batch_results_${taskId}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    console.log(`Downloading batch results for task ${taskId}`);
+}
+</script>
+{% endif %}
+{% endblock %}

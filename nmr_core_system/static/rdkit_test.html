@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RDKit.js Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-container { margin: 20px 0; border: 1px solid #ccc; padding: 15px; }
+        .smiles-svg { width: 300px; height: 300px; border: 1px solid #ddd; }
+        #console { background: #f5f5f5; padding: 10px; margin-top: 20px; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>RDKit.js Test Page</h1>
+
+    <div class="test-container">
+        <h2>Test 1: Basic RDKit Loading</h2>
+        <div id="loading-status">Loading RDKit...</div>
+        <div id="test-svg-1" class="smiles-svg"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 2: SMILES Rendering</h2>
+        <div>SMILES: <code>CC(=O)Oc1ccccc1C(=O)O</code> (Aspirin)</div>
+        <div id="test-svg-2" class="smiles-svg"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 3: Quinolone Core Structure</h2>
+        <div>SMILES: <code>O=C(O)c1cn(C2CC2)c2cc(-c3ccc4c(c3)CNC4)c(F)cc2c1=O</code></div>
+        <div id="test-svg-3" class="smiles-svg"></div>
+    </div>
+
+    <div id="console"></div>
+
+    <script src="/static/rdkit/RDKit_minimal.js"></script>
+    <script>
+        function log(message) {
+            const consoleDiv = document.getElementById('console');
+            consoleDiv.innerHTML += message + '<br>';
+            console.log(message);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Page loaded');
+
+            // Wait for RDKit to load
+            let checkCount = 0;
+            const checkRDKit = setInterval(function() {
+                checkCount++;
+                log(`🔍 RDKit check ${checkCount}: initRDKitModule = ${typeof initRDKitModule}`);
+
+                if (typeof initRDKitModule !== 'undefined') {
+                    clearInterval(checkRDKit);
+                    log('✅ initRDKitModule found!');
+
+                    document.getElementById('loading-status').innerHTML = '✅ RDKit.js loaded!';
+
+                    // Configure RDKit
+                    const rdkitConfig = {
+                        locateFile: function(file) {
+                            log(`📁 Loading WASM: ${file}`);
+                            return `/static/rdkit/${file}`;
+                        }
+                    };
+
+                    initRDKitModule(rdkitConfig).then(function(RDKit) {
+                        log('✅ RDKit module initialized');
+                        log(`🧪 RDKit type: ${typeof RDKit}`);
+                        log(`🧪 get_mol type: ${typeof RDKit.get_mol}`);
+
+                        // Test 1: Simple molecule
+                        try {
+                            const mol1 = RDKit.get_mol("CCO");
+                            log(`🧪 Test molecule created: ${mol1}`);
+                            const svg1 = mol1.get_svg();
+                            document.getElementById('test-svg-1').innerHTML = svg1;
+                            log('✅ Test 1 passed: Basic SVG generated');
+                        } catch (e) {
+                            log(`❌ Test 1 failed: ${e.message}`);
+                        }
+
+                        // Test 2: Aspirin
+                        try {
+                            const mol2 = RDKit.get_mol("CC(=O)Oc1ccccc1C(=O)O");
+                            const svg2 = mol2.get_svg();
+                            document.getElementById('test-svg-2').innerHTML = svg2;
+                            log('✅ Test 2 passed: Aspirin SVG generated');
+                        } catch (e) {
+                            log(`❌ Test 2 failed: ${e.message}`);
+                        }
+
+                        // Test 3: Quinolone
+                        try {
+                            const mol3 = RDKit.get_mol("O=C(O)c1cn(C2CC2)c2cc(-c3ccc4c(c3)CNC4)c(F)cc2c1=O");
+                            const svg3 = mol3.get_svg();
+                            document.getElementById('test-svg-3').innerHTML = svg3;
+                            log('✅ Test 3 passed: Quinolone SVG generated');
+                        } catch (e) {
+                            log(`❌ Test 3 failed: ${e.message}`);
+                        }
+
+                    }).catch(function(error) {
+                        log(`❌ RDKit initialization failed: ${error.message}`);
+                    });
+                }
+
+                if (checkCount >= 100) {
+                    clearInterval(checkRDKit);
+                    log('⏰ Timeout: RDKit failed to load');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

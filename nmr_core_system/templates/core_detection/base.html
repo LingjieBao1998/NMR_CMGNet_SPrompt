@@ -1,0 +1,1523 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI-Powered Quinolone Detection System{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+    
+    <!-- Source Sans Pro Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+    
+    <!-- DataTables CSS (Local) -->
+    <link rel="stylesheet" href="{% static 'vendor/datatables/jquery.dataTables.min.css' %}">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.0">
+    
+    <!-- Language Switcher Script (moved to head to ensure early definition) -->
+    <script>
+    // Define toggleLanguage function FIRST to ensure it's available before DOM is ready
+    window.toggleLanguage = function() {
+        // This will be properly initialized after DOMContentLoaded
+        console.log('Language toggle requested - initializing...');
+        if (typeof window.initializeLanguageSystem === 'function') {
+            window.initializeLanguageSystem();
+        }
+    };
+
+    // Placeholder for language initialization
+    window.currentLanguage = 'en';
+    </script>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation - Footer Style -->
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #2c3e50; border-bottom: 3px solid #05998B;">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'core_detection:home' %}" style="color: white; display: flex; align-items: center; gap: 10px;">
+                <img src="{% static 'images/nifdc_logo.png' %}" alt="AI-Powered Quinolone Detection System" style="height: 30px; width: auto; background: white; margin: 0; padding: 0; border: none;">
+                AI-Powered Quinolone Detection System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border: 3px solid #ffffff; padding: 10px 14px; background: rgba(255,255,255,0.9); border-radius: 6px;">
+                <span class="navbar-toggler-icon" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 30 30\'%3E%3Cpath stroke=\'%23000000\' stroke-width=\'4\' stroke-linecap=\'round\' d=\'M4 7h22M4 15h22M4 23h22\'/%3E%3C/svg%3E'); width: 28px; height: 28px; display: inline-block;"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link enhanced-nav-link" href="{% url 'core_detection:home' %}" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s;">
+                            🏠 Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link enhanced-nav-link" href="{% url 'core_detection:submit_task' %}" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s;">
+                            🧬 Submission
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link enhanced-nav-link" href="{% url 'core_detection:task_queue' %}" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s;">
+                            📊 Queue
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link enhanced-nav-link" href="{% url 'core_detection:contact' %}" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s;">
+                            📞 Contact
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link enhanced-nav-link" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px;">👤 {{ user_display_name }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'core_detection:logout' %}" style="display: inline; margin: 0;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link enhanced-nav-link btn btn-link" data-i18n="nav_logout" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s;">🚪 Logout</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link enhanced-nav-link" href="{% url 'core_detection:login' %}" data-i18n="nav_login" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s;">🔐 Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link enhanced-nav-link" href="{% url 'core_detection:register' %}" data-i18n="nav_register" style="color: rgba(255,255,255,0.9); font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.3s;">📝 Register</a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- Language Switcher -->
+                    <li class="nav-item ms-2">
+                        <button class="btn language-btn" onclick="toggleLanguage()" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); color: white; border: none; border-radius: 25px; padding: 8px 16px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(5, 153, 139, 0.3); transition: all 0.3s;">
+                            🌐 <span id="currentLang">EN</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Animation Overlay (Hidden) -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-container">
+            <div class="loading-spinner">
+                <div class="loading-ring"></div>
+                <div class="loading-ring"></div>
+                <div class="loading-ring"></div>
+                <div class="loading-ring"></div>
+            </div>
+            <div class="loading-text">
+                <div class="loading-title">NMR Core Detection System</div>
+                <div class="loading-subtitle">Initializing Analysis Platform...</div>
+            </div>
+            <div class="loading-progress">
+                <div class="loading-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container" style="padding-top: 80px; padding-bottom: 120px; min-height: calc(100vh - 200px);">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer - PROTAC-DB Style with Green Border -->
+    <footer class="text-center py-3" style="position: fixed; bottom: 0; width: 100%; z-index: 1000; background-color: #2c3e50; border-top: 3px solid #05998B; border-left: 2px solid #05998B; border-right: 2px solid #05998B; border-bottom: 2px solid #05998B;">
+        <div class="container">
+            <p class="text-white mb-2">
+                &copy; 2025 AI-Powered Quinolone Detection. All rights reserved.
+            </p>
+            <p class="text-white-50 mb-0" style="font-size: 0.8rem;">
+                <span class="visitor-counter">Page Visits: {{ total_visits|default:0 }}</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static 'bootstrap/bootstrap.bundle.min.js' %}"></script>
+    
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    
+    <!-- DataTables JS (Local) -->
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- Enhanced Navigation Effects -->
+    <style>
+    .enhanced-nav-link:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .enhanced-nav-link:active {
+        transform: translateY(0);
+    }
+    
+    /* Ensure emoji are properly rendered */
+    .enhanced-nav-link {
+        font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Android Emoji", EmojiSymbols, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .language-btn {
+        font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Android Emoji", EmojiSymbols, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    </style>
+    
+    <script>
+    // Enhanced navigation hover effects
+    document.addEventListener('DOMContentLoaded', function() {
+        const navLinks = document.querySelectorAll('.enhanced-nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.15)';
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            });
+            link.addEventListener('mouseleave', function() {
+                this.style.background = 'transparent';
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+    });
+    </script>
+    
+    <!-- Language Switcher Script -->
+    <script>
+    // Language system initialization function
+    window.initializeLanguageSystem = function() {
+        // This will be called after all translations are loaded
+        console.log('Language system initialized');
+        
+        // Replace the placeholder toggleLanguage with the full implementation
+        window.toggleLanguage = fullToggleLanguage;
+        
+        // Apply initial language
+        window.currentLanguage = getInitialLanguage();
+        updateLanguageDisplay();
+        applyTranslations(window.currentLanguage);
+        setTimeout(() => {
+            updateLinksLanguage();
+        }, 200);
+    };
+
+    // Complete translation dictionary with all text content
+    const TRANSLATIONS = {
+        'en': {
+            // Navigation
+            'nav_home': '🏠 Home',
+            'nav_submission': '🧬 Submission',
+            'nav_queue': '📊 Queue',
+            'nav_contact': '📞 Contact',
+            'nav_welcome': '👤 Welcome,',
+            'nav_login': '🔐 Login',
+            'nav_register': '📝 Register',
+            'nav_logout': '🚪 Logout',
+            'login_title': 'Login',
+            'login_header': 'Sign In',
+            'login_button': 'Login',
+            'login_identifier': '👤 Email',
+            'login_identifier_placeholder': 'Enter your email address',
+            'username': '👤 Username',
+            'username_placeholder': 'Choose a username',
+            'username_display_help': 'Display name (can be the same as others). You will log in with your email.',
+            'password': '🔒 Password',
+            'password_placeholder': 'At least 8 characters',
+            'confirm_password': '🔒 Confirm Password',
+            'confirm_password_placeholder': 'Repeat your password',
+            'need_account_register': 'Need an account? Register',
+            'register_title': 'Create Account',
+            'register_header': 'Register',
+            'register_button': 'Register',
+            'have_account_login': 'Have an account? Login',
+            'email_address': '📧 Email Address',
+            'email_placeholder': 'your.email@example.com',
+            'register_email_help': 'A verification link will be sent to this address.',
+            'institution': '🏢 Institution (Optional)',
+            'institution_placeholder': 'Your university / company / lab',
+            'register_flow_notice': 'After registration, click the link in the verification email to activate your account and log in automatically. Your data will be private to your account.',
+            'check_email_header': '📧 Check Your Email',
+            'verification_sent': 'A verification link has been sent to:',
+            'click_link_instructions': 'Click the link in the email to activate your account — you will be logged in automatically. The link is valid for 48 hours.',
+            'check_spam_folder': "If you don't see the email, please check your spam folder.",
+            'back_home': 'Back to Home',
+            'forgot_password_link': 'Forgot password?',
+            'forgot_password_header': '🔑 Forgot Password',
+            'forgot_password_notice': 'Enter your registered email address. We will send you a link to set a new password (valid for 1 hour).',
+            'send_reset_link': 'Send Reset Link',
+            'back_to_login': '← Back to Login',
+            'reset_email_sent_header': '📧 Reset Link Sent',
+            'if_account_exists': 'If an account exists for this email, a reset link has been sent to:',
+            'reset_link_instructions': 'Click the link in the email to set a new password. The link is valid for 1 hour and can be used only once.',
+            'reset_password_header': '🔒 Set New Password',
+            'new_password': '🔒 New Password',
+            'reset_password_button': 'Reset Password',
+            'hello': 'Hello',
+            
+            // Page titles
+            'page_title': 'AI-Powered Quinolone Detection System',
+            'site_title': 'AI-Powered Quinolone Detection System',
+            
+            // Hero section
+            'hero_title': 'AI-Powered Quinolone Detection System',
+            'hero_subtitle': 'Advanced <sup>13</sup>C NMR Core Structure Detection Using Deep Learning',
+            'start_analysis': 'Start Analysis',
+            'view_queue': 'View Queue',
+            'platform_overview': 'Platform Overview',
+            'platform_description': 'This platform provides computational methodologies for automated core structure detection using Nuclear Magnetic Resonance (NMR) spectroscopy data. Our system employs advanced deep learning algorithms to identify core structures and structural motifs within complex molecular systems, facilitating drug discovery, pharmaceutical research, and chemical education research.',
+            
+            // Statistics
+            'total_tasks': 'Total Tasks',
+            'pending_tasks': 'Pending',
+            'processing_tasks': 'Processing',
+            'completed_tasks': 'Completed',
+            'failed_tasks': 'Failed',
+            'f1_score_accuracy': 'F1 Score Accuracy',
+            'ai_powered': 'AI-Powered',
+            'deep_learning_models': 'Deep Learning Models',
+            
+            // Common labels
+            'task_name': 'Task Name',
+            'status': 'Status',
+            'actions': 'Actions',
+            'processing': 'Processing',
+            'completed': 'Completed',
+            'failed': 'Failed',
+            'pending': 'Pending',
+            'submit': 'Submit',
+            'details': 'Details',
+            'download': 'Download',
+            'search': 'Search',
+            'view': 'View',
+            'close': 'Close',
+            'cancel': 'Cancel',
+            'save': 'Save',
+            'delete': 'Delete',
+            'edit': 'Edit',
+            'visitor': 'Visitor',
+            
+            // Task related
+            'principal_investigator': 'Principal Investigator',
+            'submission_date': 'Submission Date',
+            'processing_start': 'Processing Start Time',
+            'processing_end': 'Processing End Time',
+            'completion_date': 'Completion Date',
+            'processing_duration': 'Processing Duration',
+            'detection_results': 'Detection Results',
+            'task_id': 'Task ID',
+            'task_details': 'Task Details',
+            'task_information': 'Task Information',
+            
+            // Results
+            'positive': 'Positive',
+            'negative': 'Negative',
+            'votes': 'Votes',
+            'sample_id': 'Sample ID',
+            'nmr_spectrum': 'NMR Spectrum',
+            'result': 'Result',
+            'details_view': 'View Details',
+            'download_all': 'Download All Results',
+            'batch_results': 'Batch Processing Results',
+            'batch_samples': 'samples',
+            
+            // Chemical information
+            'molecule_name': 'Molecule Name',
+            'smiles': 'SMILES',
+            'molecular_formula': 'Molecular Formula',
+            'molecular_weight': 'Molecular Weight',
+            'nmr_frequency': 'NMR Frequency',
+            'solvent': 'Solvent',
+            'temperature': 'Temperature',
+            'analysis_method': 'Analysis Method',
+            
+            // NMR related
+            'nmr_shifts': 'NMR Shifts',
+            'chemical_shift': 'Chemical Shift',
+            'intensity': 'Intensity',
+            'values': 'Values',
+            
+            // Messages
+            'processing_samples': 'Processing... samples',
+            'language_changed': 'Language',
+            'page_visits': 'Page Visits',
+            'copyright': 'All rights reserved',
+            'copyright_text': '© 2025 China National Institutes for Food and Drug Control. All rights reserved.',
+            
+            // Form related
+            'submit_task': 'Submit Task',
+            'input_nmr_data': 'Input NMR Data',
+            'select_file': 'Select File',
+            'browse': 'Browse',
+            'upload': 'Upload',
+            'task_name_label': 'Task Name',
+            'task_description': 'Task Description',
+            'choose_file': 'Choose File',
+            'no_file_chosen': 'No file chosen',
+            'file_upload_label': 'Click to upload CSV file',
+            
+            // Submit page specific
+            'submit_header_title': '🧬 Submit Quinolone Scaffold Analysis',
+            'submit_header_subtitle': 'Upload your <sup>13</sup>C NMR data for advanced AI-powered detection',
+            'task_details': '📝 Analysis Task Details',
+            'success_message': '✅ Success!',
+            'error_message': '❌ Error!',
+            'input_data_section': '📊 Input Data',
+            'c13_nmr_data': '<sup>13</sup>C NMR Data',
+            'load_example': '📋 Load Example',
+            'nmr_placeholder': 'Enter ¹³C NMR data (e.g., 176.49, 166.02, 153.61, 152.37...)',
+            'nmr_help_text': '💡 Optional: Provide <sup>13</sup>C NMR spectroscopy data (comma-separated values). Either this OR CSV file is required.',
+            'upload_csv_file': '📁 Upload CSV File',
+            'download_example_csv': '⬇️ Example CSV',
+            'csv_help_text': '📋 Optional: Upload CSV file with columns: id, NMR. Maximum 5000 entries per file. Either this OR NMR data text is required.',
+            'task_information_section': '🔧 Task Information',
+            'task_name_input': 'Task Name *',
+            'task_name_placeholder': 'Enter a descriptive name for your task',
+            'email_address': '📧 Email Address',
+            'email_placeholder': 'your.email@example.com',
+            'email_help_text': '💡 Optional: Provide your email to receive notifications about task status.',
+            'user_name': '👤 User Name',
+            'user_name_placeholder': 'Enter your name',
+            'user_name_help_text': '💡 Optional: Provide your name for better task management.',
+            'advanced_options': '⚙️ Advanced Options',
+            'advanced_options_subtitle': 'Configure advanced analysis settings',
+            'xgboost_threshold': '🎯 XGBoost Threshold',
+            'threshold_placeholder': 'Enter threshold between 0.1 and 0.999',
+            'threshold_help_text': '💡 XGBoost confidence threshold (0.1 - 0.999, default: 0.5). Values outside this range will be clipped.',
+            'topk_predictions': '🔝 Top-K Predictions',
+            'topk_placeholder': 'Enter number between 1 and 30',
+            'topk_help_text': '💡 Number of top predictions to generate (1-30, default: 10). Only applicable for Ensemble model.',
+            'cancel_button': '🏠 Cancel',
+            'submit_analysis': '🚀 Submit Analysis',
+            'submission_guidelines': '📋 Submission Guidelines',
+            'guidelines_input_data': '📊 Input Data:',
+            'guidelines_input_text': '<strong style="color: #05998B;"><sup>13</sup>C NMR Data</strong> OR <strong style="color: #05998B;">CSV File</strong> - Provide either <sup>13</sup>C NMR data (comma-separated values) OR upload a CSV file with columns: id, NMR (max 5000 entries per file). One of them is required, but not both.',
+            'guidelines_task_info': '🔧 Task Information:',
+            'guidelines_task_name': '<strong style="color: #05998B;">Task Name *</strong> - Provide a descriptive name',
+            'guidelines_email': '<strong style="color: #05998B;">Email Address</strong> - Receive notifications about task status',
+            'guidelines_advanced': '⚙️ Advanced Options:',
+            'guidelines_threshold': '<strong style="color: #05998B;">XGBoost Threshold</strong> - Set confidence threshold (0.1-0.999, default: 0.5) for the Ensemble model',
+            'guidelines_topk': '<strong style="color: #05998B;">Top-K Predictions</strong> - Number of top predictions to generate for Ensemble model (1-30, default: 10)',
+            'help_support': '💚 Help & Support',
+            'help_text': 'Need assistance with your submission? Our support team is here to help you with any questions or technical issues.',
+            'contact_support': '📞 Contact Support',
+            'show_button': 'Show',
+            'hide_button': 'Hide',
+            
+            // Queue page specific
+            'queue_header_title': 'Analysis Task Queue',
+            'queue_header_subtitle': 'Monitor your AI-Powered Quinolone Detection System Tasks in Real-Time',
+            'task_management': '📋 Task Management',
+            'new_submission': '🧬 Submission',
+            'all_tasks': 'All Tasks',
+            'queue_all_status': 'All Status',
+            'search_tasks_placeholder': '🔍 Search tasks...',
+            'filter_button': 'Filter',
+            'showing_tasks_info': 'Showing _START_ to _END_ of _TOTAL_ tasks',
+            'task_list': 'Task List',
+            'task_id_header': 'Task ID',
+            'task_name_header': 'Task Name',
+            'user_name_header': '👤 User',
+            'status_header': 'Status',
+            'progress_header': 'Progress',
+            'positive_total_header': 'Positive/Total',
+            'actions_header': 'Actions',
+            'view_task': 'View',
+            'download_task': 'Download',
+            'delete_task': 'Delete',
+            'no_tasks_found': 'No tasks found',
+            'get_started_message': 'Get started by submitting your first task.',
+            'submission_button': 'Submission',
+            'delete_task_title': 'Delete Task',
+            'warning_message': '<strong>Warning:</strong> This action cannot be undone. Are you sure you want to delete this task?',
+            'task_name_label': 'Task Name:',
+            'cancel_button': 'Cancel',
+            'delete_task_button': '<i class="bi bi-trash"></i> Delete Task',
+            'delete_success': 'Task deleted successfully!',
+            'delete_error': 'Error deleting task. Please try again.',
+            'previous_page': 'Previous',
+            'next_page': 'Next',
+            
+            // Contact page specific
+            'contact_header_title': '📞 Contact Us',
+            'contact_header_subtitle': 'Get in touch with our AI-Powered Quinolone Detection System support team',
+            'send_message_title': '📝 Send us a Message',
+            'message_success_title': '✅ Message Sent Successfully!',
+            'message_success_text': 'Thank you for contacting us. We will get back to you within 1-2 business days.',
+            'message_success_footer': 'You can submit another message below or return to the',
+            'home_page_link': 'home page',
+            'contact_information': '📋 Contact Information',
+            'email_label': 'Email',
+            'response_time_label': 'Response Time',
+            'response_time_text': 'Usually within 1-2 business days',
+            'quick_links': '🔗 Quick Links',
+            'faq_title': '❓ Frequently Asked Questions',
+            'faq_model_difference': 'What is the difference between Ensemble Model and XGBoost Model?',
+            'faq_processing_time': 'How long does processing take?',
+            'faq_file_formats': 'What file formats are supported?',
+            'faq_token_download': 'How do I download my task token file?',
+            'faq_advanced_options': 'What are the advanced options?',
+            'faq_free_service': 'Is this service free to use?',
+            'faq_lost_token': 'I lost my token file. Can I still access my task?',
+            
+            // FAQ content
+            'faq_model_difference_content': '<strong>Ensemble Model (Recommended):</strong> Two mode of CMGNet + XGBoost models for comprehensive detection. Best for complex molecular structures and research applications.<br><br><strong>XGBoost Model:</strong> Gradient boosting approach for faster processing. Suitable for quick analysis and simpler molecular patterns.',
+            'faq_processing_time_content': '<strong>Standard Processing:</strong> 30-60 seconds per task<br><strong>Large Datasets:</strong> May take 2-3 minutes depending on complexity<br><strong>Processing Time:</strong> Varies by model selection (XGBoost is typically faster than CMGNet)',
+            'faq_file_formats_content': '<strong>CSV Files:</strong> Two columns required (id, NMR) with comma-separated values in quotes. Maximum 5,000 entries per file.<br><strong>Direct Input:</strong> <sup>13</sup>C NMR data can be entered directly in the submission form as comma-separated chemical shift values.<br><strong>Example:</strong> <code>176.49, 166.02, 153.61, 152.37, 148.32...</code>',
+            'faq_token_download_content': '<strong>Automatic Download:</strong> Your task token file downloads automatically immediately after submission.<br><strong>File Format:</strong> <code>task_[TASK_ID].token</code> (e.g., <code>task_NMR_20260107141014_1cb6b497.token</code>)<br><strong>Important:</strong> Save this file securely - you will need it to view or delete your task later.',
+            'faq_advanced_options_content': '<strong>Model Selection:</strong> Choose between Ensemble Model (two mode of CMGNet + XGBoost models) or XGBoost Model (gradient boosting only)<br><strong>XGBoost Threshold:</strong> Set confidence threshold (0.1-0.999, default: 0.5). Higher values = stricter filtering<br><strong>AR Predictions:</strong> Number of top predictions for autoregressive model (1-30, default: 10). Only applies to Ensemble Model',
+            'faq_free_service_content': '<strong>Yes!</strong> This is a free academic research tool for quinolone detection using advanced NMR spectroscopy and machine learning. No registration or payment required.',
+            'faq_lost_token_content': '<strong>Unfortunately, no.</strong> The token file is required for task security and privacy. Without it, you cannot view or delete your task. Please make sure to save your token file in a secure location when creating new tasks.',
+            'send_message_button': '📤 Send Message',
+            'sending_text': 'Sending...',
+            'required_field_warning': 'Please fill in all required fields (Email and Message).',
+            'invalid_email_warning': 'Please enter a valid email address.',
+            'placeholder_name': 'Enter your full name',
+            'placeholder_email': 'Enter your email address',
+            'placeholder_message': 'Type your message here...',
+            'contact_page': 'Contact',
+            'your_email': 'Your Email',
+            'subject': 'Subject',
+            'message': 'Message',
+            'send_message': 'Send Message',
+            
+            // Home page specific
+            'current_research_studies': 'Current Research Studies',
+            'research_tools': 'Research Tools',
+            'platform_information': 'Platform Information',
+            'initiate_new_task': 'Initiate New Task',
+            'research_queue': 'Research Queue',
+            'research_support': 'Research Support',
+            'system_status': 'System Status',
+            'platform_version': 'Platform Version',
+            'computational_method': 'Computational Method',
+            'online': 'Online',
+            'deep_learning_core_detection': 'Deep learning-based AI-Powered Quinolone Detection System',
+            'no_research_studies': 'No research studies have been submitted yet.',
+            'initiate_first_study': 'Initiate your first core detection study.',
+            
+            // Methodology section
+            'computational_methodology': 'Computational Methodology',
+            'data_acquisition': 'Data Acquisition',
+            'data_acquisition_desc': 'High-quality NMR spectroscopy data collection from validated sources including NMRShiftDB, BMRB, and HMDB databases with comprehensive spectral information.',
+            'deep_learning_analysis': 'Deep Learning Analysis',
+            'deep_learning_analysis_desc': 'By integrating Cress-XGBoost prompts with <sup>13</sup>C NMR data, the Transformer model enables robust automated detection of <span style="color: #dc3545; font-weight: bold;">Quinolone Scaffold</span>, delivering an <span style="color: #dc3545; font-weight: bold;">F1 score of 96.2%</span>.',
+            'results_validation': 'Results & Validation',
+            'results_validation_desc': 'Comprehensive statistical analysis, test with compounds in real-world scenario, and detailed reporting of detected Quinolone derivatives with confidence metrics.',
+            'validated_spectral_databases': 'Validated spectral databases',
+            'quality_controlled_datasets': 'Quality-controlled datasets',
+            'comprehensive_molecular_data': 'Comprehensive molecular data',
+            'cress_xgboost_integration': 'Cress-XGBoost integration',
+            'transformer_architecture': 'Transformer architecture',
+            'high_accuracy_predictions': 'High-accuracy predictions',
+            'statistical_validation': 'Statistical validation',
+            'real_world_testing': 'Real-world testing',
+            'confidence_metrics': 'Confidence metrics',
+            
+            // Detail page
+            'task_details': 'Task Details',
+            'task_information': 'Task Information',
+            'principal_investigator': 'Principal Investigator',
+            'submission_date': 'Submission Date',
+            'processing_start': 'Processing Start Time',
+            'processing_end': 'Processing End Time',
+            'completion_date': 'Completion Date',
+            'processing_duration': 'Processing Duration',
+            'detection_results': 'Detection Results',
+            'batch_results': 'Batch Processing Results',
+            'download_all': 'Download All Results',
+            'sample_id': 'Sample ID',
+            'nmr_spectrum': 'NMR Spectrum',
+            'result': 'Result',
+            'details': 'Details',
+            'details_view': 'View Details',
+            'values': 'Values',
+            'votes': 'Votes',
+            'positive': 'Positive',
+            'negative': 'Negative',
+
+            // Result page
+            'analysis_results': 'Analysis Results',
+            'all_results': 'All Results',
+            'nmr_shift_analysis': 'NMR Shift Analysis',
+            'ensemble_prediction': 'Ensemble Prediction',
+            'data_id': 'Data ID',
+            'result_classification': 'Result',
+            'core_molecule': 'Core Molecule',
+            'not_core_molecule': 'Not Core Molecule',
+            'voting': 'Voting',
+            'xgboost_probability': 'XGBoost Probability',
+            'cmgnet_frag_prediction': 'CMGNet-Frag Prediction',
+            'yes_core_found': 'Yes (Core Found)',
+            'no_core': 'No Core',
+            'cmgnet_smiles_prediction': 'CMGNet-SMILES Prediction',
+            'nmr_spectrum_visualization': 'NMR Spectrum Visualization',
+            'quinolone_scaffold_detection_results': 'AI-Powered Quinolone Detection System Results',
+            'core_structure': 'Core Structure',
+            'confidence_score': 'Confidence Score',
+            'nmr_match': 'NMR Match',
+            'detection_method': 'Detection Method',
+            'additional_notes': 'Additional Notes',
+            'cmgnet_prediction_results': 'CMGNet Prediction Results',
+            'download_result': 'Download Result',
+            'rank': 'Rank',
+            'smiles_structure': 'SMILES Structure',
+            'has_core': 'Has Core',
+            'analysis_in_progress': 'Analysis in Progress',
+            'current_status': 'Current status',
+            'initializing': 'Initializing',
+            'analysis_failed': 'Analysis Failed',
+            'review_error_logs': 'Please review the error logs or contact support',
+            'analysis_pending': 'Analysis Pending',
+            'queued_processing': 'This study is queued for processing and will be processed shortly',
+            'back_to_queue': 'Back to Queue',
+            'no_smiles_available': 'No SMILES predictions available',
+
+            // General
+            'no_data': 'No data available',
+            'loading': 'Loading...',
+            'error': 'Error',
+            'success': 'Success',
+            'warning': 'Warning',
+            'info': 'Information',
+            'back': 'Back',
+            'next': 'Next',
+            'previous': 'Previous',
+            'search_placeholder': 'Search...',
+            'filter_placeholder': 'Filter...',
+            'show_entries': 'Show _MENU_ entries per page',
+            'showing_info': 'Showing _START_ to _END_ of _TOTAL_ entries',
+            'table_info': 'Showing _START_ to _END_ of _TOTAL_ entries',
+            'paginate_first': 'First',
+            'paginate_last': 'Last',
+            'paginate_next': 'Next',
+            'paginate_previous': 'Previous'
+        },
+        'zh': {
+            // Navigation
+            'nav_home': '🏠 首页',
+            'nav_submission': '🧬 提交',
+            'nav_queue': '📊 队列',
+            'nav_contact': '📞 联系',
+            'nav_welcome': '👤 欢迎,',
+            'nav_login': '🔐 登录',
+            'nav_register': '📝 注册',
+            'nav_logout': '🚪 退出',
+            'login_title': '登录',
+            'login_header': '登录',
+            'login_button': '登录',
+            'login_identifier': '👤 邮箱',
+            'login_identifier_placeholder': '请输入邮箱',
+            'username': '👤 用户名',
+            'username_placeholder': '请输入用户名',
+            'username_display_help': '显示名，可与他人重复。登录时请使用邮箱。',
+            'password': '🔒 密码',
+            'password_placeholder': '至少 8 位字符',
+            'confirm_password': '🔒 确认密码',
+            'confirm_password_placeholder': '再次输入密码',
+            'need_account_register': '没有账号？注册',
+            'register_title': '创建账号',
+            'register_header': '注册',
+            'register_button': '注册',
+            'have_account_login': '已有账号？登录',
+            'email_address': '📧 邮箱地址',
+            'email_placeholder': 'your.email@example.com',
+            'register_email_help': '验证链接将发送到该邮箱。',
+            'institution': '🏢 机构/单位（选填）',
+            'institution_placeholder': '您的大学 / 公司 / 实验室',
+            'register_flow_notice': '注册后点击验证邮件中的链接即可激活账号并自动登录。您的数据仅自己可见。',
+            'check_email_header': '📧 请查收邮件',
+            'verification_sent': '验证链接已发送至：',
+            'click_link_instructions': '点击邮件中的链接即可激活账号并自动登录，链接 48 小时内有效。',
+            'check_spam_folder': '如果没有收到邮件，请检查垃圾邮件文件夹。',
+            'back_home': '返回首页',
+            'forgot_password_link': '忘记密码？',
+            'forgot_password_header': '🔑 忘记密码',
+            'forgot_password_notice': '请输入您注册时使用的邮箱，我们将向您发送设置新密码的链接（1 小时内有效）。',
+            'send_reset_link': '发送重置链接',
+            'back_to_login': '← 返回登录',
+            'reset_email_sent_header': '📧 重置链接已发送',
+            'if_account_exists': '如果该邮箱已注册，重置链接已发送至：',
+            'reset_link_instructions': '请点击邮件中的链接设置新密码。链接 1 小时内有效，且只能使用一次。',
+            'reset_password_header': '🔒 设置新密码',
+            'new_password': '🔒 新密码',
+            'reset_password_button': '重置密码',
+            'hello': '您好',
+            
+            // Page titles
+            'page_title': '喹诺酮类物质智慧检测系统',
+            'site_title': '喹诺酮类物质智慧检测系统',
+            
+            // Hero section
+            'hero_title': '喹诺酮类物质智慧检测系统',
+            'hero_subtitle': '基于人工智能的喹诺酮类非法添加物检测技术',
+            'start_analysis': '开始分析',
+            'view_queue': '查看队列',
+            'platform_overview': '平台概述',
+            'platform_description': '针对喹诺酮类非法添加频发且结构鉴定困难的行业痛点，本平台构建了面向喹诺酮类物质的<sup>13</sup>C NMR智能检测系统，系统内置基于多模态深度学习的Transformer模型，在复杂体系中可直接从原始<sup>13</sup>C NMR数据中自动识别喹诺酮核心骨架并进行结构预测。实现了从"图谱数据"到"化学结构"的自动转化。为复杂体系中非法添加物的检测、药物质量控制提供了高精度的计算工具。',
+            
+            // Statistics
+            'total_tasks': '总任务数',
+            'pending_tasks': '等待中',
+            'processing_tasks': '处理中',
+            'completed_tasks': '已完成',
+            'failed_tasks': '失败',
+            'f1_score_accuracy': 'F1分数准确率',
+            'ai_powered': '人工智能驱动',
+            'deep_learning_models': '深度学习模型',
+            
+            // Common labels
+            'task_name': '任务名称',
+            'status': '状态',
+            'actions': '操作',
+            'processing': '处理中',
+            'completed': '已完成',
+            'failed': '失败',
+            'pending': '等待中',
+            'submit': '提交',
+            'details': '详情',
+            'download': '下载',
+            'search': '搜索',
+            'view': '查看',
+            'close': '关闭',
+            'cancel': '取消',
+            'save': '保存',
+            'delete': '删除',
+            'edit': '编辑',
+            'visitor': '访问者',
+            
+            // Task related
+            'principal_investigator': '负责人',
+            'submission_date': '提交日期',
+            'processing_start': '处理开始时间',
+            'processing_end': '处理结束时间',
+            'completion_date': '完成日期',
+            'processing_duration': '处理时长',
+            'detection_results': '检测结果',
+            'task_id': '任务ID',
+            'task_details': '任务详情',
+            'task_information': '任务信息',
+            
+            // Results
+            'positive': '阳性',
+            'negative': '阴性',
+            'votes': '投票数',
+            'sample_id': '样本ID',
+            'nmr_spectrum': 'NMR谱图',
+            'result': '结果',
+            'details_view': '查看详情',
+            'download_all': '下载所有结果',
+            'batch_results': '批量处理结果',
+            'batch_samples': '样本',
+            
+            // Chemical information
+            'molecule_name': '分子名称',
+            'smiles': 'SMILES',
+            'molecular_formula': '分子式',
+            'molecular_weight': '分子量',
+            'nmr_frequency': 'NMR频率',
+            'solvent': '溶剂',
+            'temperature': '温度',
+            'analysis_method': '分析方法',
+            
+            // NMR related
+            'nmr_shifts': 'NMR化学位移',
+            'chemical_shift': '化学位移',
+            'intensity': '强度',
+            'values': '数值',
+            
+            // Messages
+            'processing_samples': '处理中... 样本',
+            'language_changed': '语言',
+            'page_visits': '页面访问量',
+            'copyright': '版权所有',
+            'copyright_text': '© 2025 中国食品药品检定研究院. 版权所有。',
+            
+            // Form related
+            'submit_task': '提交任务',
+            'input_nmr_data': '输入NMR数据',
+            'select_file': '选择文件',
+            'browse': '浏览',
+            'upload': '上传',
+            'task_name_label': '任务名称',
+            'task_description': '任务描述',
+            'choose_file': '选择文件',
+            'no_file_chosen': '未选择文件',
+            'file_upload_label': '点击上传CSV文件',
+            
+            // Submit page specific
+            'submit_header_title': '🧬 提交喹诺酮骨架分析',
+            'submit_header_subtitle': '上传您的<sup>13</sup>C NMR数据以进行先进的人工智能检测',
+            'task_details': '📝 分析任务详情',
+            'success_message': '✅ 成功！',
+            'error_message': '❌ 错误！',
+            'input_data_section': '📊 输入数据',
+            'c13_nmr_data': '<sup>13</sup>C NMR数据',
+            'load_example': '📋 加载示例',
+            'nmr_placeholder': '输入¹³C NMR数据（例如：176.49, 166.02, 153.61, 152.37...）',
+            'nmr_help_text': '💡 可选：提供<sup>13</sup>C NMR光谱数据（逗号分隔值）。此项或CSV文件必选其一。',
+            'upload_csv_file': '📁 上传CSV文件',
+            'download_example_csv': '⬇️ 示例.CSV',
+            'csv_help_text': '📋 可选：上传包含列的CSV文件：id, NMR。每个文件最多5000条记录。此项或NMR数据文本必选其一。',
+            'task_information_section': '🔧 任务信息',
+            'task_name_input': '任务名称 *',
+            'task_name_placeholder': '为您的任务输入一个描述性名称',
+            'email_address': '📧 邮箱地址',
+            'email_placeholder': 'your.email@example.com',
+            'email_help_text': '💡 可选：提供您的邮箱以接收任务状态通知。',
+            'user_name': '👤 用户',
+            'user_name_placeholder': '输入您的名字',
+            'user_name_help_text': '💡 可选：提供您的姓名以便更好地管理任务。',
+            'advanced_options': '⚙️ 高级选项',
+            'advanced_options_subtitle': '配置高级分析设置',
+            'xgboost_threshold': '🎯 XGBoost阈值',
+            'threshold_placeholder': '输入0.1到0.999之间的阈值',
+            'threshold_help_text': '💡 XGBoost置信度阈值（0.1 - 0.999，默认：0.5）。超出此范围的值将被裁剪。',
+            'topk_predictions': '🔝 Top-K预测',
+            'topk_placeholder': '输入1到30之间的数字',
+            'topk_help_text': '💡 要生成的顶部预测数量（1-30，默认：10）。仅适用于集成模型。',
+            'cancel_button': '🏠 取消',
+            'submit_analysis': '🚀 提交分析',
+            'submission_guidelines': '📋 提交指南',
+            'guidelines_input_data': '📊 输入数据：',
+            'guidelines_input_text': '<strong style="color: #05998B;"><sup>13</sup>C NMR数据</strong> 或 <strong style="color: #05998B;">CSV文件</strong> - 提供<sup>13</sup>C NMR数据（逗号分隔值）或上传包含列的CSV文件：id, NMR（每个文件最多5000条记录）。必选其一，但不能两者都提供。',
+            'guidelines_task_info': '🔧 任务信息：',
+            'guidelines_task_name': '<strong style="color: #05998B;">任务名称 *</strong> - 提供描述性名称',
+            'guidelines_email': '<strong style="color: #05998B;">邮箱地址</strong> - 接收任务状态通知',
+            'guidelines_advanced': '⚙️ 高级选项：',
+            'guidelines_threshold': '<strong style="color: #05998B;">XGBoost阈值</strong> - 为集成模型设置置信度阈值（0.1-0.999，默认：0.5）',
+            'guidelines_topk': '<strong style="color: #05998B;">Top-K预测</strong> - 为集成模型生成的顶部预测数量（1-30，默认：10）',
+            'help_support': '💚 帮助与支持',
+            'help_text': '需要提交帮助？我们的支持团队随时为您解答任何问题或技术问题。',
+            'contact_support': '📞 联系支持',
+            'show_button': '显示',
+            'hide_button': '隐藏',
+            
+            // Queue page specific
+            'queue_header_title': '分析任务队列',
+            'queue_header_subtitle': '实时监控您的喹诺酮骨架检测任务',
+            'task_management': '📋 任务管理',
+            'new_submission': '🧬 提交',
+            'all_tasks': '所有任务',
+            'queue_all_status': '所有状态',
+            'search_tasks_placeholder': '🔍 搜索任务...',
+            'filter_button': '筛选',
+            'showing_tasks_info': '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条任务',
+            'task_list': '任务列表',
+            'task_id_header': '任务ID',
+            'task_name_header': '任务名称',
+            'user_name_header': '👤 用户',
+            'status_header': '状态',
+            'progress_header': '进度',
+            'positive_total_header': '阳性/总数',
+            'actions_header': '操作',
+            'view_task': '查看',
+            'download_task': '下载',
+            'delete_task': '删除',
+            'no_tasks_found': '未找到任务',
+            'get_started_message': '通过提交您的第一个任务开始使用。',
+            'submission_button': '提交',
+            'delete_task_title': '删除任务',
+            'warning_message': '<strong>警告：</strong>此操作无法撤销。确定要删除此任务吗？',
+            'task_name_label': '任务名称：',
+            'cancel_button': '取消',
+            'delete_task_button': '<i class="bi bi-trash"></i> 删除任务',
+            'delete_success': '任务删除成功！',
+            'delete_error': '删除任务时出错，请重试。',
+            'previous_page': '上一页',
+            'next_page': '下一页',
+            
+            // Contact page specific
+            'contact_header_title': '📞 联系我们',
+            'contact_header_subtitle': '与我们的喹诺酮骨架检测支持团队取得联系',
+            'send_message_title': '📝 给我们发消息',
+            'message_success_title': '✅ 消息发送成功！',
+            'message_success_text': '感谢您联系我们。我们将在1-2个工作日内回复您。',
+            'message_success_footer': '您可以在下面提交另一条消息或返回',
+            'home_page_link': '首页',
+            'contact_information': '📋 联系信息',
+            'email_label': '邮箱',
+            'response_time_label': '回复时间',
+            'response_time_text': '通常在1-2个工作日内',
+            'quick_links': '🔗 快速链接',
+            'faq_title': '❓ 常见问题',
+            'faq_model_difference': '集成模型和XGBoost模型有什么区别？',
+            'faq_processing_time': '处理需要多长时间？',
+            'faq_file_formats': '支持哪些文件格式？',
+            'faq_token_download': '如何下载我的任务令牌文件？',
+            'faq_advanced_options': '高级选项是什么？',
+            'faq_free_service': '这个服务是免费的吗？',
+            'faq_lost_token': '我的令牌文件丢失了。还能访问我的任务吗？',
+            
+            // FAQ content
+            'faq_model_difference_content': '<strong>集成模型（推荐）：</strong> CMGNet + XGBoost 双模型模式用于综合检测。适用于复杂分子结构研究应用。<br><br><strong>XGBoost模型：</strong> 梯度提升方法，处理速度更快。适用于快速分析和简单的分子模式。',
+            'faq_processing_time_content': '<strong>标准处理：</strong> 每个任务30-60秒<br><strong>大型数据集：</strong> 可能需要2-3分钟，取决于复杂性<br><strong>处理时间：</strong> 根据模型选择而变化（XGBoost通常比CMGNet更快）',
+            'faq_file_formats_content': '<strong>CSV文件：</strong> 需要两列（id, NMR），引号内用逗号分隔的值。每个文件最多5000条条目。<br><strong>直接输入：</strong> <sup>13</sup>C NMR数据可以直接在提交表单中输入，用逗号分隔化学位移值。<br><strong>示例：</strong> <code>176.49, 166.02, 153.61, 152.37, 148.32...</code>',
+            'faq_token_download_content': '<strong>自动下载：</strong> 任务令牌文件在提交后立即自动下载。<br><strong>文件格式：</strong> <code>task_[TASK_ID].token</code>（例如：<code>task_NMR_20260107141014_1cb6b497.token</code>）<br><strong>重要提示：</strong> 请安全保存此文件 - 查看或删除任务时需要用到。',
+            'faq_advanced_options_content': '<strong>模型选择：</strong> 可选择集成模型（CMGNet + XGBoost双模型模式）或XGBoost模型（仅梯度提升）<br><strong>XGBoost阈值：</strong> 设置置信度阈值（0.1-0.999，默认：0.5）。数值越高，筛选越严格<br><strong>AR预测：</strong> 自回归模型的顶部预测数量（1-30，默认：10）。仅适用于集成模型',
+            'faq_free_service_content': '<strong>是的！</strong> 这是一个免费的学术研究工具，使用先进的NMR光谱学和机器学习进行喹诺酮检测。无需注册或付费。',
+            'faq_lost_token_content': '<strong>很遗憾，不能。</strong> 令牌文件是任务安全和隐私的必需品。没有令牌文件，您无法查看或删除任务。请确保在创建新任务时将令牌文件保存在安全位置。',
+            'send_message_button': '📤 发送消息',
+            'sending_text': '发送中...',
+            'required_field_warning': '请填写所有必填字段（邮箱和消息）。',
+            'invalid_email_warning': '请输入有效的邮箱地址。',
+            'placeholder_name': '输入您的全名',
+            'placeholder_email': '输入您的邮箱地址',
+            'placeholder_message': '在此输入您的消息...',
+            'contact_page': '联系',
+            'your_email': '您的邮箱',
+            'subject': '主题',
+            'message': '消息',
+            'send_message': '发送消息',
+            
+            // Contact page (原有)
+            'contact_us': '联系我们',
+            
+            // Home page specific
+            'current_research_studies': '当前研究项目',
+            'research_tools': '研究工具',
+            'platform_information': '平台信息',
+            'initiate_new_task': '发起新任务',
+            'research_queue': '研究队列',
+            'research_support': '研究支持',
+            'system_status': '系统状态',
+            'platform_version': '平台版本',
+            'computational_method': '计算方法',
+            'online': '在线',
+            'deep_learning_core_detection': '基于深度学习的喹诺酮骨架系统',
+            'no_research_studies': '暂无研究项目提交。',
+            'initiate_first_study': '发起您的第一个核心检测研究。',
+            
+            // Methodology section
+            'computational_methodology': '计算方法学',
+            'data_acquisition': '数据采集',
+            'data_acquisition_desc': '从NMRShiftDB、BMRB和HMDB数据库等验证来源收集高质量核磁共振光谱数据，包含全面的光谱信息。',
+            'deep_learning_analysis': '深度学习分析',
+            'deep_learning_analysis_desc': '通过将Cress-XGBoost提示与<sup>13</sup>C NMR数据集成，Transformer模型能够实现对<span style="color: #dc3545; font-weight: bold;">喹诺酮骨架</span>的强健自动检测，F1分数达到<span style="color: #dc3545; font-weight: bold;">96.2%</span>。',
+            'results_validation': '结果与验证',
+            'results_validation_desc': '综合统计分析、真实场景化合物测试，以及检测到的喹诺酮衍生物的详细报告，包含置信度指标。',
+            'validated_spectral_databases': '验证的光谱数据库',
+            'quality_controlled_datasets': '质量控制的数据库',
+            'comprehensive_molecular_data': '全面的分子数据',
+            'cress_xgboost_integration': 'Cress-XGBoost集成',
+            'transformer_architecture': 'Transformer架构',
+            'high_accuracy_predictions': '高精度预测',
+            'statistical_validation': '统计验证',
+            'real_world_testing': '真实世界测试',
+            'confidence_metrics': '置信度指标',
+            
+            // Detail page
+            'task_details': '任务详情',
+            'task_information': '任务信息',
+            'principal_investigator': '首席研究员',
+            'submission_date': '提交日期',
+            'processing_start': '处理开始时间',
+            'processing_end': '处理结束时间',
+            'completion_date': '完成日期',
+            'processing_duration': '处理时长',
+            'detection_results': '检测结果',
+            'batch_results': '批量处理结果',
+            'download_all': '下载所有结果',
+            'sample_id': '样本ID',
+            'nmr_spectrum': 'NMR谱图',
+            'result': '结果',
+            'details': '详情',
+            'details_view': '查看详情',
+            'values': '数值',
+            'votes': '投票',
+            'positive': '阳性',
+            'negative': '阴性',
+
+            // Result page
+            'analysis_results': '分析结果',
+            'all_results': '所有结果',
+            'nmr_shift_analysis': 'NMR化学位移分析',
+            'ensemble_prediction': '集成预测',
+            'data_id': '数据ID',
+            'result_classification': '结果',
+            'core_molecule': '核心分子',
+            'not_core_molecule': '非核心分子',
+            'voting': '投票',
+            'xgboost_probability': 'XGBoost概率',
+            'cmgnet_frag_prediction': 'CMGNet-Frag预测',
+            'yes_core_found': '是（发现核心）',
+            'no_core': '无核心',
+            'cmgnet_smiles_prediction': 'CMGNet-SMILES预测',
+            'nmr_spectrum_visualization': 'NMR谱图可视化',
+            'quinolone_scaffold_detection_results': '喹诺酮骨架检测结果',
+            'core_structure': '核心结构',
+            'confidence_score': '置信度分数',
+            'nmr_match': 'NMR匹配',
+            'detection_method': '检测方法',
+            'additional_notes': '附加说明',
+            'cmgnet_prediction_results': 'CMGNet预测结果',
+            'download_result': '下载结果',
+            'rank': '排名',
+            'smiles_structure': 'SMILES结构',
+            'has_core': '喹诺酮类结构',
+            'analysis_in_progress': '分析进行中',
+            'current_status': '当前状态',
+            'initializing': '初始化中',
+            'analysis_failed': '分析失败',
+            'review_error_logs': '请查看错误日志或联系技术支持',
+            'analysis_pending': '分析等待中',
+            'queued_processing': '该项研究已排队等待处理，即将开始处理',
+            'back_to_queue': '返回队列',
+            'no_smiles_available': '无SMILES预测可用',
+
+            // General
+            'no_data': '暂无数据',
+            'loading': '加载中...',
+            'error': '错误',
+            'success': '成功',
+            'warning': '警告',
+            'info': '信息',
+            'back': '返回',
+            'next': '下一页',
+            'previous': '上一页',
+            'search_placeholder': '搜索...',
+            'filter_placeholder': '筛选...',
+            'show_entries': '显示 _MENU_ 条每页',
+            'showing_info': '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条',
+            'table_info': '显示 _START_ 到 _END_ 条，共 _TOTAL_ 条',
+            'paginate_first': '首页',
+            'paginate_last': '末页',
+            'paginate_next': '下一页',
+            'paginate_previous': '上一页'
+        }
+    };
+
+    // Current language state with URL parameter support (must be global)
+    window.currentLanguage = 'en';
+    
+    // Get language from URL parameter or localStorage
+    function getInitialLanguage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLang = urlParams.get('lang');
+        
+        console.log('=== LANGUAGE INITIALIZATION DEBUG ===');
+        console.log('Current URL:', window.location.href);
+        console.log('URL search params:', window.location.search);
+        console.log('URL language parameter:', urlLang);
+        console.log('localStorage language before:', localStorage.getItem('preferredLanguage'));
+        
+        if (urlLang && (urlLang === 'en' || urlLang === 'zh')) {
+            console.log('Setting language from URL:', urlLang);
+            localStorage.setItem('preferredLanguage', urlLang);
+            console.log('Final language from URL:', urlLang);
+            return urlLang;
+        }
+        
+        const localLang = localStorage.getItem('preferredLanguage') || 'en';
+        console.log('Using language from localStorage:', localLang);
+        console.log('Final language from localStorage:', localLang);
+        return localLang;
+    }
+
+    // Full Toggle language function implementation (will replace the placeholder above)
+    function fullToggleLanguage() {
+        window.currentLanguage = window.currentLanguage === 'en' ? 'zh' : 'en';
+        localStorage.setItem('preferredLanguage', window.currentLanguage);
+        
+        console.log('Language toggled to:', window.currentLanguage);
+        
+        // Update URL without reloading
+        const url = new URL(window.location);
+        url.searchParams.set('lang', window.currentLanguage);
+        window.history.pushState({}, '', url);
+        
+        // Update language display
+        updateLanguageDisplay();
+        
+        // Apply translations immediately
+        applyTranslations(window.currentLanguage);
+        
+        // Update links after a short delay
+        setTimeout(() => {
+            updateLinksLanguage();
+        }, 50);
+        
+        // Show notification
+        showNotification(window.currentLanguage === 'en' ? 'Language: English' : '语言: 中文');
+    }
+
+    // Update language display
+    function updateLanguageDisplay() {
+        const langDisplay = window.currentLanguage === 'en' ? 'EN' : '中';
+        const currentLangElement = document.getElementById('currentLang');
+        if (currentLangElement) {
+            currentLangElement.textContent = langDisplay;
+            console.log('Language button display updated to:', langDisplay);
+        }
+    }
+
+    // Apply translations to page
+    function applyTranslations(lang) {
+        console.log('Applying translations for language:', lang);
+        const translations = TRANSLATIONS[lang];
+        
+        if (!translations) {
+            console.error('Translations not found for language:', lang);
+            return;
+        }
+        
+        // Translate all elements with data-i18n attribute
+        const i18nElements = document.querySelectorAll('[data-i18n]');
+        console.log('Found elements with data-i18n:', i18nElements.length);
+        i18nElements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[key]) {
+                // Preserve HTML structure for elements with child nodes
+                if (element.children.length > 0) {
+                    // For elements with children, translate only text nodes
+                    translateTextNodes(element, translations[key]);
+                } else {
+                    // Use innerHTML to preserve HTML tags like <sup>
+                    element.innerHTML = translations[key];
+                }
+                console.log('Translated element:', key, '->', translations[key]);
+            } else {
+                console.warn('Translation not found for key:', key);
+            }
+        });
+        
+        // Translate navigation links FIRST (before any other operations)
+        console.log('Translating navigation links...');
+        translateNavigation(lang);
+        
+        // Log navigation state after translation
+        setTimeout(() => {
+            console.log('Navigation links state after translation:');
+            document.querySelectorAll('.enhanced-nav-link').forEach(link => {
+                console.log('  -', link.textContent.trim(), 'href:', link.getAttribute('href'));
+            });
+        }, 10);
+        
+        // Translate page title
+        translateTitle(lang);
+        
+        // Translate footer
+        translateFooter(lang);
+        
+        // Translate dynamic content
+        translateDynamicContent(lang);
+        
+        // Translate placeholders
+        translatePlaceholders(lang);
+        
+        // Translate DataTables if present
+        translateDataTables(lang);
+        
+        // Translate FAQ content after all other translations
+        if (typeof translateFAQContent === 'function') {
+            translateFAQContent(lang);
+        }
+        
+        // Translate queue page dynamic content
+        translateQueueDynamicContent(lang);
+        
+        console.log('Translation application completed');
+    }
+
+    // Translate text nodes while preserving HTML structure
+    function translateTextNodes(element, translation) {
+        // Simply replace the entire content with the translation
+        // This works because our translations now include the HTML structure
+        element.innerHTML = translation;
+    }
+
+    // Translate navigation links
+    function translateNavigation(lang) {
+        const translations = TRANSLATIONS[lang];
+        console.log('Translating navigation to language:', lang);
+        
+        document.querySelectorAll('.enhanced-nav-link').forEach(link => {
+            const text = link.textContent.trim();
+            const href = link.getAttribute('href');
+            
+            console.log('Processing navigation link:', text, 'href:', href);
+            
+            // Determine translation based on href and current text
+            let translationKey = null;
+            
+            // Try text mapping first
+            const navMap = {
+                '🏠 Home': 'nav_home',
+                '🧬 Submission': 'nav_submission', 
+                '📊 Queue': 'nav_queue',
+                '📞 Contact': 'nav_contact',
+                '👤': 'nav_welcome',
+                '🏠 首页': 'nav_home',
+                '🧬 提交': 'nav_submission',
+                '📊 队列': 'nav_queue',
+                '📞 联系': 'nav_contact',
+                'Home': 'nav_home',
+                'Submission': 'nav_submission', 
+                'Queue': 'nav_queue',
+                'Contact': 'nav_contact',
+                '首页': 'nav_home',
+                '提交': 'nav_submission',
+                '队列': 'nav_queue',
+                '联系': 'nav_contact'
+            };
+            
+            // If text mapping doesn't work, try href mapping
+            const hrefMap = {
+                '/': 'nav_home',
+                '/submission/': 'nav_submission',
+                '/queue/': 'nav_queue',
+                '/contact/': 'nav_contact'
+            };
+            
+            // Try text mapping first
+            translationKey = navMap[text];
+            
+            // If text mapping fails, try href mapping
+            if (!translationKey && href) {
+                const path = href.split('?')[0]; // Remove query parameters
+                translationKey = hrefMap[path];
+            }
+            
+            if (translationKey && translations[translationKey]) {
+                const newTranslation = translations[translationKey];
+                console.log('Found translation key:', translationKey, '-> translation:', newTranslation);
+                
+                // Handle Welcome text specially
+                if (translationKey === 'nav_welcome') {
+                    // Extract username from current content
+                    const usernameMatch = text.match(/👤\s*(?:Welcome,|欢迎,)\s*(\S+)/);
+                    if (usernameMatch) {
+                        link.textContent = newTranslation + ' ' + usernameMatch[1];
+                    } else {
+                        link.textContent = newTranslation;
+                    }
+                } else {
+                    link.textContent = newTranslation;
+                }
+                console.log('Navigation link translated from:', text, 'to:', link.textContent);
+            } else {
+                console.log('No translation found for:', text, 'href:', href);
+            }
+        });
+    }
+
+    // Translate page title
+    function translateTitle(lang) {
+        const titleElement = document.querySelector('title');
+        const brandElement = document.querySelector('.navbar-brand');
+        const translations = TRANSLATIONS[lang];
+        
+        if (titleElement && translations['page_title']) {
+            titleElement.textContent = translations['page_title'];
+        }
+        
+        if (brandElement) {
+            const brandText = brandElement.textContent;
+            const icon = brandElement.querySelector('img');
+            if (icon) {
+                const iconClone = icon.cloneNode(true);
+                brandElement.innerHTML = '';
+                brandElement.appendChild(iconClone);
+                brandElement.appendChild(document.createTextNode(' ' + translations['site_title']));
+                // Update alt attribute for the image
+                iconClone.alt = translations['site_title'];
+            } else {
+                brandElement.textContent = translations['site_title'];
+            }
+            // Update href to include language parameter
+            brandElement.href = '/?lang=' + lang;
+        }
+    }
+
+    // Translate footer
+    function translateFooter(lang) {
+        const translations = TRANSLATIONS[lang];
+        
+        // Get all footer paragraphs
+        const footerParagraphs = document.querySelectorAll('footer p');
+        
+        footerParagraphs.forEach((element, index) => {
+            const text = element.textContent.trim();
+            
+            // First paragraph: copyright text
+            if (text.includes('©') || text.includes('版权所有')) {
+                element.textContent = translations['copyright_text'];
+            }
+            // Second paragraph: visitor counter  
+            else if (text.includes('Page Visits') || text.includes('页面访问量') || element.querySelector('.visitor-counter')) {
+                const visitorCounter = element.querySelector('.visitor-counter');
+                if (visitorCounter) {
+                    // Try to extract visit count from existing text
+                    const visitCount = visitorCounter.textContent.match(/\d+/);
+                    if (visitCount) {
+                        visitorCounter.textContent = translations['page_visits'] + ' ' + visitCount[0];
+                    } else {
+                        // If no number found, just translate the text part
+                        visitorCounter.textContent = translations['page_visits'] + ' 0';
+                    }
+                }
+            }
+        });
+    }
+
+    // Translate dynamic content (buttons, badges, etc.)
+    function translateDynamicContent(lang) {
+        const translations = TRANSLATIONS[lang];
+        
+        // Translate buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            const text = button.textContent.trim();
+            let translation = null;
+            
+            // Find matching translation
+            for (const [key, value] of Object.entries(translations)) {
+                if (text.toLowerCase() === value.toLowerCase() || text === value) {
+                    translation = translations[key];
+                    break;
+                }
+            }
+            
+            if (translation) {
+                // Preserve icons
+                const icon = button.querySelector('i, [class*="bi-"], [class*="fa-"]');
+                if (icon) {
+                    const iconClone = icon.cloneNode(true);
+                    button.innerHTML = '';
+                    button.appendChild(iconClone);
+                    button.appendChild(document.createTextNode(' ' + translation));
+                } else {
+                    button.textContent = translation;
+                }
+            }
+        });
+        
+        // Translate badges
+        document.querySelectorAll('.badge').forEach(badge => {
+            const text = badge.textContent.trim();
+            for (const [key, value] of Object.entries(translations)) {
+                if (text === value || text.toLowerCase() === value.toLowerCase()) {
+                    badge.textContent = translations[key];
+                    break;
+                }
+            }
+        });
+    }
+
+    // Translate placeholders
+    function translatePlaceholders(lang) {
+        const translations = TRANSLATIONS[lang];
+        
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            if (translations[key]) {
+                element.setAttribute('placeholder', translations[key]);
+                console.log('Translated placeholder for key:', key, '->', translations[key]);
+            }
+        });
+        
+        // Fallback for elements without data-i18n-placeholder
+        document.querySelectorAll('[placeholder]:not([data-i18n-placeholder])').forEach(element => {
+            const placeholder = element.getAttribute('placeholder');
+            for (const [key, value] of Object.entries(translations)) {
+                if (placeholder === value) {
+                    element.setAttribute('placeholder', translations[key]);
+                    break;
+                }
+            }
+        });
+    }
+
+    // Translate FAQ content specifically
+    function translateFAQContent(lang) {
+        const translations = TRANSLATIONS[lang];
+        const faqContentElements = document.querySelectorAll('.accordion-body[data-i18n]');
+        faqContentElements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[key]) {
+                element.innerHTML = translations[key];
+                console.log('Translated FAQ content for key:', key, '->', translations[key]);
+            }
+        });
+    }
+
+    // Translate DataTables if present
+    function translateDataTables(lang) {
+        if (typeof $.fn.DataTable !== 'undefined') {
+            const translations = TRANSLATIONS[lang];
+            const dataTableSettings = {
+                language: {
+                    search: translations['search_placeholder'],
+                    lengthMenu: translations['show_entries'],
+                    info: translations['showing_info'],
+                    paginate: {
+                        first: translations['paginate_first'],
+                        last: translations['paginate_last'],
+                        next: translations['paginate_next'],
+                        previous: translations['paginate_previous']
+                    }
+                }
+            };
+            
+            // Update all DataTables on page
+            $.fn.dataTable.tables({ visible: true, api: true }).each(function() {
+                this.settings()[0].oLanguage = dataTableSettings.language;
+                this.destroy();
+                $(this.DataTable).DataTable(dataTableSettings);
+            });
+        }
+    }
+    
+    // Translate queue page dynamic content with variables
+    function translateQueueDynamicContent(lang) {
+        const translations = TRANSLATIONS[lang];
+        
+        // Translate pagination info with variables
+        const paginationInfo = document.querySelector('.pagination-info span');
+        if (paginationInfo) {
+            // Get values from data attributes
+            const start = paginationInfo.getAttribute('data-start');
+            const end = paginationInfo.getAttribute('data-end');
+            const total = paginationInfo.getAttribute('data-total');
+            
+            if (start && end && total) {
+                let translation = translations['showing_tasks_info'];
+                translation = translation.replace('_START_', start).replace('_END_', end).replace('_TOTAL_', total);
+                paginationInfo.innerHTML = '📋 ' + translation;
+                console.log('Translated pagination info with values:', start, end, total);
+            }
+        }
+        
+        // Translate status badges
+        const statusMap = {
+            'Pending': 'pending',
+            'Processing': 'processing', 
+            'Completed': 'completed',
+            'Failed': 'failed',
+            '等待中': 'pending',
+            '处理中': 'processing',
+            '已完成': 'completed',
+            '失败': 'failed'
+        };
+        
+        document.querySelectorAll('.badge').forEach(badge => {
+            const statusText = badge.textContent.trim();
+            if (statusMap[statusText]) {
+                const translationKey = statusMap[statusText];
+                if (translations[translationKey]) {
+                    badge.textContent = translations[translationKey];
+                    console.log('Translated badge:', statusText, '->', translations[translationKey]);
+                }
+            }
+        });
+    }
+
+    // Show notification
+    function showNotification(message) {
+        // Remove existing notification
+        const existing = document.querySelector('.lang-notification');
+        if (existing) existing.remove();
+        
+        const notification = document.createElement('div');
+        notification.className = 'lang-notification';
+        notification.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #05998B; color: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 9999; font-weight: 600; animation: slideIn 0.3s ease-out;';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 2000);
+    }
+
+    // Update all links to include language parameter
+    function updateLinksLanguage() {
+        const links = document.querySelectorAll('a[href]');
+        links.forEach(link => {
+            let href = link.getAttribute('href');
+            if (href && !href.startsWith('javascript:') && !href.startsWith('#')) {
+                // Handle relative paths
+                if (href.startsWith('/')) {
+                    // Check if link already has lang parameter
+                    if (href.includes('lang=')) {
+                        // Replace existing lang parameter
+                        link.setAttribute('href', href.replace(/lang=[a-z]{2}/, 'lang=' + window.currentLanguage));
+                    } else {
+                        // Add new lang parameter
+                        const separator = href.includes('?') ? '&' : '?';
+                        link.setAttribute('href', href + separator + 'lang=' + window.currentLanguage);
+                    }
+                } else if (href.startsWith('http')) {
+                    // Full URL
+                    const url = new URL(href);
+                    url.searchParams.set('lang', window.currentLanguage);
+                    link.setAttribute('href', url.toString());
+                }
+                // For relative paths without leading /, leave them as is
+            }
+        });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('=== LANGUAGE SYSTEM INITIALIZATION ===');
+        
+        // Call the initialization function which will set up everything
+        window.initializeLanguageSystem();
+        
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function() {
+            console.log('=== POPSTATE EVENT ===');
+            window.currentLanguage = getInitialLanguage();
+            updateLanguageDisplay();
+            applyTranslations(window.currentLanguage);
+            setTimeout(() => {
+                updateLinksLanguage();
+            }, 200);
+        });
+        
+        console.log('=== LANGUAGE INITIALIZATION COMPLETED ===');
+    });
+    </script>
+    
+    <style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+    
+    .language-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(5, 153, 139, 0.4) !important;
+    }
+    </style>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

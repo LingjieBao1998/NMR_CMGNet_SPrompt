@@ -1,0 +1,543 @@
+{% extends 'core_detection/base.html' %}
+
+{% block title %}Submit New Submission - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<!-- Enhanced Header Section -->
+<div class="submit-header mb-4" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); padding: 40px; border-radius: 16px; text-align: center; box-shadow: 0 8px 24px rgba(5, 153, 139, 0.2); margin-bottom: 30px;">
+    <div style="color: white;">
+        <h2 style="font-weight: 700; margin-bottom: 10px;" data-i18n="submit_header_title">🧬 Submit Quinolone Scaffold Analysis</h2>
+        <p style="margin: 0; opacity: 0.9;" data-i18n="submit_header_subtitle">Upload your ¹³C NMR data for advanced AI-powered detection</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card enhanced-form-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none;">
+            <div class="card-header" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border-radius: 16px 16px 0 0; border: none;">
+                <h4 class="text-white mb-0" style="font-weight: 600;" data-i18n="task_details">📝 Analysis Task Details</h4>
+            </div>
+            <div class="card-body" style="padding: 30px;">
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <!-- Enhanced Success Message Container -->
+                <div id="successMessage" class="alert alert-success" role="alert" style="display: none; border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);">
+                    <strong data-i18n="success_message">✅ Success!</strong> <span id="successText"></span>
+                </div>
+
+                <!-- Enhanced Error Message Container -->
+                <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none; border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);">
+                    <strong data-i18n="error_message">❌ Error!</strong> <span id="errorText"></span>
+                </div>
+                
+                <form method="post" enctype="multipart/form-data" id="taskForm">
+                    {% csrf_token %}
+                    
+                    <!-- Enhanced Input Data Section -->
+                    <div class="mb-4">
+                        <div class="section-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #05998B;">
+                            <h5 class="mb-0" style="color: #05998B; font-weight: 700;" data-i18n="input_data_section">📊 Input Data</h5>
+                        </div>
+                        
+                        <!-- Enhanced Input SMILES -->
+                        <div class="mb-4">
+                            <div class="enhanced-label" style="margin-bottom: 15px;">
+                                <label for="input_nmr" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="c13_nmr_data"><sup>13</sup>C NMR Data</label>
+                                <button type="button" class="btn btn-outline-success btn-sm ms-2" id="loadExampleBtn" style="border-radius: 20px; font-weight: 600;" data-i18n="load_example">
+                                    📋 Load Example
+                                </button>
+                            </div>
+                            <textarea class="form-control enhanced-textarea" id="input_nmr" name="input_nmr" rows="4"
+                                      data-i18n-placeholder="nmr_placeholder"
+                                      placeholder="Enter <sup>13</sup>C NMR data (e.g., 176.49, 166.02, 153.61, 152.37...)" 
+                                      style="border-radius: 12px; border: 2px solid #e9ecef; padding: 15px; font-size: 1rem; transition: border-color 0.3s;"></textarea>
+                            <div class="form-text" style="color: #6c757d; margin-top: 10px;" data-i18n="nmr_help_text">💡 Optional: Provide <sup>13</sup>C NMR spectroscopy data (comma-separated values). Either this OR CSV file is required.</div>
+                        </div>
+
+                        <!-- Enhanced File Upload -->
+                        <div class="mb-4">
+                            <div class="enhanced-label" style="margin-bottom: 15px;">
+                                <label for="input_file" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="upload_csv_file">📁 Upload CSV File</label>
+                                <button type="button" class="btn btn-outline-info btn-sm ms-2" id="downloadExampleBtn" style="border-radius: 20px; font-weight: 600;" data-i18n="download_example_csv">
+                                    ⬇️ Example CSV
+                                </button>
+                            </div>
+                            <div class="enhanced-file-upload" style="position: relative;">
+                                <input type="file" class="form-control enhanced-file-input" id="input_file" name="input_file"
+                                       accept=".csv" 
+                                       style="border-radius: 12px; border: 2px dashed #05998B; padding: 20px; text-align: center; background: #f8f9fa; cursor: pointer; position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 2;">
+                                <div class="file-upload-label" style="border-radius: 12px; border: 2px dashed #05998B; padding: 20px; text-align: center; background: #f8f9fa; cursor: pointer;" id="fileUploadLabel" data-i18n="file_upload_label">
+                                    📁 Click to upload CSV file
+                                </div>
+                                <div class="form-text" style="color: #6c757d; margin-top: 10px;" data-i18n="csv_help_text">📋 Optional: Upload CSV file with columns: id, NMR. Maximum 5000 entries per file. Either this OR NMR data text is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Task Information -->
+                    <div class="mb-4">
+                        <div class="section-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #05998B;">
+                            <h5 class="mb-0" style="color: #05998B; font-weight: 700;" data-i18n="task_information_section">🔧 Task Information</h5>
+                        </div>
+                        
+                        <!-- Enhanced Task Name -->
+                        <div class="mb-4">
+                            <label for="task_name" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="task_name_input">Task Name *</label>
+                            <input type="text" class="form-control enhanced-input" id="task_name" name="task_name"
+                                   data-i18n-placeholder="task_name_placeholder"
+                                   placeholder="Enter a descriptive name for your task" required
+                                   style="border-radius: 12px; border: 2px solid #e9ecef; padding: 12px 15px; font-size: 1rem; transition: border-color 0.3s;">
+                        </div>
+                        
+                        <!-- Enhanced Email -->
+                        <div class="mb-4">
+                            <label for="email" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="email_address">📧 Email Address</label>
+                            <input type="email" class="form-control enhanced-input" id="email" name="email"
+                                   data-i18n-placeholder="email_placeholder"
+                                   placeholder="your.email@example.com"
+                                   style="border-radius: 12px; border: 2px solid #e9ecef; padding: 12px 15px; font-size: 1rem; transition: border-color 0.3s;">
+                            <div class="form-text" style="color: #6c757d; margin-top: 8px;" data-i18n="email_help_text">💡 Optional: Provide your email to receive notifications about task status.</div>
+                        </div>
+                        
+                        <!-- Enhanced User Name -->
+                        <div class="mb-4">
+                            <label for="user_name" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="user_name">👤 User Name</label>
+                            <input type="text" class="form-control enhanced-input" id="user_name" name="user_name"
+                                   data-i18n-placeholder="user_name_placeholder"
+                                   placeholder="Enter your name"
+                                   style="border-radius: 12px; border: 2px solid #e9ecef; padding: 12px 15px; font-size: 1rem; transition: border-color 0.3s;">
+                            <div class="form-text" style="color: #6c757d; margin-top: 8px;" data-i18n="user_name_help_text">💡 Optional: Provide your name for better task management.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Advanced Options -->
+                    <div class="mb-4">
+                        <div class="section-header-advanced" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #6c757d;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1" style="color: #495057; font-weight: 700;" data-i18n="advanced_options">⚙️ Advanced Options</h5>
+                                    <small class="text-muted" data-i18n="advanced_options_subtitle">Configure advanced analysis settings</small>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="toggleAdvancedBtn" style="border-radius: 20px; font-weight: 600;">
+                                    <i class="bi bi-chevron-down"></i> <span data-i18n="show_button">Show</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="advancedOptionsContent" style="display: none;">
+                            <!-- Model Selection -->
+                            <div class="mb-4">
+                                <label class="form-label" style="font-weight: 600; color: #495057;" data-i18n="model_selection">🤖 Model Selection</label>
+                                <div class="btn-group" role="group" style="width: 100%;">
+                                    <input type="radio" class="btn-check" id="model_ensemble" name="model_selection" value="ensemble" checked>
+                                    <label class="btn btn-outline-primary" for="model_ensemble" style="border-radius: 8px 0 0 8px;">Ensemble Model</label>
+                                    
+                                    <input type="radio" class="btn-check" id="model_xgboost" name="model_selection" value="xgboost">
+                                    <label class="btn btn-outline-primary" for="model_xgboost" style="border-radius: 0 8px 8px 0;">XGBoost Only</label>
+                                </div>
+                                <div class="form-text" style="color: #6c757d; margin-top: 8px;" data-i18n="model_help_text">💡 Choose between ensemble model (recommended) or XGBoost-only model.</div>
+                                <input type="hidden" id="model_selection" name="model_selection" value="ensemble">
+                            </div>
+                            
+                            <!-- Enhanced XGBoost Threshold -->
+                            <div class="mb-4">
+                                <label for="xgboost_threshold" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="xgboost_threshold">🎯 XGBoost Threshold</label>
+                                <input type="number" class="form-control enhanced-input" id="xgboost_threshold" 
+                                       name="xgboost_threshold" 
+                                       min="0.1" max="0.999" step="0.001" value="0.5"
+                                       data-i18n-placeholder="threshold_placeholder"
+                                       placeholder="Enter threshold between 0.1 and 0.999"
+                                       style="border-radius: 12px; border: 2px solid #e9ecef; padding: 12px 15px; font-size: 1rem; transition: border-color 0.3s;">
+                                <div class="form-text" style="color: #6c757d; margin-top: 8px;" data-i18n="threshold_help_text">💡 XGBoost confidence threshold (0.1 - 0.999, default: 0.5). Values outside this range will be clipped.</div>
+                            </div>
+                            
+                            <!-- Enhanced Autoregressive Model Predictions -->
+                            <div class="mb-4">
+                                <label for="topk" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="topk_predictions">🔝 Top-K Predictions</label>
+                                <input type="number" class="form-control enhanced-input" id="topk" 
+                                       name="topk" 
+                                       min="1" max="30" step="1" value="10"
+                                       data-i18n-placeholder="topk_placeholder"
+                                       placeholder="Enter number between 1 and 30"
+                                       style="border-radius: 12px; border: 2px solid #e9ecef; padding: 12px 15px; font-size: 1rem; transition: border-color 0.3s;">
+                                <div class="form-text" style="color: #6c757d; margin-top: 8px;" data-i18n="topk_help_text">💡 Number of top predictions to generate (1-30, default: 10). Only applicable for Ensemble model.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Submit Buttons -->
+                    <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                        <a href="{% url 'core_detection:home' %}" class="btn btn-outline-secondary btn-lg" style="border-radius: 25px; font-weight: 600; padding: 12px 30px;" data-i18n="cancel_button">
+                            🏠 Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success btn-lg" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border: none; border-radius: 25px; font-weight: 600; padding: 12px 40px; box-shadow: 0 4px 15px rgba(5, 153, 139, 0.3);" data-i18n="submit_analysis">
+                            🚀 Submit Analysis
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Enhanced Guidelines Card -->
+        <div class="card enhanced-info-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none; margin-bottom: 24px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border-radius: 16px 16px 0 0; border: none;">
+                <h5 class="text-white mb-0" style="font-weight: 600;" data-i18n="submission_guidelines">📋 Submission Guidelines</h5>
+            </div>
+            <div class="card-body" style="padding: 24px;">
+                <div class="guideline-section mb-4">
+                    <h6 style="color: #05998B; font-weight: 700; margin-bottom: 12px; font-size: 1rem;" data-i18n="guidelines_input_data">📊 Input Data:</h6>
+                    <ul style="padding-left: 20px; line-height: 1.8;">
+                        <li data-i18n="guidelines_input_text"><strong style="color: #05998B;"><sup>13</sup>C NMR Data</strong> OR <strong style="color: #05998B;">CSV File</strong> - Provide either <sup>13</sup>C NMR data (comma-separated values) OR upload a CSV file with columns: id, NMR (max 5000 entries per file). One of them is required, but not both.</li>
+                    </ul>
+                </div>
+                
+                <div class="guideline-section mb-4">
+                    <h6 style="color: #05998B; font-weight: 700; margin-bottom: 12px; font-size: 1rem;" data-i18n="guidelines_task_info">🔧 Task Information:</h6>
+                    <ul style="padding-left: 20px; line-height: 1.8;">
+                        <li data-i18n="guidelines_task_name"><strong style="color: #05998B;">Task Name *</strong> - Provide a descriptive name</li>
+                        <li data-i18n="guidelines_email"><strong style="color: #05998B;">Email Address</strong> - Receive notifications about task status</li>
+                    </ul>
+                </div>
+                
+                <div class="guideline-section">
+                    <h6 style="color: #05998B; font-weight: 700; margin-bottom: 12px; font-size: 1rem;" data-i18n="guidelines_advanced">⚙️ Advanced Options:</h6>
+                    <ul style="padding-left: 20px; line-height: 1.8;">
+                        <li data-i18n="guidelines_threshold"><strong style="color: #05998B;">XGBoost Threshold</strong> - Set confidence threshold (0.1-0.999, default: 0.5) for the Ensemble model</li>
+                        <li data-i18n="guidelines_topk"><strong style="color: #05998B;">Top-K Predictions</strong> - Number of top predictions to generate for Ensemble model (1-30, default: 10)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Help Card -->
+        <div class="card enhanced-info-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none;">
+            <div class="card-header" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border-radius: 16px 16px 0 0; border: none;">
+                <h5 class="text-white mb-0" style="font-weight: 600;" data-i18n="help_support">💚 Help & Support</h5>
+            </div>
+            <div class="card-body" style="padding: 24px;">
+                <p style="margin-bottom: 20px; color: #495057; line-height: 1.6;" data-i18n="help_text">Need assistance with your submission? Our support team is here to help you with any questions or technical issues.</p>
+                <a href="{% url 'core_detection:contact' %}" class="btn btn-outline-info w-100" style="border-radius: 25px; font-weight: 600; padding: 12px 20px; border-width: 2px;" data-i18n="contact_support">
+                    📞 Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Enhanced form interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Add focus effects to form inputs
+    const enhancedInputs = document.querySelectorAll('.enhanced-input, .enhanced-textarea');
+    enhancedInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.borderColor = '#05998B';
+            this.style.boxShadow = '0 0 0 3px rgba(5, 153, 139, 0.1)';
+        });
+        input.addEventListener('blur', function() {
+            this.style.borderColor = '#e9ecef';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // File upload enhancement
+    const fileInput = document.getElementById('input_file');
+    const fileUploadLabel = document.getElementById('fileUploadLabel');
+    
+    if (fileInput && fileUploadLabel) {
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileName = this.files[0].name;
+                fileUploadLabel.textContent = '✅ ' + fileName;
+                fileUploadLabel.style.background = '#e9ecef';
+                fileUploadLabel.style.borderColor = '#05998B';
+            } else {
+                // Reset to default text based on current language
+                const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+                const defaultText = currentLang === 'zh' ? '📁 点击上传CSV文件' : '📁 Click to upload CSV file';
+                fileUploadLabel.textContent = defaultText;
+                fileUploadLabel.style.background = '#f8f9fa';
+                fileUploadLabel.style.borderColor = '#05998B';
+            }
+        });
+    }
+});
+// Helper function to show error message
+function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    errorText.textContent = message;
+    errorDiv.style.display = 'block';
+
+    // Hide success message if showing
+    document.getElementById('successMessage').style.display = 'none';
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        errorDiv.style.display = 'none';
+    }, 5000);
+}
+
+// Helper function to show success message
+function showSuccess(message) {
+    const successDiv = document.getElementById('successMessage');
+    const successText = document.getElementById('successText');
+    successText.textContent = message;
+    successDiv.style.display = 'block';
+
+    // Hide error message if showing
+    document.getElementById('errorMessage').style.display = 'none';
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('taskForm').addEventListener('submit', function(e) {
+    const taskName = document.getElementById('task_name').value.trim();
+    const nmrData = document.getElementById('input_nmr').value.trim();
+    const fileInput = document.getElementById('input_file');
+    const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
+
+    // Clear previous messages
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('successMessage').style.display = 'none';
+
+    // Validate Task Name (required)
+    if (!taskName) {
+        e.preventDefault();
+        showError('Please provide a task name.');
+        return false;
+    }
+
+    // Get advanced options
+    const modelSelectionElement = document.getElementById('model_selection');
+    const modelSelection = modelSelectionElement ? modelSelectionElement.value : 'ensemble';
+    
+    const xgboostThresholdElement = document.getElementById('xgboost_threshold');
+    const xgboostThreshold = xgboostThresholdElement ? parseFloat(xgboostThresholdElement.value) : 0.5;
+    
+    const topkElement = document.getElementById('topk');
+    const topk = topkElement ? parseInt(topkElement.value) : 10;
+
+    // Validate model selection
+    if (!['ensemble', 'xgboost'].includes(modelSelection)) {
+        e.preventDefault();
+        showError('Please select a valid model option.');
+        return false;
+    }
+
+    // Validate XGBoost threshold
+    if (isNaN(xgboostThreshold) || xgboostThreshold < 0.1 || xgboostThreshold > 0.999) {
+        e.preventDefault();
+        showError('Please enter a valid XGBoost threshold between 0.1 and 0.999.');
+        return false;
+    }
+
+    // Clip threshold values to allowed range
+    const clippedThreshold = Math.max(0.1, Math.min(0.999, xgboostThreshold));
+    if (clippedThreshold !== xgboostThreshold) {
+        document.getElementById('xgboost_threshold').value = clippedThreshold;
+        console.log('XGBoost threshold clipped to:', clippedThreshold);
+    }
+
+    // Validate topk predictions (only for Ensemble model)
+    if (modelSelection === 'ensemble' && (isNaN(topk) || topk < 1 || topk > 30)) {
+        e.preventDefault();
+        showError('Please enter a valid number of predictions between 1 and 30 for Ensemble model.');
+        return false;
+    }
+
+    // Validate email if provided
+    const email = document.getElementById('email').value.trim();
+    if (email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            e.preventDefault();
+            showError('Please enter a valid email address.');
+            return false;
+        }
+    }
+
+    // 检查是否至少提供了一个输入（NMR数据或CSV文件）
+    if (!nmrData && !file) {
+        e.preventDefault();
+        showError('Please provide either ¹³C NMR data OR upload a CSV file.');
+        return false;
+    }
+
+    // 验证不能同时提供文本和文件
+    if (nmrData && file) {
+        e.preventDefault();
+        showError('Please provide either NMR data text OR upload a file, not both.');
+        return false;
+    }
+
+    // 快速验证NMR文本数据 - 与Python后端的list(map(float, input_nmr.split(",")))兼容
+    if (nmrData) {
+        // 模拟Python的split(",")逻辑，同时兼容其他分隔符
+        let values = [];
+
+        // 首先尝试逗号分隔（主要格式）
+        if (nmrData.includes(',')) {
+            values = nmrData.split(',').map(v => v.trim()).filter(v => v);
+        } else {
+            // 如果没有逗号，尝试空格、换行、制表符分隔
+            values = nmrData.split(/[ \n\t]+/).map(v => v.trim()).filter(v => v);
+        }
+
+        // 验证每个值都能转换为浮点数（模拟Python的map(float, ...)）
+        let validNumbers = [];
+        let invalidValues = [];
+
+        for (let val of values) {
+            let num = parseFloat(val);
+            if (!isNaN(num)) {
+                validNumbers.push(num);
+            } else {
+                invalidValues.push(val);
+            }
+        }
+
+        // 验证结果
+        if (validNumbers.length === 0) {
+            e.preventDefault();
+            showError('No valid NMR chemical shifts found. Please provide numbers separated by commas, like: 176.49, 166.02, 153.61, 152.37');
+            return false;
+        }
+
+        if (invalidValues.length > 0) {
+            e.preventDefault();
+            const invalidList = invalidValues.slice(0, 3).join(', ') + (invalidValues.length > 3 ? '...' : '');
+            showError(`Found ${invalidValues.length} invalid value(s): ${invalidList}. All values must be valid numbers.`);
+            return false;
+        }
+
+        if (validNumbers.length < 3) {
+            e.preventDefault();
+            showError(`NMR data should contain at least 3 chemical shifts for meaningful prediction. Currently provided: ${validNumbers.length} shift(s)`);
+            return false;
+        }
+
+        console.log(`✅ Validated ${validNumbers.length} NMR shifts: [${validNumbers.slice(0, 5).join(', ')}${validNumbers.length > 5 ? '...' : ''}]`);
+    }
+
+    // 快速验证CSV文件
+    if (file) {
+        if (!file.name.toLowerCase().endsWith('.csv')) {
+            e.preventDefault();
+            showError('Please upload a CSV file only.');
+            return false;
+        }
+
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+            e.preventDefault();
+            showError('CSV file is too large. Maximum size is 10MB.');
+            return false;
+        }
+
+        console.log(`CSV file validated: ${file.name} (${(file.size/1024).toFixed(1)}KB)`);
+    }
+
+    // 前端验证通过，统一使用AJAX提交（文本输入与文件上传相同路径，
+    // 后端返回JSON，这里统一处理并跳转队列页）
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalBtnHtml = submitBtn.innerHTML;
+
+    // 禁用提交按钮并显示加载状态
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+    fetch('/submission/', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // 处理成功的JSON响应
+            return response.json().then(data => {
+                console.log('Submission successful:', data);
+
+                // 显示成功消息
+                showSuccess(`Task "${data.task_name}" submitted successfully! Total samples: ${data.total_count}.`);
+
+                // 直接跳转到队列页面
+                window.location.href = '/queue/';
+            });
+        } else {
+            // 处理错误响应
+            return response.json().then(errorData => {
+                throw new Error(errorData.error || 'Error processing submission');
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Submission error:', error);
+        showError(`Error: ${error.message}`);
+
+        // 重新启用提交按钮
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    });
+});
+
+// Load Example button functionality
+document.getElementById('loadExampleBtn').addEventListener('click', function() {
+    const exampleData = `176.49, 166.02, 153.61, 152.37, 148.32, 144.25, 144.21, 139.18, 119.48, 119.44, 111.34, 111.23, 107.03, 107.02, 106.92, 46.45, 42.66, 36.08, 7.71`;
+
+    document.getElementById('input_nmr').value = exampleData;
+});
+
+// Toggle Advanced Options
+document.getElementById('toggleAdvancedBtn').addEventListener('click', function() {
+    const content = document.getElementById('advancedOptionsContent');
+    const button = this;
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        button.innerHTML = '<i class="bi bi-chevron-up"></i> Hide';
+    } else {
+        content.style.display = 'none';
+        button.innerHTML = '<i class="bi bi-chevron-down"></i> Show';
+    }
+});
+
+// Model selection sync
+document.querySelectorAll('input[name="model_selection"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        document.getElementById('model_selection').value = this.value;
+        
+        // Show/hide topk field based on model selection
+        const topkField = document.getElementById('topk').closest('.mb-4');
+        if (this.value === 'ensemble') {
+            topkField.style.display = 'block';
+        } else {
+            topkField.style.display = 'none';
+        }
+    });
+});
+
+// Download 65 Molecules Example CSV
+document.getElementById('downloadExampleBtn').addEventListener('click', function() {
+    const link = document.createElement('a');
+    link.href = '/static/examples/test_core_mol_data_updated_v2.csv';
+    link.download = 'example.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+</script>
+{% endblock %}

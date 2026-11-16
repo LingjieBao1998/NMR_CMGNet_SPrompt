@@ -1,0 +1,67 @@
+services:
+  nmr-core-system:
+    image: my-nmr-service:v1.0-web
+    container_name: nmr-core-system
+    restart: unless-stopped
+    shm_size: 2g
+
+    # GPU: nvidia runtime 已注册(daemon.json: nvidia-ctk runtime configure)，
+    # NVIDIA_VISIBLE_DEVICES=1 只暴露宿主 GPU 1 (RTX 4090) 为容器内 cuda:0
+    # (镜像 torch cu118 不支持 RTX 5090)
+    runtime: nvidia
+
+    ports:
+      - "8888:8888"
+
+    env_file:
+      - .env.docker
+
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=1   # GPU 1 (RTX 4090)
+      - CUDA_VISIBLE_DEVICES=0     # 容器内唯一可见卡即 cuda:0
+      - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=nmr_core_system.settings
+
+    volumes:
+      # 整个项目目录挂载(代码与宿主机一致, db/media/logs/result 随项目持久化)
+      - .:/app/nmr_core_system
+
+      # ensemble 预测结果 result.json 的落点(代码用 parent.parent.parent/result 推导 = /app/result)
+      - ../result:/app/result
+
+      # 模型文件（只读挂载）- 代码引用 /app/models 与 /app/checkpoints
+      - ../models:/app/models:ro
+      - ../checkpoints:/app/checkpoints:ro
+
+    working_dir: /app/nmr_core_system
+
+    command: >
+      bash -c "
+        echo 'Starting NMR Core Detection System (Docker)...';
+        mkdir -p logs media/uploads/nmr_input result;
+
+        # 清理宿主机残留的旧 pid 文件(避免 celery/redis 误判已运行)
+        rm -f logs/celery.pid logs/redis.pid;
+
+        # 应用数据库迁移
+        python manage.py migrate --noinput;
+
+        # 启动Redis(容器内)
+        redis-server --daemonize yes --port 6379 --logfile logs/redis.log --pidfile logs/redis.pid;
+        sleep 2;
+
+        # 启动Celery worker(容器内GPU cuda:0 = 宿主4090)
+        celery -A nmr_core_system worker --loglevel=info --logfile=logs/celery.log --pidfile=logs/celery.pid --detach;
+        sleep 5;
+
+        # 启动Django服务
+        echo 'Starting Django server on port 8888...';
+        exec python manage.py runserver 0.0.0.0:8888
+      "
+
+    networks:
+      - nmr-network
+
+networks:
+  nmr-network:
+    driver: bridge

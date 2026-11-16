@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务提交成功</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #05998B;
+        }
+        .header h1 {
+            color: #05998B;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .task-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #05998B;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .task-info p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .task-info strong {
+            color: #05998B;
+            display: inline-block;
+            width: 100px;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #05998B;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background-color: #06b5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>✅ 任务提交成功</h1>
+        </div>
+        
+        <div class="content">
+            <p>尊敬的用户，您好！</p>
+            <p>您的任务已成功提交到喹诺酮类物质智慧检测系统。</p>
+            
+            <div class="task-info">
+                <p><strong>任务ID：</strong>{{ task.task_id }}</p>
+                <p><strong>任务名称：</strong>{{ task.task_name }}</p>
+                <p><strong>提交时间：</strong>{{ submission_time }}</p>
+                <p><strong>任务类型：</strong>{{ task.get_task_type_display }}</p>
+            </div>
+            
+            <p>您的任务正在排队等待处理，处理完成后，系统将自动把结果文件发送到此邮箱。</p>
+            
+            <p style="text-align: center;">
+                <a href="{{ site_url }}queue/" class="btn">查看任务队列</a>
+            </p>
+            
+            <p>如需查看任务进度或下载结果文件，请访问任务队列页面。</p>
+            
+            <p>如有任何问题，请通过以下方式联系我们：</p>
+            <ul>
+                <li>邮箱：<a href="mailto:{{ site_url }}contact/">联系我们</a></li>
+                <li>网站：<a href="{{ site_url }}contact/">{{ site_url }}contact/</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>谢谢使用！</p>
+            <p><strong>喹诺酮类物质智慧检测系统</strong></p>
+            <p><a href="{{ site_url }}">{{ site_url }}</a></p>
+            <p>此邮件由系统自动发送，请勿直接回复。</p>
+        </div>
+    </div>
+</body>
+</html>

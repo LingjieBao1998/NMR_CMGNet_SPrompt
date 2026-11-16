@@ -1,0 +1,11 @@
+Django>=4.2.0,<5.0.0
+celery==5.3.4
+redis==5.0.1
+django-redis==5.4.0
+Pillow==10.1.0
+whitenoise==6.6.0
+gunicorn==21.2.0
+# 邮箱验证(域名MX查询 + SMTP探测)
+dnspython==2.8.0
+py3-validate-email==1.0.5.post2
+python-dotenv==1.0.1

@@ -1,0 +1,317 @@
+{% extends 'core_detection/base.html' %}
+
+{% block title %}Contact Us - AI-Powered Quinolone Detection System{% endblock %}
+
+{% block content %}
+<!-- Enhanced Header Section -->
+<div class="contact-header mb-4" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); padding: 40px; border-radius: 16px; text-align: center; box-shadow: 0 8px 24px rgba(5, 153, 139, 0.2); margin-bottom: 30px;">
+    <div style="color: white;">
+        <h2 style="font-weight: 700; margin-bottom: 10px;" data-i18n="contact_header_title">📞 Contact Us</h2>
+        <p style="margin: 0; opacity: 0.9;" data-i18n="contact_header_subtitle">Get in touch with our AI-Powered Quinolone Detection System support team</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card enhanced-form-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none;">
+            <div class="card-header" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border-radius: 16px 16px 0 0; border: none;">
+                <h4 class="text-white mb-0" style="font-weight: 600;" data-i18n="send_message_title">📝 Send us a Message</h4>
+            </div>
+            <div class="card-body" style="padding: 30px;">
+                {% if success %}
+                <div class="alert alert-success enhanced-alert" role="alert" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);">
+                    <h4 class="alert-heading" style="font-weight: 700;" data-i18n="message_success_title">✅ Message Sent Successfully!</h4>
+                    <p data-i18n="message_success_text">Thank you for contacting us. We'll get back to you within 1-2 business days.</p>
+                    <hr>
+                    <p class="mb-0"><span data-i18n="message_success_footer">You can submit another message below or return to the</span> <a href="{% url 'core_detection:home' %}" data-i18n="home_page_link">home page</a>.</p>
+                </div>
+                {% endif %}
+                
+                {% if error %}
+                <div class="alert alert-danger enhanced-alert" role="alert" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);">
+                    {{ error }}
+                </div>
+                {% endif %}
+                
+                <form method="post" id="contactForm">
+                    {% csrf_token %}
+                    
+                    <!-- Enhanced Name Input -->
+                    <div class="mb-4">
+                        <label for="name" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="your_name">👤 Your Name</label>
+                        <input type="text" class="form-control enhanced-input" id="name" name="name"
+                               data-i18n-placeholder="placeholder_name"
+                               placeholder="Enter your full name"
+                               style="border-radius: 12px; border: 2px solid #e9ecef; padding: 12px 15px; font-size: 1rem; transition: border-color 0.3s;">
+                    </div>
+                    
+                    <!-- Enhanced Email Input -->
+                    <div class="mb-4">
+                        <label for="email" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="your_email">📧 Email Address *</label>
+                        <input type="email" class="form-control enhanced-input" id="email" name="email" required
+                               data-i18n-placeholder="placeholder_email"
+                               placeholder="Enter your email address"
+                               style="border-radius: 12px; border: 2px solid #e9ecef; padding: 12px 15px; font-size: 1rem; transition: border-color 0.3s;">
+                    </div>
+                    
+                    <!-- Enhanced Message Input -->
+                    <div class="mb-4">
+                        <label for="message" class="form-label" style="font-weight: 600; color: #495057;" data-i18n="message">💬 Message *</label>
+                        <textarea class="form-control enhanced-textarea" id="message" name="message" rows="6" required
+                                  data-i18n-placeholder="placeholder_message"
+                                  placeholder="Type your message here..."
+                                  style="border-radius: 12px; border: 2px solid #e9ecef; padding: 15px; font-size: 1rem; transition: border-color 0.3s;"></textarea>
+                    </div>
+                    
+                    <!-- Enhanced Submit Buttons -->
+                    <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                        <a href="{% url 'core_detection:home' %}" class="btn btn-outline-secondary btn-lg" style="border-radius: 25px; font-weight: 600; padding: 12px 30px;">
+                            🏠 Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success btn-lg" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border: none; border-radius: 25px; font-weight: 600; padding: 12px 40px; box-shadow: 0 4px 15px rgba(5, 153, 139, 0.3);" data-i18n="send_message_button">
+                            📤 Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Enhanced Contact Information Card -->
+        <div class="card enhanced-info-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none; margin-bottom: 24px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border-radius: 16px 16px 0 0; border: none;">
+                <h5 class="text-white mb-0" style="font-weight: 600;" data-i18n="contact_information">📋 Contact Information</h5>
+            </div>
+            <div class="card-body" style="padding: 24px;">
+                <div class="contact-item mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="contact-icon" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <span style="color: white; font-size: 1.2rem;">📧</span>
+                        </div>
+                        <div>
+                            <h6 style="color: #05998B; font-weight: 700; margin-bottom: 4px;" data-i18n="email_label">Email</h6>
+                            <p style="margin: 0; color: #495057;">liyutongvincent@163.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-item mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="contact-icon" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                            <span style="color: white; font-size: 1.2rem;">⏰</span>
+                        </div>
+                        <div>
+                            <h6 style="color: #05998B; font-weight: 700; margin-bottom: 4px;" data-i18n="response_time_label">Response Time</h6>
+                            <p style="margin: 0; color: #495057;" data-i18n="response_time_text">Usually within 1-2 business days</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-item" style="display: none;">
+                    <h6 style="color: #05998B; font-weight: 700; margin-bottom: 12px;" data-i18n="quick_links">🔗 Quick Links</h6>
+                    <ul class="list-unstyled" style="line-height: 2;">
+                        <li><a href="{% url 'core_detection:home' %}" style="color: #495057; text-decoration: none; font-weight: 500;">🏠 Home</a></li>
+                        <li><a href="{% url 'core_detection:submit_task' %}" style="color: #495057; text-decoration: none; font-weight: 500;">🧬 Submission</a></li>
+                        <li><a href="{% url 'core_detection:task_queue' %}" style="color: #495057; text-decoration: none; font-weight: 500;">📊 Queue</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced FAQ Card -->
+        <div class="card enhanced-info-card" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none;">
+            <div class="card-header" style="background: linear-gradient(135deg, #05998B 0%, #06b5a6 100%); border-radius: 16px 16px 0 0; border: none;">
+                <h5 class="text-white mb-0" style="font-weight: 600;" data-i18n="faq_title">❓ Frequently Asked Questions</h5>
+            </div>
+            <div class="card-body" style="padding: 20px;">
+                <div class="accordion enhanced-accordion" id="faqAccordion" style="border-radius: 12px; overflow: hidden;">
+                    <div class="accordion-item enhanced-accordion-item" style="border: 1px solid #e9ecef; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed enhanced-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" style="border: none; background: #f8f9fa; font-weight: 600; color: #495057;">
+                                <span style="margin-right: 10px;">🤖</span> <span data-i18n="faq_model_difference">What is the difference between Ensemble Model and XGBoost Model?</span>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body enhanced-accordion-body" style="background: white; padding: 20px;" data-i18n="faq_model_difference_content">
+                                <strong>Ensemble Model (Recommended):</strong> Two mode of CMGNet + XGBoost models for comprehensive detection. Best for complex molecular structures and research applications.<br><br>
+                                <strong>XGBoost Model:</strong> Gradient boosting approach for faster processing. Suitable for quick analysis and simpler molecular patterns.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item enhanced-accordion-item" style="border: 1px solid #e9ecef; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed enhanced-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" style="border: none; background: #f8f9fa; font-weight: 600; color: #495057;">
+                                <span style="margin-right: 10px;">⏱️</span> <span data-i18n="faq_processing_time">How long does processing take?</span>
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body enhanced-accordion-body" style="background: white; padding: 20px;" data-i18n="faq_processing_time_content">
+                                <strong>Standard Processing:</strong> 30-60 seconds per task<br>
+                                <strong>Large Datasets:</strong> May take 2-3 minutes depending on complexity<br>
+                                <strong>Processing Time:</strong> Varies by model selection (XGBoost is typically faster than CMGNet)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item enhanced-accordion-item" style="border: 1px solid #e9ecef; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed enhanced-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" style="border: none; background: #f8f9fa; font-weight: 600; color: #495057;">
+                                <span style="margin-right: 10px;">📁</span> <span data-i18n="faq_file_formats">What file formats are supported?</span>
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body enhanced-accordion-body" style="background: white; padding: 20px;" data-i18n="faq_file_formats_content">
+                                <strong>CSV Files:</strong> Two columns required (id, NMR) with comma-separated values in quotes. Maximum 5,000 entries per file.<br>
+                                <strong>Direct Input:</strong> <sup>13</sup>C NMR data can be entered directly in the submission form as comma-separated chemical shift values.<br>
+                                <strong>Example:</strong> <code>176.49, 166.02, 153.61, 152.37, 148.32...</code>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item enhanced-accordion-item" style="border: 1px solid #e9ecef; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed enhanced-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" style="border: none; background: #f8f9fa; font-weight: 600; color: #495057;">
+                                <span style="margin-right: 10px;">💾</span> <span data-i18n="faq_token_download">How do I download my task token file?</span>
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body enhanced-accordion-body" style="background: white; padding: 20px;" data-i18n="faq_token_download_content">
+                                <strong>Automatic Download:</strong> Your task token file downloads automatically immediately after submission.<br>
+                                <strong>File Format:</strong> <code>task_[TASK_ID].token</code> (e.g., <code>task_NMR_20260107141014_1cb6b497.token</code>)<br>
+                                <strong>Important:</strong> Save this file securely - you'll need it to view or delete your task later.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item enhanced-accordion-item" style="border: 1px solid #e9ecef; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button class="accordion-button collapsed enhanced-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" style="border: none; background: #f8f9fa; font-weight: 600; color: #495057;">
+                                <span style="margin-right: 10px;">⚙️</span> <span data-i18n="faq_advanced_options">What are the advanced options?</span>
+                            </button>
+                        </h2>
+                        <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body enhanced-accordion-body" style="background: white; padding: 20px;" data-i18n="faq_advanced_options_content">
+                                <strong>Model Selection:</strong> Choose between Ensemble Model (two mode of CMGNet + XGBoost models) or XGBoost Model (gradient boosting only)<br>
+                                <strong>XGBoost Threshold:</strong> Set confidence threshold (0.1-0.999, default: 0.5). Higher values = stricter filtering<br>
+                                <strong>AR Predictions:</strong> Number of top predictions for autoregressive model (1-30, default: 10). Only applies to Ensemble Model
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item enhanced-accordion-item" style="border: 1px solid #e9ecef; border-radius: 12px; margin-bottom: 12px; overflow: hidden;">
+                        <h2 class="accordion-header" id="headingSix">
+                            <button class="accordion-button collapsed enhanced-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" style="border: none; background: #f8f9fa; font-weight: 600; color: #495057;">
+                                <span style="margin-right: 10px;">💰</span> <span data-i18n="faq_free_service">Is this service free to use?</span>
+                            </button>
+                        </h2>
+                        <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body enhanced-accordion-body" style="background: white; padding: 20px;" data-i18n="faq_free_service_content">
+                                <strong>Yes!</strong> This is a free academic research tool for quinolone detection using advanced NMR spectroscopy and machine learning. No registration or payment required.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item enhanced-accordion-item" style="border: 1px solid #e9ecef; border-radius: 12px; margin-bottom: 0; overflow: hidden;">
+                        <h2 class="accordion-header" id="headingSeven">
+                            <button class="accordion-button collapsed enhanced-accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" style="border: none; background: #f8f9fa; font-weight: 600; color: #495057;">
+                                <span style="margin-right: 10px;">🔒</span> <span data-i18n="faq_lost_token">I lost my token file. Can I still access my task?</span>
+                            </button>
+                        </h2>
+                        <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body enhanced-accordion-body" style="background: white; padding: 20px;" data-i18n="faq_lost_token_content">
+                                <strong>Unfortunately, no.</strong> The token file is required for task security and privacy. Without it, you cannot view or delete your task. Please make sure to save your token file in a secure location when when creating new tasks.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Enhanced contact page interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Add focus effects to form inputs
+    const enhancedInputs = document.querySelectorAll('.enhanced-input, .enhanced-textarea');
+    enhancedInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.borderColor = '#05998B';
+            this.style.boxShadow = '0 0 0 3px rgba(5, 153, 139, 0.1)';
+        });
+        input.addEventListener('blur', function() {
+            this.style.borderColor = '#e9ecef';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // Add hover effects to accordion items
+    const accordionItems = document.querySelectorAll('.enhanced-accordion-item');
+    accordionItems.forEach(item => {
+        const button = item.querySelector('.enhanced-accordion-button');
+        if (button) {
+            button.addEventListener('mouseenter', function() {
+                this.style.background = '#e9ecef';
+                this.style.transform = 'translateX(5px)';
+            });
+            button.addEventListener('mouseleave', function() {
+                if (this.classList.contains('collapsed')) {
+                    this.style.background = '#f8f9fa';
+                    this.style.transform = 'translateX(0)';
+                }
+            });
+        }
+    });
+    
+    // Add hover effects to contact info cards
+    const infoCards = document.querySelectorAll('.enhanced-info-card');
+    infoCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 8px 28px rgba(5, 153, 139, 0.15)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+        });
+    });
+});
+
+// Form validation and submission
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    
+    // Validate required fields
+    if (!email || !message) {
+        e.preventDefault();
+        const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+        const warningMsg = currentLang === 'zh' ? '请填写所有必填字段（邮箱和消息）。' : 'Please fill in all required fields (Email and Message).';
+        alert(warningMsg);
+        return false;
+    }
+    
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        e.preventDefault();
+        const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+        const invalidEmailMsg = currentLang === 'zh' ? '请输入有效的邮箱地址。' : 'Please enter a valid email address.';
+        alert(invalidEmailMsg);
+        return false;
+    }
+    
+    // Show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+    const sendingText = currentLang === 'zh' ? '发送中...' : 'Sending...';
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ' + sendingText;
+});
+</script>
+{% endblock %}
