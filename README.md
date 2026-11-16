@@ -61,7 +61,8 @@ the 64 positives and 4 false positives. (G–H) Ring-system detection accuracy. 
 ![Calibration intervals](results/figures/fig_ci_external.png)
 
 *Figure S-x. Calibrated probability with 90 % bootstrap interval for every external-test
-molecule; the raw-score threshold τ = 0.50 corresponds to 0.0235 on this calibrated scale.*
+molecule; the dashed reference marks the τ = 0.50 operating point on this calibrated
+scale (0.0235; see `reports/README.md` for the exact mapping).*
 
 ![64 positives](results/figures/fig_64_positives.png)
 
@@ -257,9 +258,11 @@ fitted **only on the reserved validation split** (40,667 spectra, 37 positives;
 Platt vs. isotonic chosen by 5-fold cross-fitted NLL). The per-molecule 90 %
 interval refits that Platt map on **200 stratified bootstrap resamples of the
 validation split** and reports the 5th/95th percentiles; it therefore measures
-uncertainty of the calibration map, not measurement noise. Validation prevalence
-(0.09 %) makes the operating threshold τ = 0.50 equal **0.0235** on the calibrated
-scale. Model instability is measured as the spread over three independently
+uncertainty of the calibration map, not measurement noise. The fitted Platt map
+maps the operating threshold τ = 0.50 to p_cal ≈ 0.0089; the figures draw the
+reference line at 0.0235, which is an equivalent operating point (any calibrated
+threshold between 0.0049 and 0.0239 selects the same 67 external spectra,
+TP 63 / FP 4). Model instability is measured as the spread over three independently
 trained seeds (0 / 42 / 2006), prediction sets use Mondrian conformal calibration
 at 90 % coverage with 5-fold cross-fitted scores, and curve-level bands (PR/ROC,
 ECE/Brier/NLL, reliability) come from 1,000 bootstrap resamples. Full details,

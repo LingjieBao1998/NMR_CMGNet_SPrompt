@@ -20,6 +20,9 @@ TRAIN_LMDB=${TRAIN_LMDB:-data/experimental/exp_lit.lmdb}
 EXTRA_LMDB=${EXTRA_LMDB:-data/pubchem/pubchem_1209.lmdb}
 EXTRA_JSON=${EXTRA_JSON:-data/experimental/ex_train.json}
 VALID=${VALID:-data/validation/validation.json}
+# NOTE: the original 40,642-record held-out in-domain test split is not part of
+# this release, so TEST defaults to the validation split and the `test` columns
+# of the report duplicate `valid`. Point TEST=... at any other JSON to evaluate.
 TEST=${TEST:-data/validation/validation.json}
 EXTERNAL=${EXTERNAL:-data/external_test/external_test.json}
 F_SPLIT=${F_SPLIT:-data/f_split/with_f_split.json}

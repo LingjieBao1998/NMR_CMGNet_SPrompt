@@ -25,6 +25,9 @@ bash scripts/train/train_cmgnet_sprompt.sh 42 0
 # 3. inference + evaluation
 bash scripts/infer/infer_cmgnet_sprompt.sh data/external_test/external_test.json \
      output/infer_sprompt_external 0
+
+# 4. figures (CPU, cached artefacts; see reports/README.md)
+bash scripts/plot/make_all_figures.sh
 ```
 
 All scripts resolve paths relative to the repository root and accept

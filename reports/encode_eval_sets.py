@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 
 import numpy as np
 
@@ -26,14 +27,17 @@ import torch  # noqa: E402
 
 from infer import ModelInference  # noqa: E402
 from train_xgb_cress_new_dataset_seed42 import load_json  # noqa: E402
+from train_xgb_cress_nmrmind import build_cress_config, CRESS_WEIGHTS  # noqa: E402
 
 OUT = os.path.join(ROOT, "reports", "calib_data")
 os.makedirs(OUT, exist_ok=True)
 
 SPLITS = {
-    "validation": "data/new_dataset/validation.json",
+    "validation": "data/validation/validation.json",
+    # 40,642-record held-out internal split from the source distribution
+    # (not included in this release)
     "internal_test": "data/new_dataset/test.json",
-    "external_test": "data/new_dataset/external_test.json",
+    "external_test": "data/external_test/external_test.json",
 }
 MODEL = "models/xgboost/model_xgb_cress_ex_train_seed42.pkl"
 BATCH = 512
@@ -57,7 +61,7 @@ def encode(mi, nmrs):
 
 def main():
     torch.set_num_threads(32)
-    mi = ModelInference("models/2_5_w_model/8.json", "models/2_5_w_model/8.pth", "cuda")
+    mi = ModelInference(build_cress_config(), CRESS_WEIGHTS, "cuda")
     clf = joblib.load(MODEL)
     meta = {}
 

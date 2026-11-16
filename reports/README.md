@@ -49,6 +49,7 @@ Individual scripts resolve paths relative to the repository root (override with
 | `viz_tmp/train_emb_subset.npz` | subset of `train_emb.npy` | 41,961 embeddings in the FN #12 neighbourhood (59 MB instead of 4.8 GB) |
 | `results/predictions/*.json` | CMGNet / NMR-Solver runs | prediction dumps used by the qualitative figures |
 | `models/xgboost/model_xgb_cress_ex_train_seed42.pkl` | `train_xgb_cress_new_dataset.py` | classifier used by the panels |
+| `models/xgboost/model_xgb_cress_ex_train_seed{0,2006}.pkl` | `train_xgb_cress_new_dataset.py` | the other two seeds, used for the 3-seed spread in `uncertainty_ci.py` |
 
 ## How the confidence intervals are computed
 
@@ -60,10 +61,13 @@ embedding (`encode_eval_sets.py`, `models/xgboost/model_xgb_cress_ex_train_seed4
 **2. Calibration (fitted on the reserved validation split only).**
 `logit(p_raw) → Platt` (`LogisticRegression(C=1e6)`), fitted on the 40,667
 validation spectra (37 positives); Platt vs. isotonic is chosen by 5-fold
-cross-fitted NLL on validation, never on external labels.  Because the
-validation prevalence is 0.09 %, the raw operating threshold τ = 0.50 maps to
-**0.0235** on the calibrated scale (`calibration_review_metrics.json`,
-`platt_a = 0.9542`, `platt_b = −4.716`).
+cross-fitted NLL on validation, never on external labels.  The fitted map is
+`p_cal = σ(0.9542·logit(p_raw) − 4.716)`, so raw τ = 0.50 corresponds to
+`p_cal ≈ 0.0089`.  The dashed reference in the figures is drawn at **0.0235**
+instead: any calibrated threshold in the gap (0.0049, 0.0239] selects exactly
+the same 67 external spectra (TP 63 / FP 4), and 0.0235 is the round value just
+below the lowest-scoring false positive (0.0239).  Both numbers therefore encode
+the same operating point (`calibration_review_metrics.json`).
 
 **3. Per-molecule 90 % interval (Figures 2E–2F, `fig_ci_external`).**
 `uncertainty_ci.py` draws `N_BOOT_CAL = 200` **stratified** bootstrap resamples
@@ -102,16 +106,25 @@ test set for the PR/ROC bands and the AUPRC/AUROC intervals (AUPRC 0.9891,
 bootstrap resamples (2.5/97.5 percentiles) for ECE / Brier / NLL and the
 reliability curve.
 
-**Regenerating the intervals**
+**Regenerating the figures and the intervals**
+
+The figures themselves are fully reproducible from the cached files shipped here:
 
 ```bash
-# 1. embeddings + raw probabilities (GPU, ~2 min)
-python reports/encode_eval_sets.py
-# 2. calibration metrics and reliability figure (CPU)
-python reports/calibrate_and_review.py
-# 3. bootstrap intervals, conformal sets, 3-seed spread (CPU)
-python reports/uncertainty_ci.py
-# 4. figures
+bash scripts/plot/make_all_figures.sh
 python reports/make_ci_external_figure.py
 python reports/make_uncertainty_figure.py
 ```
+
+The cached arrays were produced by (for provenance; these steps need the GPU
+CReSS encoder and the 768-d embedding caches for the 40,667 validation and
+40,642 internal-test spectra, which are too large to ship):
+
+```bash
+python reports/encode_eval_sets.py     # embeddings + raw probabilities
+python reports/calibrate_and_review.py # calibration metrics, reliability
+python reports/uncertainty_ci.py       # per-sample intervals, conformal, seeds
+```
+
+`reports/calib_data/*_emb.npy` and `<split>_emb.npy` are therefore inputs, not
+outputs, of the shipped figure scripts.

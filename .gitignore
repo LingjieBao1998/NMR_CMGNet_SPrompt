@@ -8,7 +8,6 @@ data/*.lmdb/
 checkpoints/*.ckpt
 checkpoints/bart_base_0910/
 checkpoints/cress/
-models/xgboost/*.pkl
 models/cmgnet/
 
 # docker image

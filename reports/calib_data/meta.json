@@ -3,18 +3,18 @@
     "n": 40667,
     "pos": 37,
     "neg": 40630,
-    "source": "data/new_dataset/validation.json"
+    "source": "data/validation/validation.json"
   },
   "internal_test": {
     "n": 40642,
     "pos": 37,
     "neg": 40605,
-    "source": "data/new_dataset/test.json"
+    "source": "data/new_dataset/test.json (legacy held-out split, not shipped)"
   },
   "external_test": {
     "n": 4502,
     "pos": 64,
     "neg": 4438,
-    "source": "data/new_dataset/external_test.json"
+    "source": "data/external_test/external_test.json"
   }
 }

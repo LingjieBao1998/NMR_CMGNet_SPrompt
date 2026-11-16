@@ -37,9 +37,9 @@ OUT = B + "reports/"
 D = OUT + "calib_data/"
 SETS = ["validation", "internal_test", "external_apr18peak"]
 MODELS = [
-    "output/xgb_cress_new_dataset_ex_train/model_xgb_cress_new_dataset_seed0.pkl",
+    "models/xgboost/model_xgb_cress_ex_train_seed0.pkl",
     "models/xgboost/model_xgb_cress_ex_train_seed42.pkl",
-    "output/xgb_cress_new_dataset_ex_train/model_xgb_cress_new_dataset_seed2006.pkl",
+    "models/xgboost/model_xgb_cress_ex_train_seed2006.pkl",
 ]
 N_BOOT_CAL = 200
 ALPHA = 0.10
