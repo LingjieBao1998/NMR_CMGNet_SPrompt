@@ -1,24 +1,88 @@
-# data (large binaries, delivered separately)
+# ---------------------------------------------------------------------------
+# NMR_CMGNet_SPrompt
+#
+# The release directory ships large binaries (LMDB corpora, checkpoints, the
+# Docker image) next to the code; they are deliberately kept out of git.
+# Small caches that the figure scripts need ARE tracked (see viz_tmp below).
+# ---------------------------------------------------------------------------
+
+# ------------------------------------------------------------------ secrets
+.env
+.env.*
+!**/.env.example
+!**/.env.docker
+
+# ------------------------------------------------------------------ Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+pip-wheel-metadata/
+site/
+
+# virtual environments
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# ------------------------------------------------------------------ notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# ------------------------------------------------------------------ data
+# 33 GB of LMDBs and the raw source corpus are delivered separately.
+# JSON splits (data/**/*.json), data/manifest.json and data/README.md are tracked.
 data/_source/
+data/**/*.lmdb/
 data/**/data.mdb
 data/**/lock.mdb
-data/*.lmdb/
 
-# model weights
-checkpoints/*.ckpt
+# ------------------------------------------------------------------ weights
+# 4 GB of checkpoints: base model, CReSS encoder, BART tokenizer.
+*.ckpt
 checkpoints/bart_base_0910/
 checkpoints/cress/
 models/cmgnet/
+checkpoints/**/*.bin
+checkpoints/**/*.pt
+checkpoints/**/*.pth
+checkpoints/**/*.safetensors
+# the small XGBoost heads (<=6 MB each) are part of the release
+!models/xgboost/*.pkl
 
-# docker image
+# ------------------------------------------------------------------ docker
+# 6.8 GB image tarball, pulled separately
+docker/*.tar
 docker/*.tar.gz
 
-# runtime artefacts
+# ------------------------------------------------------------------ generated
 output/
 logs/
+*.log
+events.out.tfevents.*
+wandb/
+mlruns/
+
+# ------------------------------------------------------------------ caches
+# viz_tmp holds the 3.30 M-molecule UMAP coordinates and embedding caches.
+# Only the small arrays required to regenerate the paper figures are tracked;
+# train_emb.npy (4.8 GB) and re-fitted intermediates stay local.
 viz_tmp/*
-# small cached arrays required to regenerate the figures (coords, labels,
-# 41,961-row embedding subset) are tracked; the 4.8 GB train_emb.npy is not
 !viz_tmp/coords_fit.npy
 !viz_tmp/coords_rest.npy
 !viz_tmp/fit_idx.npy
@@ -27,7 +91,22 @@ viz_tmp/*
 !viz_tmp/test_labels.npy
 !viz_tmp/train_emb_subset.npz
 !viz_tmp/f48_pred.npz
-__pycache__/
-*.pyc
-*.log
+
+# ------------------------------------------------------------------ editors / OS
 .DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.#*
+~$*
+
+# ------------------------------------------------------------------ misc
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
