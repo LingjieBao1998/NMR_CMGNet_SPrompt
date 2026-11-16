@@ -88,7 +88,8 @@ python scripts/build_lmdb/filter_lmdb_by_source.py \
 
 The release file then has 1,175,089 records (~23 GB); the training file
 `synth_predicted.lmdb` keeps 1,488,432 records for reproducibility of the
-reported models.
+reported models.  Package it with
+`SYNTH_LMDB=data/synthetic/synth_predicted_release.lmdb INCLUDE_DATA=1 bash scripts/package_zenodo.sh`.
 
 | Path | Size | Records |
 |---|---:|---:|

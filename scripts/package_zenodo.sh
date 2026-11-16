@@ -13,6 +13,9 @@ VERSION="${VERSION:-v1.0.0}"
 OUT="${OUT:-$ROOT/dist/zenodo}"
 INCLUDE_WEIGHTS="${INCLUDE_WEIGHTS:-0}"
 INCLUDE_DATA="${INCLUDE_DATA:-0}"
+# Override when packaging the filtered release corpus:
+#   SYNTH_LMDB=data/synthetic/synth_predicted_release.lmdb
+SYNTH_LMDB="${SYNTH_LMDB:-data/synthetic/synth_predicted.lmdb}"
 
 mkdir -p "$OUT"
 cd "$ROOT"
@@ -44,7 +47,7 @@ if [[ "$INCLUDE_DATA" == "1" ]]; then
         data/experimental/ex_train.lmdb \
         data/experimental/ex_train.json \
         data/experimental/ex_train.ring.json \
-        data/synthetic/synth_predicted.lmdb \
+        "$SYNTH_LMDB" \
         data/pubchem/pubchem_1209.lmdb \
         data/validation/validation.lmdb \
         data/validation/validation.json \
