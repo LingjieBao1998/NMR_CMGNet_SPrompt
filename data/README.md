@@ -49,6 +49,29 @@ The original corpus contains 3,196,326 records. 1,657,910 of them (51.9 %) come 
 `NMRium` upload collection; **that subset is deliberately excluded** because its
 provenance could not be verified. Total retained: 49,984 experimental + 1,488,432 synthetic.
 
+## Licensing and availability
+
+| `source` | Records | Terms |
+|---|---:|---|
+| `multi` | 789,028 | not documented in the legacy tree; confirm before redistribution |
+| `napacd` | 313,343 | not documented in the legacy tree; confirm before redistribution |
+| `acd_lotusv9` | 194,550 | **CC BY 4.0** — LOTUS v9 structures + ACD/Labs-predicted ¹³C shifts, Zenodo [10.5281/zenodo.8175939](https://doi.org/10.5281/zenodo.8175939) |
+| `pnmrnp2` | 191,511 | not documented in the legacy tree; confirm before redistribution |
+| `NMR BANK` | 28,406 | source terms |
+| `c13_naproc` | 20,340 | source terms |
+| `bmrb` | 894 | BMRB data-use terms (cite) |
+| `Spektraris_NMR` | 159 | source terms |
+| `GlycoNMR` | 119 | source terms |
+| `hmdb` | 66 | HMDB academic-use terms |
+
+The ACD/Labs **software** is commercial, but the `acd_lotusv9` **dataset** was
+published under CC BY 4.0 by Nuzillard & Kuhn; redistribution is allowed with
+attribution.  The other synthetic sources have no licence recorded; use
+`scripts/build_lmdb/filter_lmdb_by_source.py` to build a cleared subset and
+`scripts/build_lmdb/export_source_index.py` to publish SMILES/record indices
+without spectra.  `data/_source/new_db.lmdb` is a legacy absolute symlink and is
+not part of the release.
+
 ## LMDB schema
 
 Each value is a pickled dict:

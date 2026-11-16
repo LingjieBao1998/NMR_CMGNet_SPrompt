@@ -270,6 +270,32 @@ including the regeneration commands, are in `reports/README.md`.
 
 ---
 
+## License and availability
+
+Original code and the trained model weights are released under the
+**Apache License 2.0** (see [`LICENSE`](LICENSE)).  Third-party software and
+datasets keep their own terms; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+* **Code:** https://github.com/LingjieBao1998/NMR_CMGNet_SPrompt (tag `v1.0.0`),
+  archived at Zenodo `[DOI: to be reserved]`.
+* **Weights:** same Zenodo record, separate `weights` archive.
+* **Evaluation data:** `data/external_test/` (4,502 spectra with per-record
+  provenance), `data/pubchem/` and `data/f_split/` are released with the paper.
+* **Predicted corpora:** the ACD/Lotus component of `data/synthetic/` is
+  redistributed under **CC BY 4.0** (Nuzillard & Kuhn, Zenodo
+  [10.5281/zenodo.8175939](https://doi.org/10.5281/zenodo.8175939), LOTUS v9
+  structures with ACD/Labs-predicted ¹³C shifts).  The remaining predicted
+  records (`multi`, `napacd`, `pnmrnp2`) are provided as per-source SMILES /
+  record indices until their original terms are confirmed; the full records are
+  available from the corresponding author on reasonable request.
+* **Web service:** `docker/my-nmr-service_v1.0-web.tar.gz`, also available as
+  `[registry/image:tag]`.
+
+See [`docs/zenodo_upload.md`](docs/zenodo_upload.md) for the exact upload
+manifest and [`data/README.md`](data/README.md) for per-source provenance.
+
+---
+
 ## Notes and limitations
 
 * Metrics are reported on **peak lists** (pure compounds); matrix interference and

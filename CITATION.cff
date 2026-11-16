@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: "If you use this software or the released data splits, please cite this record."
+type: software
+title: "CMGNet-SPrompt: a deep learning framework for quinolone scaffold detection in cosmetics via 13C NMR spectroscopy"
+version: 1.0.0
+date-released: 2026-11-16
+license: Apache-2.0
+repository-code: "https://github.com/LingjieBao1998/NMR_CMGNet_SPrompt"
+keywords:
+  - 13C NMR
+  - quinolone
+  - scaffold detection
+  - molecular generation
+  - cosmetic adulteration
+  - deep learning
+abstract: >-
+  CMGNet-SPrompt combines a conditional BART-based molecular generator with a
+  CReSS/XGBoost scaffold gate to detect the 4-oxo-1,4-dihydroquinoline-3-carboxylic
+  acid core from pure 13C NMR peak lists.  The release contains training and
+  inference code, the processed data splits, figure-generation scripts and the
+  reported model checkpoints.
+authors:
+  - family-names: Li
+    given-names: Yutong
+  - family-names: Bao
+    given-names: Lingjie
+  - family-names: Hu
+    given-names: Jiaqi
+  - family-names: Xiong
+    given-names: Tianning
+  - family-names: Wang
+    given-names: Jike
+  - family-names: Zou
+    given-names: Borui
+  - family-names: Lu
+    given-names: Dejin
+  - family-names: Wang
+    given-names: Qing
+  - family-names: Yang
+    given-names: Huiying
+  - family-names: Hou
+    given-names: Tingjun
+  - family-names: Wu
+    given-names: Xianfu
+  - family-names: Lu
+    given-names: Yong

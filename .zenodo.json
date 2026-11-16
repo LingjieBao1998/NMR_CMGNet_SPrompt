@@ -1,0 +1,40 @@
+{
+  "title": "CMGNet-SPrompt: a deep learning framework for quinolone scaffold detection in cosmetics via 13C NMR spectroscopy",
+  "description": "<p>Reference implementation of CMGNet-SPrompt, a conditional molecular generator (BART/CMGNet) combined with a CReSS/XGBoost scaffold gate for detecting the 4-oxo-1,4-dihydroquinoline-3-carboxylic-acid core from pure <sup>13</sup>C NMR peak lists.</p><p>This record contains the training and inference code, the processed data splits and manifests, the evaluation and figure-generation scripts, the shipped prediction outputs, and the reported model checkpoints.</p><p><strong>Licence.</strong> Original code and the trained weights are released under the Apache License 2.0. Third-party components and datasets keep their original licences; see <code>THIRD_PARTY_NOTICES.md</code> in the archive.</p><p><strong>Data.</strong> The synthetic corpus includes LOTUS v9 structures with ACD/Labs-predicted <sup>13</sup>C shifts, published under CC BY 4.0 (Nuzillard &amp; Kuhn, Zenodo 10.5281/zenodo.8175939), plus records from <code>multi</code>, <code>napacd</code> and <code>pnmrnp2</code> whose redistribution terms are being confirmed. The external test set is released with per-record provenance; the data record contains either the full corpus or the cleared subset plus per-source record indices. See the Data Availability Statement in the manuscript.</p>",
+  "creators": [
+    { "name": "Li, Yutong" },
+    { "name": "Bao, Lingjie" },
+    { "name": "Hu, Jiaqi" },
+    { "name": "Xiong, Tianning" },
+    { "name": "Wang, Jike" },
+    { "name": "Zou, Borui" },
+    { "name": "Lu, Dejin" },
+    { "name": "Wang, Qing" },
+    { "name": "Yang, Huiying" },
+    { "name": "Hou, Tingjun" },
+    { "name": "Wu, Xianfu" },
+    { "name": "Lu, Yong" }
+  ],
+  "keywords": [
+    "13C NMR",
+    "quinolone",
+    "scaffold detection",
+    "molecular generation",
+    "cosmetic adulteration",
+    "deep learning"
+  ],
+  "license": "Apache-2.0",
+  "upload_type": "software",
+  "access_right": "open",
+  "version": "1.0.0",
+  "publication_date": "2026-11-16",
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/LingjieBao1998/NMR_CMGNet_SPrompt",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "notes": "The ACD/Lotus-derived records are redistributed under CC BY 4.0 with attribution (Nuzillard & Kuhn, Zenodo 10.5281/zenodo.8175939). Records from multi/napacd/pnmrnp2 are included only if their terms permit redistribution; otherwise the data record contains the cleared subset plus per-source record indices. ACD/Labs prediction software is commercial and is not distributed."
+}
