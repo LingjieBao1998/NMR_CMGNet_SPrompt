@@ -14,7 +14,8 @@ data/
 │   ├── ex_train.ring.json           # same, with ring-system field
 │   └── ex_train.lmdb                # LMDB built from the ring JSON
 ├── synthetic/
-│   └── synth_predicted.lmdb         # predicted spectra (1,488,432)
+│   └── synth_predicted.lmdb         # predicted spectra (1,488,432; 313,343
+│                                     # carry source=NMRium, formerly napacd)
 ├── pubchem/
 │   └── pubchem_1209.lmdb            # PubChem positives, filtered (77,328)
 ├── nmrmind/
@@ -37,7 +38,7 @@ data/
 | Category | Source | Records | Positives |
 |---|---|---:|---:|
 | `experimental/exp_lit.lmdb` | `new_db.lmdb` records with `source ∈ {NMR BANK, c13_naproc, bmrb, Spektraris_NMR, GlycoNMR, hmdb}` | 49,984 | 55 |
-| `synthetic/synth_predicted.lmdb` | `new_db.lmdb` records with `source ∈ {multi, napacd, acd_lotusv9, pnmrnp2}` | 1,488,432 | 2,461 |
+| `synthetic/synth_predicted.lmdb` | `new_db.lmdb` records with `source ∈ {multi, acd_lotusv9, pnmrnp2}` plus 313,343 records whose source was rewritten from `napacd` to `NMRium` | 1,488,432 | 2,461 |
 | `pubchem/pubchem_1209.lmdb` | PubChem positive corpus `new_data_1209.filtered` after removal of 90 evaluation overlaps | 77,328 | 77,328 |
 | `nmrmind/*` | original NMRMind splits (unchanged) | 2,137,771 / 55,167 / 55,150 | 3,288 / 81 / 87 |
 | `validation/*` | clean `new_dataset` validation split | 40,667 | 37 |
@@ -49,12 +50,19 @@ The original corpus contains 3,196,326 records. 1,657,910 of them (51.9 %) come 
 `NMRium` upload collection; **that subset is deliberately excluded** because its
 provenance could not be verified. Total retained: 49,984 experimental + 1,488,432 synthetic.
 
+Inside `synthetic/synth_predicted.lmdb`, the 313,343 records whose original
+`source` was `napacd` have been rewritten to `source = "NMRium"` because their
+provenance follows the NMRium upload collection.  The records (spectra, labels,
+fingerprints) are unchanged and remain in the file, so the entry count is still
+1,488,432; only the provenance field changed.  `synth_predicted.pre_napm.lmdb`
+is the pre-rewrite copy kept locally for comparison and is not part of the release.
+
 ## Licensing and availability
 
 | `source` | Records | Terms |
 |---|---:|---|
 | `multi` | 789,028 | not documented in the legacy tree; confirm before redistribution |
-| `napacd` | 313,343 | not documented in the legacy tree; confirm before redistribution |
+| `NMRium` (313,343 formerly `napacd`) | 313,343 | unverified provenance; not redistributed |
 | `acd_lotusv9` | 194,550 | **CC BY 4.0** — LOTUS v9 structures + ACD/Labs-predicted ¹³C shifts, Zenodo [10.5281/zenodo.8175939](https://doi.org/10.5281/zenodo.8175939) |
 | `pnmrnp2` | 191,511 | not documented in the legacy tree; confirm before redistribution |
 | `NMR BANK` | 28,406 | source terms |

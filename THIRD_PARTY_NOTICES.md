@@ -58,11 +58,11 @@ itself covered by the nmrshiftdb2 Database License (share-alike).
 | GlycoNMR | `exp_lit` | source terms | no |
 | PubChem | `pubchem_1209` | PubChem terms (public domain) | yes |
 | **ACD/Lotus (`acd_lotusv9`)** | `synthetic` | **CC BY 4.0** (Zenodo 10.5281/zenodo.8175939; shifts generated with ACD/Labs) | yes, with attribution |
-| NPACD / `napacd` | `synthetic` | no licence recorded in the legacy tree | confirm before release |
+| NMRium (313,343, formerly `napacd`) | `synthetic` | provenance unverified; source rewritten from `napacd` to `NMRium` | no |
 | `multi` | `synthetic` | no licence recorded in the legacy tree | confirm before release |
 | `pnmrnp2` | `synthetic` | no licence recorded in the legacy tree | confirm before release |
 | NMRMind | `nmrmind/*` | upstream release terms | no |
-| NMRium | excluded | provenance unverified | no |
+| NMRium (upload collection) | excluded | provenance unverified | no |
 
 The `acd_lotusv9` component (194,550 records) is derived from LOTUS version 9
 structures with ACD/Labs-predicted 13C shifts, published by Nuzillard & Kuhn on
@@ -71,10 +71,11 @@ with attribution, even though the ACD/Labs prediction software itself is
 commercial.
 
 The remaining synthetic components have no licence recorded in the legacy tree:
-`multi` (789,028 records), `napacd` (313,343) and `pnmrnp2` (191,511).  Confirm
-their terms before publishing the full 1,488,432-record
-`data/synthetic/synth_predicted.lmdb`; otherwise publish the cleared subset plus
-per-source record indices.
+`multi` (789,028 records), `pnmrnp2` (191,511) and the 313,343 records relabelled
+`NMRium` (formerly `napacd`).  Confirm the `multi`/`pnmrnp2` terms before
+publishing the full 1,488,432-record `data/synthetic/synth_predicted.lmdb`;
+otherwise publish the cleared subset plus per-source record indices.  The
+`NMRium`-labelled records are excluded from release.
 
 The external test set (`data/external_test/`) is released with per-record
 provenance so that each record can be traced to its original source.

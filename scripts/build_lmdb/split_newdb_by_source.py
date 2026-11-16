@@ -3,8 +3,8 @@
 
 Category mapping (by the `source` field stored in each record):
   experimental : NMR BANK / c13_naproc / bmrb / Spektraris_NMR / GlycoNMR / hmdb   (~50 k)
-  synthetic    : multi / napacd / acd_lotusv9 / pnmrnp2                            (~1.49 M)
-  excluded     : NMRium (15,495,052-entry upload corpus, provenance unclear)      (~1.66 M)
+  synthetic    : multi / acd_lotusv9 / pnmrnp2                                    (~1.18 M)
+  excluded     : NMRium / napacd (NMRium-derived predictions)                     (~1.97 M)
 
 Values are copied as raw pickle bytes, so every field (C_nmr, ring_system,
 ecfp, maccs, label, ...) is preserved byte-for-byte.  Keys are renumbered
@@ -32,8 +32,10 @@ sys.modules.setdefault("numpy._core.numeric", _nc.numeric)
 sys.modules.setdefault("numpy._core.multiarray", _nc.multiarray)
 
 EXPERIMENTAL = {"NMR BANK", "c13_naproc", "bmrb", "Spektraris_NMR", "GlycoNMR", "hmdb"}
-SYNTHETIC = {"multi", "napacd", "acd_lotusv9", "pnmrnp2"}
-EXCLUDED = {"NMRium"}
+SYNTHETIC = {"multi", "acd_lotusv9", "pnmrnp2"}
+# `napacd` is NMRium-derived predicted data; keep it in the unverified bucket so
+# that it is never released together with the curated synthetic corpus.
+EXCLUDED = {"NMRium", "napacd"}
 
 
 def open_out(path, map_gb):

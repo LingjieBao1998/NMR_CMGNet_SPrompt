@@ -4,6 +4,12 @@
  "excluded": {
   "NMRium": 1657910
  },
+ "source_relabel": {
+  "from": "napacd",
+  "to": "NMRium",
+  "records": 313343,
+  "note": "source field rewritten inside synthetic/synth_predicted.lmdb; spectra, labels and keys are unchanged, so the file still has 1488432 entries"
+ },
  "splits": {
   "experimental/exp_lit.lmdb": {
    "entries": 49984,

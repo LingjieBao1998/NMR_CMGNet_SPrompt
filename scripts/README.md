@@ -4,6 +4,9 @@
 |---|---|
 | `build_lmdb/split_newdb_by_source.py` | split the 3.20 M source corpus into experimental / synthetic LMDBs |
 | `build_lmdb/json_to_lmdb.py` | JSON split → featurised LMDB (ring systems, ECFP, MACCS) |
+| `build_lmdb/filter_lmdb_by_source.py` | copy a subset selected by `source` (e.g. the CC BY 4.0 ACD/Lotus records) |
+| `build_lmdb/relabel_source.py` | rewrite the `source` field into a new LMDB |
+| `build_lmdb/export_source_index.py` | export key/source/SMILES/label without spectra, for restricted corpora |
 | `train/train_cmgnet_sprompt.sh` | fine-tune CMGNet-SPrompt on experimental + synthetic + PubChem |
 | `train/train_xgb_cress.sh` | train the CReSS → XGBoost core classifier |
 | `infer/infer_cmgnet_sprompt.sh` | full CMGNet-SPrompt inference (XGB gate + prompt + 10 beams) |

@@ -58,28 +58,43 @@ Upload the LMDB directories and the JSON splits, preserving the layout.
 
 ### Licensing status of the synthetic corpus
 
-The 1,488,432-record `synth_predicted.lmdb` is a union of four sources:
+The 1,488,432-record `synth_predicted.lmdb` is a union of three documented
+sources plus 313,343 records relabelled `NMRium` (the former `napacd` source):
 
 | `source` | Records | Licence status |
 |---|---:|---|
 | `multi` | 789,028 | **no licence recorded** in the legacy tree |
-| `napacd` | 313,343 | **no licence recorded** |
+| `NMRium` (313,343 formerly `napacd`) | 313,343 | **unverified provenance**; excluded |
 | `acd_lotusv9` | 194,550 | **CC BY 4.0** — Zenodo 10.5281/zenodo.8175939 |
 | `pnmrnp2` | 191,511 | **no licence recorded** |
 
 `acd_lotusv9` is the LOTUS v9 structure database with ACD/Labs-predicted 13C
 shifts (Nuzillard & Kuhn, 2023).  The ACD/Labs **software** is commercial, but
 the **dataset** is published under CC BY 4.0, so it can be redistributed with
-attribution.  The other three sources (93.5 % of the corpus) have no documented
-licence; confirm them before publishing the full 29 GB LMDB.
+attribution.  The 313,343 `NMRium`-labelled records are NMRium-derived and are
+excluded from release; `multi` and `pnmrnp2` have no documented licence.
 
-### Scenario A — all four sources cleared (33 GB)
+### Scenario A — all remaining sources cleared (33 GB)
+
+The full file is published only after `multi` and `pnmrnp2` are cleared **and**
+the 313,343 `NMRium`-labelled records are filtered out.  Rebuild with:
+
+```bash
+python scripts/build_lmdb/filter_lmdb_by_source.py \
+    --src data/synthetic/synth_predicted.lmdb \
+    --sources multi,acd_lotusv9,pnmrnp2 \
+    --out data/synthetic/synth_predicted_release.lmdb
+```
+
+The release file then has 1,175,089 records (~23 GB); the training file
+`synth_predicted.lmdb` keeps 1,488,432 records for reproducibility of the
+reported models.
 
 | Path | Size | Records |
 |---|---:|---:|
 | `data/experimental/exp_lit.lmdb` | 928 MB | 49,984 |
 | `data/experimental/ex_train.lmdb` + JSON | 107 MB | 24,520 |
-| `data/synthetic/synth_predicted.lmdb` | 29 GB | 1,488,432 |
+| `data/synthetic/synth_predicted_release.lmdb` | ~23 GB | 1,175,089 |
 | `data/pubchem/pubchem_1209.lmdb` | 1.5 GB | 77,328 |
 | `data/validation/validation.lmdb` + `.json` | 171 MB | 40,667 |
 | `data/external_test/external_test.lmdb` + JSON | 19 MB | 4,502 |
@@ -103,7 +118,7 @@ record indices for the rest.
 | `data/experimental/ex_train.lmdb` + JSON (nmrshiftdb2, share-alike) | 107 MB | 24,520 |
 | `data/f_split/*.json` | 40 KB | 48 + 48 |
 | `data/manifest.json`, `data/README.md` | 8 KB | — |
-| per-source index CSV (no spectra) for `multi` / `napacd` / `pnmrnp2` | ~120 MB | 1.29 M |
+| per-source index CSV (no spectra) for `multi` / `pnmrnp2` / `NMRium` | ~120 MB | 1.29 M |
 
 ### Scenario C — minimum (~1.6 GB)
 
@@ -171,7 +186,9 @@ dropped to save 1.24 GB.
 
 - [x] Add `LICENSE` (Apache-2.0) and `THIRD_PARTY_NOTICES.md`.
 - [x] Add `CITATION.cff` and `.zenodo.json` (author list and metadata).
-- [ ] Confirm `multi` / `napacd` / `pnmrnp2` terms; choose Scenario A or B.
+- [x] Relabel the 313,343 `napacd` records to `source = "NMRium"` in
+      `data/synthetic/synth_predicted.lmdb` (spectra and labels unchanged).
+- [ ] Confirm `multi` / `pnmrnp2` terms; choose Scenario A or B.
 - [ ] Purge `nmr_core_system/.env` from git history and rotate the SMTP password.
 - [ ] Tag the release: `git tag -a v1.0.0 -m "..." && git push origin v1.0.0`.
 - [ ] Generate `SHA256SUMS` for every archive; attach it to the record.
@@ -191,8 +208,9 @@ dropped to save 1.24 GB.
 > `data/README.md`).  The ACD/Lotus predicted-shift subset is redistributed
 > under CC BY 4.0 (Nuzillard & Kuhn, Zenodo 10.5281/zenodo.8175939); the
 > nmrshiftdb2-derived splits are released under the nmrshiftdb2 Database
-> License.  Predicted records whose original terms do not permit redistribution
-> are provided as SMILES/record indices together with the rebuild scripts, and
-> the full records are available from the corresponding author on reasonable
-> request.  The Docker image for the web service is available at
-> [registry/image:tag].
+> License.  The 313,343 records originally labelled `napacd` are relabelled
+> `NMRium` and are not redistributed.  Predicted records whose original terms do
+> not permit redistribution are provided as SMILES/record indices together with
+> the rebuild scripts, and the full records are available from the corresponding
+> author on reasonable request.  The Docker image for the web service is
+> available at [registry/image:tag].
