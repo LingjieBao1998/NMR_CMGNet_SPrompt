@@ -18,7 +18,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 BLUE, RED, GREEN, GREY = "#0072B2", "#D55E00", "#009E73", "#8C8C8C"
 TEXT = "#262626"
 TAU = 0.50
@@ -31,7 +33,7 @@ plt.rcParams.update({
     "pdf.fonttype": 42, "ps.fonttype": 42,
 })
 
-z = np.load("/tmp/f48_pred.npz")
+z = np.load(B + "viz_tmp/f48_pred.npz")
 pm, ps = z["p_merged"], z["p_split"]
 d1 = json.load(open(B + "data/new_dataset/f_split/filtered_with_f_split_fixed_stereo.json"))
 d2 = json.load(open(B + "data/new_dataset/f_without_split/filtered_without_f_split_fixed_stereo.json"))

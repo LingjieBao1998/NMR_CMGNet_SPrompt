@@ -7,6 +7,7 @@ p 值口径 = 2026-11-13 最新打分(与 response_to_reviewers_v2.md Table R1 �
   fig_fp_structures.png        5 分子一排(SI Fig. S7)
   fp_struct_<idx>.png          逐分子小图(嵌 Table R1 表格单元格)
 """
+import os
 from pathlib import Path
 
 import matplotlib
@@ -14,7 +15,7 @@ matplotlib.use("Agg")
 from rdkit import Chem
 from rdkit.Chem import Draw
 
-ROOT = Path("/mnt/data2/NMR_Core_Mol_Detection")
+ROOT = Path(os.environ.get('NMR_ROOT', str(Path(__file__).resolve().parent.parent)))
 OUT = ROOT / "reports" / "fig_fp_structures.png"
 
 ITEMS = [

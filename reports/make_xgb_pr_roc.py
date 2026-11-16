@@ -21,7 +21,7 @@ test set (64 positives / 4,438 negatives):
 Inputs
   /tmp/apr18_cress_emb.npy            4,502 x 768 CReSS embeddings (external test)
   viz_tmp/test_labels.npy             4,502 labels (64 positives)
-  output/xgb_cress_new_dataset_ex_train_seed42/model_xgb_cress_new_dataset_seed42.pkl
+  models/xgboost/model_xgb_cress_ex_train_seed42.pkl
 
 Outputs
   reports/fig_xgb_pr_roc.pdf / .svg / .png
@@ -29,6 +29,7 @@ Outputs
   reports/xgb_pr_roc_curves.npz
 """
 import json
+import os
 
 import numpy as np
 import matplotlib
@@ -39,6 +40,9 @@ from sklearn.metrics import (
     roc_curve, roc_auc_score, auc, confusion_matrix,
 )
 import joblib
+
+B = os.environ.get("NMR_ROOT", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+B = B.rstrip("/") + "/"
 
 BLUE = "#2166AC"
 RED = "#D55E00"
@@ -266,11 +270,9 @@ def plot_pr_roc(y_true, y_score, threshold=0.50, output="pr_roc",
 
 
 if __name__ == "__main__":
-    B = "/mnt/data2/NMR_Core_Mol_Detection/"
-    emb_te = np.load("/tmp/apr18_cress_emb.npy").astype(np.float32)
+    emb_te = np.load(B + "reports/calib_data/apr18_cress_emb.npy").astype(np.float32)
     y_te = np.load(B + "viz_tmp/test_labels.npy").astype(int)
-    model = joblib.load(B + "output/xgb_cress_new_dataset_ex_train_seed42/"
-                        "model_xgb_cress_new_dataset_seed42.pkl")
+    model = joblib.load(B + "models/xgboost/model_xgb_cress_ex_train_seed42.pkl")
     p_te = model.predict_proba(emb_te)[:, 1]
 
     fig, axes, m = plot_pr_roc(y_te, p_te, threshold=0.50,

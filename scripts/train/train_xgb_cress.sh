@@ -9,6 +9,7 @@
 # Set INCLUDE_SYNTH=1 to add the 1.49 M synthetic corpus to the base training set.
 # ---------------------------------------------------------------------------
 set -u
+set -o pipefail
 cd "$(dirname "$0")/../.." || exit 1
 
 OUT_DIR=${1:-output/xgb_cress_sprompt}

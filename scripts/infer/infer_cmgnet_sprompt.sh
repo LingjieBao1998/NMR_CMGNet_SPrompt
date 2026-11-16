@@ -20,7 +20,7 @@ OUT_DIR=${2:-output/infer_sprompt_external}
 GPU_ID=${3:-0}
 
 PY=${PY:-/home/lingjiebao/venvs/py312_tf457/bin/python}
-CKPT=${CKPT:-checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt}
+CKPT=${CKPT:-checkpoints/sprompt_ex1209_1ep_seed0.ckpt}
 BASE=${BASE:-checkpoints/bart_base_0910}
 BEAMS=${BEAMS:-10}
 CORE=${CORE:-"O=C(O)c1c[nH]c2ccccc2c1=O"}
@@ -28,6 +28,7 @@ CORE=${CORE:-"O=C(O)c1c[nH]c2ccccc2c1=O"}
 # spectra.  `sprompt` is accepted as an alias by main_cmgnet.py (same branch),
 # but `nmr+frag` matches the output names of the published runs.
 MODE=${MODE:-nmr+frag}
+NW=${NW:-8}
 
 for f in "$TEST_JSON" "$CKPT" "$BASE"; do
     [ -e "$f" ] || { echo "missing: $f"; exit 1; }
@@ -55,7 +56,7 @@ NCCL_P2P_DISABLE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" -u mai
     --model_dir "$BASE" \
     --train_file "" --valid_file "" \
     --test_file "$TEST_JSON" \
-    --num_workers 8 --batch_size 48 \
+    --num_workers "$NW" --batch_size 48 \
     --do_test --gpus 1 \
     --num_beams "$BEAMS" \
     --decode_mode "$MODE" \

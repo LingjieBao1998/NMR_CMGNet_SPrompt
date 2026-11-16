@@ -16,13 +16,14 @@ import pickle
 import sys
 import time
 from multiprocessing import Pool
+import os
 from pathlib import Path
 
 import lmdb
 from rdkit import Chem, RDLogger
 
 RDLogger.DisableLog("rdApp.*")
-ROOT = Path("/mnt/data2/NMR_Core_Mol_Detection")
+ROOT = Path(os.environ.get('NMR_ROOT', str(Path(__file__).resolve().parent.parent)))
 OUT = ROOT / "reports" / "train_vs_external_audit.json"
 
 EXT_JSON = ROOT / "data/nmrmind_cmgnet_1004/external_test.json"

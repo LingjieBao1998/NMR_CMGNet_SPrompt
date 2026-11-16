@@ -29,7 +29,9 @@ from rdkit.Chem import Draw
 from rdkit.Chem.Scaffolds import MurckoScaffold
 from PIL import Image
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 sys.path.insert(0, B)
 RDLogger.DisableLog("rdApp.*")
 from infer import ModelInference  # noqa: E402

@@ -1,0 +1,2404 @@
+{
+ "samples": [
+  {
+   "idx": 54,
+   "ext_index": 4492,
+   "true_smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(N3CCNCC3)cc21",
+   "xgb_p": 0.9999761581420898,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.4375,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -40.625,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.1875,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c12ccccc1[nH]cc(C(=O)O)c2=O",
+     "score": -40.75,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1ccc2[nH]cc(C(=O)O)c(=O)c2c1",
+     "score": -40.5625,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -40.1875,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "C(=O)(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1cccc2[nH]cc(C(=O)O)c(=O)c12",
+     "score": -40.375,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "OC(=O)c1c[nH]c2ccccc2c1=O",
+     "score": -41.0,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "CN1CCN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C)CC1",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=C(O)c1cn(CC2CO2)c2cc(N3CCNCC3)c(F)cc2c1=O",
+     "score": -36.625003814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CN1CCN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3CCN)CC1",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "CN1CCN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3CC#N)CC1",
+     "score": -36.625003814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "O=C(O)c1cn(CCN2CCNCC2)c2cc(F)c(F)cc2c1=O",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "O=C(O)c1cn(CC2CO2)c2ccc(N3CCNCC3)cc2c1=O",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "O=C(O)c1cn2c3c(c(N4CCNCC4)c(F)cc3c1=O)SC(N1CCCC1)=N2",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "CN1CCN(c2cc3c(cc2N)c(=O)c(C(=O)O)cn3C)CC1",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "O=C(O)c1cn2c3c(c(N4CCNCC4)c(F)cc3c1=O)CCN2",
+     "score": -36.312503814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "O=C(O)c1cn2c3c(c(N4CCNCC4)c(F)cc3c1=O)SC(N1CCNCC1)=N2",
+     "score": -36.312503814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "CN1CCN(c2cc(N3CCN(c4cccc(F)c4)CC3)c(F)cc2/C=N\\NC(N)=S)CC1",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "CN1CCN(c2cc(N3CCN(c4cccc(F)c4)CC3)c(F)cc2C=NNC(N)=S)CC1",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "CN1CCN(c2cc(N3CCN(c4cccc(F)c4)CC3)c(F)cc2/C=N/NC(N)=S)CC1",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "COC(=O)C1C(=O)NC(N2CCN(c3ccccc3F)CC2)=NC1c1ccco1",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "COC(=O)[C@H]1C(=O)NC(N2CCN(c3ccccc3F)CC2)=N[C@H]1c1ccco1",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "COc1cc(C(=O)N2C[C@H](C(=O)O)[C@@H](c3ccc4c(c3)OCO4)C2)ccn1",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "COc1cc(C(=O)N2C[C@@H](C(=O)O)[C@H](c3ccc4c(c3)OCO4)C2)ccn1",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "C=CC1CN1n1cc(C(=O)O)c(=O)c2cc(F)c(N3CCN(C)CC3)cc21",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "COc1ccc(N2CCN(C(=O)CNCc3ccc4c(c3)OCO4)CC2)cc1",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "COC(=O)[C@@H]1C(=O)NC(N2CCN(c3ccccc3OC)CC2)=N[C@H]1c1ccco1",
+     "core": false
+    }
+   ],
+   "nmrmind_top1": "C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3CCN(C)C)CCN1",
+   "nmrmind_top1_core": true,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 1,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3CCN(C)C)CCN1",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "C1CNCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2CCN(C)C",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(CCF)c2cc1N1CCNCC1",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(C3CO3)c2cc1N1CCNCC1",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "C1CNCCN1c1c(F)cc2c(=O)c(C(=O)O)cn3c2c1OCN3CCN(C)C",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "C1CNCCN1c1c(F)cc2c(=O)c(C(=O)O)cn3c2c1OC1CNCC13",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "C1CNCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2CCn1ncnn1",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "C1CNCCN1c1c(F)cc2c(=O)c(C(=O)O)cn3c2c1OC(CN)C3",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "C1CNCCN1c1c(F)cc2c(=O)c(C(=O)O)cn3c2c1OCC31CNCCNC1",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "C1CNCCN1c1c(F)cc2c(=O)c(C(=O)O)cn3c2c1OCN3C",
+     "core": true
+    }
+   ],
+   "nmrmind_core10": 10
+  },
+  {
+   "idx": 55,
+   "ext_index": 4493,
+   "true_smiles": "COc1c(N2C[C@@H]3CCCN(C)[C@@H]3C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+   "xgb_p": 0.9991478323936462,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.0,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "c1(=O)c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.625,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.375,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "C(=O)(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -40.5,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -40.0625,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "OC(=O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.0625,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -40.4375,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "O=C(O)c1c[nH]c2ncccc2c1=O",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2n1",
+     "score": -40.125,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "COc1c(N2CCCC(C)(CN)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -35.875003814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "COc1c(N2CCN(C)C(C)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "COc1c(N2CC(C)NC(C)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.625003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "COc1c(N2CCC(C)(CN)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "COc1c(N2CCC(C(C)NC(C)C)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.750003814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "COc1c(N2CCN(C)CC2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "COc1c(N2CCOCC2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(OC(F)F)c(N3CCN4CCCC4C3)c(F)cc2c1=O",
+     "score": -35.937503814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(OC(F)F)c(N3CCN4CCC3C4)c(F)cc2c1=O",
+     "score": -36.187503814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(OC(F)F)c(N3CCN4CCCC4C3)c(F)c(F)c2c1=O",
+     "score": -36.375003814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "C=C(O)C1=CN(C2CC2)c2c(cc(F)c(N3CCC/C(=C(\\F)CNC(=O)[C@@H](N)CN(C)C)C3)c2OC)C1=C",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "CCCc1ccc(N2CC(CN(C)C3CN(c4ccnc5ccc(OC)nc45)C3)OC2=O)cc1",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "COc1cc2c(c(O)c1OC)-c1c(cc(OC)c(OC)c1OC)[C@@H](OC(C)=O)[C@H](C)[C@H](C)C2",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "CCc1cc(OC)cc(N(CC2CCC(=O)N2CCO)c2ccc3ncc(-c4cnn(C)c4)nc3n2)c1F",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "CCCc1ccc(N2C[C@@H](CN(C)C3CN(c4ccnc5ccc(OC)nc45)C3)OC2=O)cc1",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "C=Cc1cc(Nc2cc(N)c(N3CCN(C(=O)CCOC)[C@H](C)C3)nc2C2CC2)ccn1",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "COC(=O)C[C@H](NC[C@H](CC(C)C)n1ccc(CN(C)C)cc1=O)c1cncc(-c2c(C)cccc2C)c1",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "CCC(C(=O)O)N(Cc1cc2c(cn1)OCCO2)C1CCN(CCn2c(=O)ccc3ncc(OC)cc32)CC1",
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "CCCN1C(=O)COc2ccc(Nc3nc(Nc4ccc(N5CC6CC5CN6S(C)(=O)=O)c(C)c4)ncc3F)nc21",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "Cc1cc2c(ccc(=O)n2CCN2CCC(NCc3cc4c(cn3)OCCO4)CC2)nc1C",
+     "core": false
+    }
+   ],
+   "nmrmind_top1": "c1(C(=O)O)cn(C)c2c(C)c(N3CC4CCCN(C)C4C3)c(F)cc2c1=O",
+   "nmrmind_top1_core": true,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 0,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "c1(C(=O)O)cn(C)c2c(C)c(N3CC4CCCN(C)C4C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C(C)C)CC1CN(C)CCO",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1(C(=O)O)cn(C2CC2F)c2c(C)c(N3CC4CCCN(C)C4C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C(C)C)CC1CN1CCOCC1",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)c2n3C(C)(C)S2)CC1CN(C)CCO",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C(CC)CC)CC1CN1CCN(C)CC1",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C(C)C)CC1CN1CCN(C)CC1",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)c2n3C(C)(C)C2)CC1CN(C)C",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C(CC)CO)CC1CN(C)C",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "C(C)C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)c2n3C(C)(C)C2)CC1CN1CCOCC1",
+     "core": true
+    }
+   ],
+   "nmrmind_core10": 10
+  },
+  {
+   "idx": 56,
+   "ext_index": 4494,
+   "true_smiles": "COc1c(N2C[C@@H]3CCCN[C@@H]3C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+   "xgb_p": 0.9999794960021973,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.0625,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.125,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -40.375,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -40.0625,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -40.3125,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1(=O)c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.0,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "C(=O)(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.0625,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1ccc2[nH]cc(C(=O)O)c(=O)c2c1",
+     "score": -40.0625,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "OC(=O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.125,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "c12ccccc1[nH]cc(C(=O)O)c2=O",
+     "score": -40.0,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "COc1c(N2CC(C)C(N)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "COc1c(N2CC(C)C(CN)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "COc1c(N2CC(C)NC(C)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2OC2CC2)CCN1",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "CC1CN(c2cc3c(c(N)c2F)c(=O)c(C(=O)O)cn3C2CC2)CC(C)C1N",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2OC2CC2)CCN1C",
+     "score": -36.750003814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2OC)CC(C)N1C",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2OC2CC2)CC(C)N1",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2F)CC1CN",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2OC2CC2)CC(C)N1C",
+     "score": -36.312503814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "CN=c1c2c(N3CC4C5C=CC(N)(CC5)C4C3)c(F)cc3c(=O)c(C(=O)O)c4scc1n4c32",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "C=Cc1cc(Nc2cc(N)c(N3CCN(C(=O)CCO)[C@H](C(C)C)C3)nc2C2CC2)ccn1",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "CCC(C)N1CCOc2c(F)cc(-c3nc(Nc4ccc(CN5CCC(C(N)=O)CC5)c(F)c4)ncc3F)cc21",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "C=Cc1cc(Nc2cc(N)c(N3CCN(C(=O)CCOC)[C@H](C)C3)nc2C2CC2)ccn1",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "CP(=O)(O)C(Cc1ccc(OC(=O)NC2CCN(c3c(F)c(N)c4c(=O)c(C(=O)O)cn(C5CC5)c4c3Cl)C2)cc1)P(=O)(O)O",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "C=Cc1cc(Nc2cc(N)c(N3CCN(C(=O)CCO)[C@H](C)C3)nc2C2CC2)ccn1",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "CN=c1c2c(N3CC4C(C)C=CC(N)C4C3)c(F)cc3c(=O)c(C(=O)O)c4scc1n4c32",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "CCNC1CCN(c2ccc(C(=O)Nc3cn4cc(C)nc(CC(=O)NC)c4n3)c(N)c2C=NC)CC1",
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "Cc1csc2c(C(=O)O)c(=O)c3cc(F)c(N4CC5C(C)C=CC(N)C5C4)cc3n12",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "COc1c(N2CCNC(C)C2)c(F)c(NC(=O)Oc2ccc(CC(P(=O)(O)O)P(=O)(O)O)cc2)c2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "core": true
+    }
+   ],
+   "nmrmind_top1": "O=C(O)c1cn(C2CC2C)c2c(OC)c(N3CC(C)C(CN)C3)c(F)cc2c1=O",
+   "nmrmind_top1_core": true,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 5,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1cn(C2CC2C)c2c(OC)c(N3CC(C)C(CN)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "C(=O)(O)c1cn(C2CC2C)c2c(OC)c(N3CC(C)C(CN)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1(=O)c(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CC(C)C(CN)C3)c(F)cc12",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1(=O)c(C(=O)O)cn(C)c2c(C)c(N3C[C@@H](C)[C@H](N(C)C)C3)c(F)cc12",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(=O)c(C(=O)O)cn2c3c(c(N4CC(C)C(N(C)C)C4)c(F)cc13)C(C)C2C",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1(=O)c(C(=O)O)cn([C@@H]2C[C@@H]2C)c2c(OC)c(N3C[C@@H]4C[C@H]3CN4C)c(F)cc12",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "c1(=O)c(C(=O)O)cn2c3c(c(N4CC(C)C(N(C)C)C4)c(F)cc13)CC2CC",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "C(=O)(O)c1cn([C@@H]2C[C@@H]2C)c2c(OC)c(N3C[C@@H](N(C)C)[C@H](C)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1(=O)c(C(=O)O)cn([C@@H]2C[C@@H]2F)c2c(C)c(N3C[C@@H](C)[C@H](N(C)C)C3)c(F)cc12",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "c1(=O)c(C(=O)O)cn([C@@H]2C[C@@H]2F)c2c(C)c(N3C[C@@H](C)[C@H](CN)C3)c(F)cc12",
+     "core": true
+    }
+   ],
+   "nmrmind_core10": 10
+  },
+  {
+   "idx": 57,
+   "ext_index": 4495,
+   "true_smiles": "CCOC(=O)c1cn(C2CC2)c2c(OC)c(F)c(F)cc2c1=O",
+   "xgb_p": 0.8785688281059265,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=c1cc[nH]c2ccccc12",
+     "score": -39.875,
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "O=c1cc[nH]c2cc3c(cc12)OCCO3",
+     "score": -40.0,
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "c12ccccc1c(=O)cc[nH]2",
+     "score": -39.9375,
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "c1ccc2[nH]ccc(=O)c2c1",
+     "score": -40.0,
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "c1cc(=O)c2ccccc2[nH]1",
+     "score": -40.3125,
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "c1ccc2c(=O)cc[nH]c2c1",
+     "score": -40.0625,
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "c1(=O)cc[nH]c2ccccc12",
+     "score": -40.25,
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "c1cccc2c(=O)cc[nH]c12",
+     "score": -40.25,
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "c12ccccc1[nH]ccc2=O",
+     "score": -40.25,
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "c1c[nH]c2ccccc2c1=O",
+     "score": -40.0,
+     "core": false
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "CCOC(=O)c1cn(C)c2cc(OCC)c(OCC)cc2c1=O",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "CCOC(=O)c1cn2c3c(c(OCC)c(F)cc3c1=O)OCC2C",
+     "score": -35.937503814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CCOC(=O)c1cn2c3c(c(OCC)c(F)cc3c1=O)SC(N(CC)CC)=N2",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "CCOC(=O)c1cn(CC)c2cc(OCC)c(OCC)cc2c1=O",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "CCOC(=O)c1cn2c3c(c(OCC)c(F)cc3c1=O)SC(N(C)C)=N2",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "CCOC(=O)c1cn(CC)c2c(OCC)c(F)c(F)cc2c1=O",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "CCOC(=O)c1cn2c3c(c(OCC)c(F)cc3c1=O)CCN2C",
+     "score": -36.000003814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "CCOC(=O)c1cn2c(cc1=O)-c1cc(OC)c(OCC)cc1CC2C",
+     "score": -36.500003814697266,
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "CCOC(=O)c1cn(C2CC2)c2c(OCC)c(F)c(F)cc2c1=O",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "CCOC(=O)c1cn2c3c(c(OCC)c(F)cc3c1=O)CCN2",
+     "score": -36.312503814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "CNC(C)C(=O)Nc1cc(-c2ncnc3c(C)nn(C)c23)cc(NC(=O)c2ccc(Cl)cn2)n1",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "COc1ncnc(OC)c1-n1c(NS(=O)(=O)[C@@H](C)[C@H](O)c2cnc(Cl)cn2)nnc1-c1cccnc1",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "CNc1c(C(C)=N)ncnc1-c1cc(NC(=O)c2ccc(Cl)cn2)nc(NC(=O)C(C)NC)c1",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "Cc1scnc1-c1ccc(F)c(OC2CN(C(=O)N3N=CC[C@H]3c3cc(F)cc(F)c3)C2)n1",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "CNC(C)C(=O)Nc1cc(-c2ccncc2C)cc(NC(=O)c2ccc(Cl)cn2)n1",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "Cc1nc(CO)sc1-c1cc(OC2CN(C(=O)N3N=CC[C@H]3c3cc(F)cc(F)c3)C2)c(F)cn1",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "CCOC(=O)n1nc(NC(=O)c2ccccn2)c2c1C(C)(C)NC2NC(=O)c1ccccn1",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "CCCn1c(=O)n(C2CC(O)C2)c(=O)c2[nH]c(COc3ccc(N(C)C(=O)c4cnc(Cl)cn4)nc3)nc21",
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "COc1cc(OC(F)(F)F)ccc1Oc1cnc(C)c(OC)c1C(=O)Nc1cc(C(N)=O)ncc1C",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "C=NC[C@H]1C[C@@H]1C(=O)Nc1cc2cc(-c3cnccc3CCO)nc(N)c2cn1",
+     "core": false
+    }
+   ],
+   "nmrmind_top1": "C(=O)(OCC)c1c(NC(=O)CS(=O)Cc2ccncc2)sc(C)c1C",
+   "nmrmind_top1_core": false,
+   "frag_core10": 0,
+   "smiles_core10": 9,
+   "solver_core10": 0,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "C(=O)(OCC)c1c(NC(=O)CS(=O)Cc2ccncc2)sc(C)c1C",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "O=C(OCC)c1c(NC(=O)CS(=O)Cc2ccncc2)sc(C)c1C",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "O(CC)C(=O)c1c(NC(=O)CS(=O)Cc2ccncc2)sc(C)c1C",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "c1(C(=O)OCC)c(NC(=O)CS(=O)Cc2cc(C)[nH]n2)sc(C(=O)OCC)c1C",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(C(=O)OCC)c(NC(=O)CS(=O)Cc2cc(C)[nH]n2)sc(C(N)=O)c1C",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "C(=O)(CS(=O)CC(=O)OCC)Nc1cc(C)nn1-c1nc(C)cs1",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "C(=O)(CS(=O)CC(=O)Nc1cc(C)nn1-c1nc(C)cs1)OCC",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "c1(C(=O)OCC)c(NC(=O)CS(=O)Cc2ccncc2)sc(C)c1C",
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "C(=O)(CS(=O)CC(=O)Nc1cc(C)nn1-c1nc(C)cs1)N(CC)OC",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "O=C(OCC)c1c(NC(=O)CS(=O)Cc2cc(C)[nH]n2)sc(C(=O)OCC)c1C",
+     "core": false
+    }
+   ],
+   "nmrmind_core10": 0
+  },
+  {
+   "idx": 58,
+   "ext_index": 4496,
+   "true_smiles": "C[C@H]1COc2c(N3CCN(C)CC3)c(F)cc3c(=O)c(C(=O)O)cn1c23",
+   "xgb_p": 0.9995174407958984,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -39.9375,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "O=C(O)c1cn2c3c(cccc3c1=O)OCC2",
+     "score": -40.4375,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -40.375,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.5,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "c1(=O)c(C(=O)O)c[nH]c2ccccc12",
+     "score": -39.9375,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1ccc2[nH]cc(C(=O)O)c(=O)c2c1",
+     "score": -40.4375,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c12ccccc1[nH]cc(C(=O)O)c2=O",
+     "score": -40.3125,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "C(=O)(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.3125,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "CN1CCN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C2COC2)CC1",
+     "score": -36.312503814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "CN1CCN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C2CO2)CC1",
+     "score": -36.312503814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "COc1cc2c(=O)c(C(=O)O)cn(C)c2cc1N1CCN(C)CC1",
+     "score": -36.062503814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "CN1CCN(c2c(F)c(N)c3c(=O)c(C(=O)O)cn(C4CC4)c3c2F)CC1",
+     "score": -36.187503814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "CN1CCN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3CC(O)CO)CC1",
+     "score": -36.250003814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "CN1CCN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3CCO)CC1",
+     "score": -36.062503814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "CN1CCN(c2c(F)cc3c(=O)c(C(=O)O)cn4c3c2OCC4)CC1",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "COc1ccc2c(=O)c(C(=O)O)cn(CCN3CCOCC3)c2c1",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CN1CCN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4COC4)c3c2Cl)CC1",
+     "score": -35.937503814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "O=C(O)c1cn2c3c(c(N4CCNCC4)c(F)cc3c1=O)OCC2",
+     "score": -36.312503814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "COc1cccc(N2CCN(C(=O)c3cccc(NC4=N[C@@H]5CS(=O)(=O)C[C@H]5S4)c3)CC2)c1",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "COc1cccc(N2CCN(C(=O)c3cccc(NC4=N[C@H]5CS(=O)(=O)C[C@@H]5S4)c3)CC2)c1",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "COc1cccc(N2CCN(C(=O)c3cccc(NC4=N[C@@H]5CS(=O)(=O)C[C@@H]5S4)c3)CC2)c1",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "COc1cccc(N2CCN(C(=O)c3cccc(NC4=N[C@H]5CS(=O)(=O)C[C@H]5S4)c3)CC2)c1",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "COc1cccc2c1nc(C(F)F)n2-c1nc(-c2cc(N)cnc2N(C)CCN(C)C)nc(N2CCOCC2)n1",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "COc1cc2cc(C(=O)N3CCN(CCOc4cccnc4)CC3)[nH]c2cc1OC",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "COc1cc(/C=N\\NC(=O)c2cn3c4c(c(N5CCN(C)CC5)c(F)cc4c2=O)OC[C@@H]3C)cc(OC)c1OC",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "COc1ccc2c(c1)C(=O)N(CC1(c3cc4nc(N5CCC(O)C5)ccc4o3)NC(=O)NC1=O)C2",
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "COc1cc2c(Nc3ccc(Cl)c(Cl)c3)ncnc2cc1OCc1nsc(CN2CCN(C)CC2)n1",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "COc1cc2[nH]c3ncnc(N4CCN(C(=S)Nc5ccc(SN6CCOCC6)cc5)CC4)c3c2cc1OC",
+     "core": false
+    }
+   ],
+   "nmrmind_top1": "O(C)c1c(N2CCNC(CO)C2)c(F)cc2c(=O)c(C(=O)O)cn(CC(F)(F)F)c12",
+   "nmrmind_top1_core": true,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 0,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "O(C)c1c(N2CCNC(CO)C2)c(F)cc2c(=O)c(C(=O)O)cn(CC(F)(F)F)c12",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "c1(OC)c(N2CCNC(CO)C2)c(F)cc2c(=O)c(C(=O)O)cn(CC(F)(F)F)c12",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1c(F)c(N2CCNC(COC)C2)c(Cl)c2c1c(=O)c(C(=O)O)cn2CC(F)(F)F",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "C(=O)(O)c1cn2c3c(c(N4CCNC(CO)C4)c(F)cc3c1=O)OCC2",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(C(=O)O)cn2c3c(c(N4CCNC(CO)C4)c(F)cc3c1=O)OCC2",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "O=C(O)c1cn2c3c(c(N4CCNC(CO)C4)c(F)cc3c1=O)OCC2",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "O=c1c(C(=O)O)cn2c3c(c(N4CCNC(CO)C4)c(F)cc13)OCC2",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "C1CN(c2c(F)cc3c(=O)c(C(=O)O)cn4c3c2OC[C@@H]4C(F)(F)F)CCN1CCN(C)C",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1(OC)c(N2CCNC(CO)C2)c(F)cc2c(=O)c(C(=O)O)cn(CC(F)F)c12",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "O(C)c1c(N2CCNC(CO)C2)c(F)cc2c(=O)c(C(=O)O)cn(CC(F)F)c12",
+     "core": true
+    }
+   ],
+   "nmrmind_core10": 10
+  },
+  {
+   "idx": 59,
+   "ext_index": 4497,
+   "true_smiles": "CC1CCc2c(N3CCC(O)CC3)c(F)cc3c(=O)c(C(=O)O)cn1c23",
+   "xgb_p": 0.9993161559104919,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.5,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=C(O)c1cn2c3c(cccc3c1=O)CCC2",
+     "score": -40.0,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=C(O)c1cn2c3c(cccc3c1=O)OCC21CCCC1",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "O=C(O)c1cn2c3c(cccc3c1=O)OCC2",
+     "score": -40.125,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -40.0,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -40.4375,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.3125,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -40.5625,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1(=O)c(C(=O)O)c[nH]c2ccccc12",
+     "score": -39.9375,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "O=C(O)c1cn2c3c(cccc3c1=O)CC2",
+     "score": -40.375,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "CC1CCCN1c1c(F)cc2c(=O)c(C(=O)O)cn3c2c1OCC3C",
+     "score": -36.062503814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "CC1CCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2C(C)C",
+     "score": -36.000003814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CC1CCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2C1CCC1",
+     "score": -35.875003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "CC1CCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2C1CC1",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "CC1CCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2C1CCCC1",
+     "score": -36.062503814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "C[CH]1CCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2C1CCCC1",
+     "score": -36.312503814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "CC1CCCN1c1cc2c(cc1Br)c(=O)c(C(=O)O)cn2C(C)C",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "C[CH]1CCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2C1CCC1",
+     "score": -35.937503814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CC1CCCN1c1cc2c(cc1Cl)c(=O)c(C(=O)O)cn2C(C)C",
+     "score": -36.062503814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "CC1CCCN1c1cc2c(cc1F)c(=O)c(C(=O)O)cn2C1(C)CC1",
+     "score": -36.375003814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "COc1cc(C2(C(=O)N(C)Cc3cc(C(=O)O)c(C)o3)CCCC2)ccc1C",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "CO/N=C1\\CCN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2F)CC1(C)CN",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(N3CCC(C)(NC)/C(=N/OC)C3)c(F)c21",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "C[C@H]1CCc2c(N3CCC[C@H](O)C3)c(F)cc3c(=O)c(C(=O)O)cn1c23",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "C[C@H]1COc2c(N3CCC4(CC4N)C3)c(F)cc3c(=O)c(C(=O)O)cn1c23",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "COc1nn(C)c2nc(C)c(CCC(=O)Nc3cccc(OCCS(C)(=O)=O)c3)c(C)c12",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "COc1cc(C)c(NC(=O)CCc2c(C)nc(N3CCOCC3)[nH]c2=O)cc1OC",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "CC1C=CCC2CN(c3c(F)cc4c(=O)c(C(=O)O)cn5c4c3COC5C)CC12",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "COc1ccc([C@@H](NC(=O)CN2C(=O)N[C@@](C)(CCc3ccc4c(c3)OCO4)C2=O)C(C)C)cc1",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "CO/N=C1/CCN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2F)CC1(C)CN",
+     "core": true
+    }
+   ],
+   "nmrmind_top1": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC4(CC3)OCCO4)c(F)cc2c1=O",
+   "nmrmind_top1_core": true,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 6,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC4(CC3)OCCO4)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC(N)(CO)CC3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC4(C3)OCCO4)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(F)c(N3CCC(N)(CO)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(F)c(N3CCC(N)(COC)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC(N)(CO)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC4(CCOCC4)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC(O)(CO)CC3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1(C(=O)O)cn(C2CC2C)c2c(OC)c(N3CCC4(CCOCC4)C3=O)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "O=C(O)C1(NC(=O)c2ccc(OC)c3oc(C(C)O)cc23)CCCCC1C",
+     "core": false
+    }
+   ],
+   "nmrmind_core10": 9
+  },
+  {
+   "idx": 60,
+   "ext_index": 4498,
+   "true_smiles": "C[C@@H]1COc2c(F)c(F)cc3c(=O)c(C(=O)O)cn1c23",
+   "xgb_p": 0.9998992085456848,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.4375,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -40.1875,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=C(O)c1cn2c3c(cccc3c1=O)OCC2",
+     "score": -40.1875,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -39.8125,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -40.375,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -39.9375,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "C(=O)(O)c1c[nH]c2ccccc2c1=O",
+     "score": -39.8125,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1(=O)c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.3125,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1ccc2[nH]cc(C(=O)O)c(=O)c2c1",
+     "score": -39.9375,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "OC(=O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.0,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1cn2c3c(c(F)c(F)cc3c1=O)OCC2C1CC1",
+     "score": -36.000003814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "CCOC(=O)c1cn2c3c(c(F)c(F)cc3c1=O)OCC2C",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=C(O)c1cn2c3c(c(F)c(F)c(F)c3c1=O)OCC2C1CC1",
+     "score": -36.000003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "CCOC(=O)c1cn2c3c(c(F)c(F)cc3c1=O)OC(C)C2C",
+     "score": -36.062503814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "O=C(O)c1cn2c3c(c(F)c(Cl)cc3c1=O)OCC2C1CC1",
+     "score": -35.625003814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "O=C(O)c1cn2c3c(c(O)c(F)cc3c1=O)OCC2C1CC1",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "O=C(O)c1cn2c3c(cc(F)cc3c1=O)OCC2C1CC1",
+     "score": -35.937503814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "O=C(O)c1cn2c3c(c(F)c(F)cc3c1=O)OCC21CC1",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CCOC(=O)c1cn2c3c(c(F)c(F)c(F)c3c1=O)OCC2C",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "CCOC(=O)c1cn2c3c(c(F)c(F)cc3c1=O)OC(C)C2",
+     "score": -36.062503814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "O=C1N=c2c(nnc3cc4c(cc23)=CC=C4)-c2nccnc21",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "c1cncc(SNc2cpc(-c3ccncc3)c3cccnc23)c1",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "N=C(c1cc(C(N)=O)ccn1)c1cc(-c2cccnc2)ncc1N",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "c1ccc(-c2csc(-c3cnccn3)c2-c2ncccn2)nc1",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "N/C=N\\c1ncc(Oc2cncc(F)c2F)cc1C(=O)Nc1ccccn1",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "O=C(N/N=C/c1ccncc1)c1nnn(-c2ccc([N+](=O)[O-])cc2)c1C(=O)N/N=C/c1ccncc1",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "Brc1cnc2ccc(-c3n[nH]nc3-c3ccccn3)nc2c1",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "NC(=O)c1ccnc(-c2n[nH]c3cnc(-c4cccnc4)cc23)c1",
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "NC(=O)c1cc(-c2ccc(C(F)(F)F)nc2)nc(-c2cccnc2)c1N",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "Nc1nc(-c2ccccn2)c(-c2ccnc3cccnc23)s1",
+     "core": false
+    }
+   ],
+   "nmrmind_top1": "C1(OC)=C(C)C(=O)c2cc3c(c(O)c2C1=O)C(C)OC3=O",
+   "nmrmind_top1_core": false,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 0,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "C1(OC)=C(C)C(=O)c2cc3c(c(O)c2C1=O)C(C)OC3=O",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "c1(C(=O)NC(C)COC(F)(F)F)cnn(-c2ncc(C(F)(F)F)cn2)c1C",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "c1(C(=O)O)cn2c3c(c(F)c(F)cc3c1=O)OC[C@@H]2C",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1(C(=O)O)cn2c3c(c(F)c(F)cc3c1=O)OCC2C",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "C(=O)(NC(C)COC(F)(F)F)c1cnn(-c2ncc(C(F)(F)F)cn2)c1C",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "c1(C(=O)O)cn2c3c(c(F)c(F)c(C)c3c1=O)OC[C@@H]2C",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "C(=O)(NC(C)COC(F)(F)F)c1cnn2c(C)c(C(=O)O)cnc12",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "c1(C(=O)O)cn2c3c(c(F)c(F)c(C)c3c1=O)OCC2C",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "C1(OC)=C(C)C(=O)c2cc3c(c(O)c2C1=O)OC(C)C3O",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "c1(C(=O)O)cn2c3c(c(F)c(F)cc3c1=O)OC[C@@H]2CC",
+     "core": true
+    }
+   ],
+   "nmrmind_core10": 5
+  },
+  {
+   "idx": 61,
+   "ext_index": 4499,
+   "true_smiles": "COc1c(N2CCN(C)CC2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+   "xgb_p": 0.9999275207519531,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.5,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.4375,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -39.625,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "C(=O)(O)c1c[nH]c2ccccc2c1=O",
+     "score": -39.8125,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -39.875,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "c1(=O)c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.0,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1ccc2[nH]cc(C(=O)O)c(=O)c2c1",
+     "score": -40.125,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c12ccccc1[nH]cc(C(=O)O)c2=O",
+     "score": -40.0625,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "OC(=O)c1c[nH]c2ccccc2c1=O",
+     "score": -39.9375,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "COc1c(N2CCN(C)CC2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(F)c(N3CCN(CCNO)CC3)c(F)cc2c1=O",
+     "score": -35.937503814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(F)c(N3CCN(CCO)CC3)c(F)cc2c1=O",
+     "score": -36.750003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(F)c(N3CCN(CCCl)CC3)c(F)cc2c1=O",
+     "score": -35.875003814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "Cc1c(N2CCN(C)CC2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -35.937503814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(F)c(N3CCN(CN4CCOC4=O)CC3)c(F)cc2c1=O",
+     "score": -36.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc2c1=O",
+     "score": -36.312503814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "CN1CCN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2F)CC1",
+     "score": -36.187503814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "Cc1c(F)c(N2CCN(C)CC2)cc2c1c(=O)c(C(=O)O)cn2CCO",
+     "score": -35.875003814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "Cc1c(F)c(N2CCN(C)CC2)cc2c1c(=O)c(C(=O)O)cn2C1CC1",
+     "score": -35.500003814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "COc1c(N2CCC(CF)(CNc3cccc(Cl)n3)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "CCOC(=O)c1cn(N2CC2c2ccccn2)c2cc(N3CCN(C)CC3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CS(=O)(=O)NC[C@@H]1CN(c2ccc(N3CCN(c4cc5c(cc4F)c(=O)c(C(=O)O)cn5C4CC4)CC3)c(F)c2)C(=O)O1",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "O=C(O)c1cn(C2CC2)c2cc(N3CCNC(c4cccnc4)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "CS(=O)(=O)NC[C@H]1CN(c2ccc(N3CCN(c4cc5c(cc4F)c(=O)c(C(=O)O)cn5C4CC4)CC3)c(F)c2)C(=O)O1",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "CCn1cc(C(=O)NN2C(=O)CSC2c2cc(OC)c(OC)c(OC)c2)c(=O)c2cc(F)c(N3CCNCC3)cc21",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(N3CCNC(c4cccnc4)C3)cc21",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(N3CCN(C)C(c4ccn(C)n4)C3)cc21",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(N3CCN(C)C(c4ccnn4C)C3)cc21",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "CCOC(=O)c1cn(N2CC2c2ccccn2)c2c(F)c(N3CCN(C)CC3)c(F)cc2c1=O",
+     "core": true
+    }
+   ],
+   "nmrmind_top1": "C(=O)(O)c1cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc2c1=O",
+   "nmrmind_top1_core": true,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 9,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "C(=O)(O)c1cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=c1c(C(=O)O)cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc12",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "C1CN(c2nc3c(cc2F)c(=O)c(C(=O)O)cn3C2CC2)CCN1CCN",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c2c(F)c1N1CCNC(CO)C1",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1(C(=O)O)cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "O=c1c(C(=O)O)cn(C2CC2)c2c(F)c(N3CCN(CCN)CC3)c(F)cc12",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c2c(F)c1N1CCN(CCN)CC1",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "C1CN(c2nc3c(cc2F)c(=O)c(C(=O)O)cn3C2CC2)CCN1CCNC(=O)OC",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c2c(F)c1N1CC2CN(C)CC2C1",
+     "core": true
+    }
+   ],
+   "nmrmind_core10": 10
+  },
+  {
+   "idx": 62,
+   "ext_index": 4500,
+   "true_smiles": "COc1c(N2CCNCC2C)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+   "xgb_p": 0.9999420642852783,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.125,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=c1c(C(=O)O)c[nH]c2ccccc12",
+     "score": -39.875,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1ccc2c(=O)c(C(=O)O)c[nH]c2c1",
+     "score": -39.8125,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c12ccccc1c(=O)c(C(=O)O)c[nH]2",
+     "score": -39.8125,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(=O)c(C(=O)O)c[nH]c2ccccc12",
+     "score": -40.25,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1cccc2c(=O)c(C(=O)O)c[nH]c12",
+     "score": -39.875,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "C(=O)(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.0,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c12ccccc1[nH]cc(C(=O)O)c2=O",
+     "score": -40.0,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1ccc2[nH]cc(C(=O)O)c(=O)c2c1",
+     "score": -39.1875,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "OC(=O)c1c[nH]c2ccccc2c1=O",
+     "score": -39.8125,
+     "core": true
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2Cl)CCN1",
+     "score": -36.187503814697266,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2F)CCN1",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2OC(F)F)CCN1",
+     "score": -36.750003814697266,
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "CC1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C2CC2)CCN1",
+     "score": -36.375003814697266,
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "CC1CN(c2cc3c(c(F)c2F)c(=O)c(C(=O)O)cn3C2CC2)CCN1",
+     "score": -36.750003814697266,
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "C[CH]1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C2CC2)CCN1",
+     "score": -36.750003814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "COc1c(N2CCNC(C)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "score": -36.875003814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "C[CH]1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2Cl)C[CH]1N",
+     "score": -36.187503814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CC1CN(c2c(F)cc3c(=O)c(C(=O)O)cn(C4CC4)c3c2CO)CCN1",
+     "score": -35.500003814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "CC1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C2CC2)CCN1C",
+     "score": -36.312503814697266,
+     "core": true
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "COc1c(N2CCN(Cc3cc(C)cc(=O)n3O)CC2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "COc1c(N2CCN(Cc3ccc(C)o3)CC2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CCOC(=O)/C(C#N)=C\\C1CN(c2cc3c(cc2F)c(=O)c(C(=O)O)cn3C2CC2)CCN1",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "COC(=O)C(C)CN(Cc1cccnc1)C(=O)COc1cccc(OC)c1",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "COc1c(N2CCC(C(N)c3ncc(C)o3)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "COC(=O)C(C)CN(Cc1ccccn1)C(=O)COc1cccc(OC)c1",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "COc1c(N2CCC(C)(c3ccncc3)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "COOSc1ccc(C(O)C2CCN(c3c(F)cc4c(=O)c(C(=O)O)cn(C5CC5)c4c3OC)C2)o1",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(N3CCN(c4cccc(Cl)n4)C(C)C3)c(F)c21",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "COc1c(N2CCN(P(=O)(O)Oc3ccccc3)C(C)C2)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12",
+     "core": true
+    }
+   ],
+   "nmrmind_top1": "O=c1c(C(=O)O)cn(CC)c2c(F)c(N3CCN(CC(C)=NOC)CC3)c(F)cc12",
+   "nmrmind_top1_core": true,
+   "frag_core10": 10,
+   "smiles_core10": 10,
+   "solver_core10": 8,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "O=c1c(C(=O)O)cn(CC)c2c(F)c(N3CCN(CC(C)=NOC)CC3)c(F)cc12",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "C(=O)(O)c1cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "O=C(O)c1cn(C2CC2)c2c(F)c(N3CCNC(CO)C3)c(F)cc2c1=O",
+     "core": true
+    },
+    {
+     "rank": 4,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(C3CC3F)c2c(F)c1N1CCNC(CC)C1",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(CC)c2c(F)c1N1CCN(CC(C)=NOC)CC1",
+     "core": true
+    },
+    {
+     "rank": 6,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(C3CC3F)c2c(F)c1N1CCN(CCNCC)CC1",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(CC)c2c(F)c1N1CC(C)C(=NOC)C1",
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn(C3CC3F)c2c(F)c1N1CCNC(C)C1",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn([C@@H]3C[C@@H]3F)c2c(F)c1N1CCN(CCNCC)CC1",
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "c1(F)cc2c(=O)c(C(=O)O)cn([C@@H]3C[C@@H]3F)c2c(F)c1N1CCN(CCN(C)C)CC1",
+     "core": true
+    }
+   ],
+   "nmrmind_core10": 10
+  },
+  {
+   "idx": 63,
+   "ext_index": 4501,
+   "true_smiles": "CCn1cc(C(=O)O)c(=O)c2ccc(C)nc21",
+   "xgb_p": 0.9990062713623047,
+   "frag": [
+    {
+     "rank": 1,
+     "smiles": "O=C(O)c1c[nH]c2ncccc2c1=O",
+     "score": -39.875,
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "O=C(O)c1c[nH]c2ccccc2c1=O",
+     "score": -40.3125,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "c1ccccc1",
+     "score": -39.9375,
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "O=C(O)c1c[nH]c2ccncc2c1=O",
+     "score": -39.75,
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "O=C(O)c1c[nH]c2ncncc2c1=O",
+     "score": -39.4375,
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "O=c1cc[nH]c2ncccc12",
+     "score": -39.8125,
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "O=C(O)c1c[nH]c2ncccc2c1=S",
+     "score": -39.25,
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "O=c1cc[nH]c2ccccc12",
+     "score": -39.25,
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "O=c1cc[nH]c(=S)[nH]1",
+     "score": -39.9375,
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "O=c1cc[nH]c2ccncc12",
+     "score": -38.3125,
+     "core": false
+    }
+   ],
+   "smiles": [
+    {
+     "rank": 1,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cnc(C)nc21",
+     "score": -36.500003814697266,
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2ccc(C)nc21",
+     "score": -36.125003814697266,
+     "core": true
+    },
+    {
+     "rank": 3,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cnc(C)cc21",
+     "score": -36.625003814697266,
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2c(C)nc(C)cc21",
+     "score": -36.375003814697266,
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2c(C)nc(N)nc21",
+     "score": -35.562503814697266,
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2c(O)cc(C)nc21",
+     "score": -36.187503814697266,
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(C)nc21",
+     "score": -36.187503814697266,
+     "core": true
+    },
+    {
+     "rank": 8,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(F)c(N3CCCC3)nc21",
+     "score": -35.750003814697266,
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2c(C)ccnc21",
+     "score": -36.062503814697266,
+     "core": true
+    },
+    {
+     "rank": 10,
+     "smiles": "CCn1ccc(=O)c2cnc(C)nc21",
+     "score": -36.125003814697266,
+     "core": false
+    }
+   ],
+   "nmrsolver": [
+    {
+     "rank": 1,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2ccc(C)nc21",
+     "core": true
+    },
+    {
+     "rank": 2,
+     "smiles": "CCn1cc(C(N)=O)c(=O)c2ccc(C)nc21",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "CCn1cc(C(=O)NN)c(=O)c2ccc(C)nc21",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "CCNn1cc(C(=O)O)c(=O)c2ccc(C)nc21",
+     "core": true
+    },
+    {
+     "rank": 5,
+     "smiles": "CCn1cc(C(=O)NNC(=O)c2cn(CC)c3nc(C)ccc3c2=O)c(=O)c2ccc(C)nc21",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "CCn1cc(C(=O)O)c(=O)c2cc(Br)c(C)nc21",
+     "core": true
+    },
+    {
+     "rank": 7,
+     "smiles": "CCn1cc(C(=O)Cl)c(=O)c2ccc(C)nc21",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "CCCc1ccc2c(=O)c(C(=O)O)c[nH]c2n1",
+     "core": true
+    },
+    {
+     "rank": 9,
+     "smiles": "CCn1cc(C(=O)Nn2cnnc2)c(=O)c2ccc(C)nc21",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "CCn1cc(C(=O)Nc2nn[nH]n2)c(=O)c2ccc(C)nc21",
+     "core": false
+    }
+   ],
+   "nmrmind_top1": "n1c(C(F)(F)F)ccnc1N1CCN(C(=O)c2c(Cl)nc(C)nc2SC)CC1",
+   "nmrmind_top1_core": false,
+   "frag_core10": 2,
+   "smiles_core10": 5,
+   "solver_core10": 4,
+   "nmrmind": [
+    {
+     "rank": 1,
+     "smiles": "n1c(C(F)(F)F)ccnc1N1CCN(C(=O)c2c(Cl)nc(C)nc2SC)CC1",
+     "core": false
+    },
+    {
+     "rank": 2,
+     "smiles": "c1(N2CCCC2)ccc(NC(=O)c2c(Cl)nc(SC)nc2Cl)cc1",
+     "core": false
+    },
+    {
+     "rank": 3,
+     "smiles": "n1c(C(F)(F)F)ccnc1Nc1cc(C)nc(N2CCCC2)n1",
+     "core": false
+    },
+    {
+     "rank": 4,
+     "smiles": "c1(N2CCCC2)ccc(NC(=O)c2cnc(SC)nc2Cl)cc1",
+     "core": false
+    },
+    {
+     "rank": 5,
+     "smiles": "c1(C(F)(F)F)ccnc(N2CCN(C(=O)c3c(Cl)nc(C)nc3SC)CC2)n1",
+     "core": false
+    },
+    {
+     "rank": 6,
+     "smiles": "n1c(C(F)(F)F)ccnc1CNC(=O)c1c(Cl)nc(C)nc1SC",
+     "core": false
+    },
+    {
+     "rank": 7,
+     "smiles": "n1c(C(F)(F)F)ccnc1CNC(=O)c1c(Cl)nc(SC)nc1N1CCCC1",
+     "core": false
+    },
+    {
+     "rank": 8,
+     "smiles": "c1(C(=O)NC(C)c2ccnc(C(F)(F)F)c2)c(Cl)nc(SC)nc1Cl",
+     "core": false
+    },
+    {
+     "rank": 9,
+     "smiles": "n1c(C(F)(F)F)ccnc1N1CCN(C(=O)c2cc(C)nc(SC)n2)CC1",
+     "core": false
+    },
+    {
+     "rank": 10,
+     "smiles": "n1c(C(F)(F)F)ccnc1CNC(=O)c1c(Cl)nc(SCC)nc1Cl",
+     "core": false
+    }
+   ],
+   "nmrmind_core10": 0
+  }
+ ]
+}

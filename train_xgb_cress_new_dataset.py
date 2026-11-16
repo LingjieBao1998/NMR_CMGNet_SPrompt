@@ -25,12 +25,15 @@ import time
 import numpy as np
 import torch
 
-# new_db was pickled with numpy 2.x; py312/numpy 1.26 needs the _core aliases
-sys.modules["numpy._core"] = np.core
-for _sub in ["numeric", "multiarray", "umath", "_multiarray_umath", "function_base", "shape_base"]:
-    _mod = getattr(np.core, _sub, None)
-    if _mod is not None:
-        sys.modules["numpy._core." + _sub] = _mod
+# new_db was pickled with numpy 2.x; numpy 1.x needs the `numpy._core` aliases.
+# Under numpy >= 2 the alias already exists and must NOT be overridden.
+if int(np.__version__.split(".")[0]) < 2:
+    sys.modules.setdefault("numpy._core", np.core)
+    for _sub in ["numeric", "multiarray", "umath", "_multiarray_umath",
+                 "function_base", "shape_base"]:
+        _mod = getattr(np.core, _sub, None)
+        if _mod is not None:
+            sys.modules.setdefault("numpy._core." + _sub, _mod)
 
 import lmdb  # noqa: E402
 import xgboost as xgb  # noqa: E402
@@ -281,8 +284,8 @@ def main():
                  f"added {len(ex_y):,} (pos {int(ex_y.sum()):,}); train now {len(y):,}")
 
     torch.set_num_threads(32)
-    mi = base.ModelInference(config_path="models/2_5_w_model/8.json",
-                             pretrain_model_path="models/2_5_w_model/8.pth", device="cpu")
+    mi = base.ModelInference(config_path=base.build_cress_config(),
+                             pretrain_model_path=base.CRESS_WEIGHTS, device="cpu")
     X_train = base.encode(mi, nmrs, tag="train")
     del nmrs
     X_val = base.encode(mi, val_nmrs, tag="valid")
@@ -304,7 +307,7 @@ def main():
                  "external": {"n": int(len(y_ext)), "pos": int(y_ext.sum())},
                  "f_split": {"n": int(len(y_fs)), "pos": int(y_fs.sum())},
                  "f_without": {"n": int(len(y_fw)), "pos": int(y_fw.sum())}},
-        "config": {"seeds": seeds, "scale_pos_weight": spw, "cress": "models/2_5_w_model/8.pth",
+        "config": {"seeds": seeds, "scale_pos_weight": spw, "cress": base.CRESS_WEIGHTS,
                    "n_estimators": 2000, "max_depth": 5, "learning_rate": 0.1,
                    "subsample": 0.9, "colsample_bytree": 0.9, "gamma": 0.1,
                    "reg_alpha": 0.5, "reg_lambda": 0.5,

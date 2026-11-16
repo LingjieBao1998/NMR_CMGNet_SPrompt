@@ -12,6 +12,7 @@ reference vs 各模型 top-1 输出结构,附母核命中/精确匹配标记.
 输出: reports/fig_r2_qualitative.png (600dpi)
 """
 import json
+import os
 from pathlib import Path
 
 import matplotlib
@@ -25,10 +26,10 @@ from rdkit.Chem import Draw
 from rdkit.Chem.Draw import rdMolDraw2D
 
 RDLogger.DisableLog("rdApp.*")
-ROOT = Path("/mnt/data2/NMR_Core_Mol_Detection")
+ROOT = Path(os.environ.get('NMR_ROOT', str(Path(__file__).resolve().parent.parent)))
 OUT = ROOT / "reports" / "fig_r2_qualitative.png"
 
-BEAM = ROOT / "output"
+BEAM = ROOT / "results" / "predictions"
 
 
 def load_beam(rel):
@@ -40,18 +41,18 @@ def top1(d, i):
     return p["smiles"], bool(p.get("has_core_structure"))
 
 
-sprompt = load_beam("apr18_ex1209r_s42_smiles_beams10/test_smiles_beams10_samples4502.json")
-csmiles = load_beam("apr18_ex1209_s42_smiles_beams10/test_smiles_beams10_samples4502.json")
-c0910 = load_beam("apr18_base0910_smiles_beams10/test_smiles_beams10_samples4502.json")
+sprompt = load_beam("sprompt_seed42_smiles_beams10.json")
+csmiles = load_beam("cmgnet_smiles_seed42_beams10.json")
+c0910 = load_beam("cmgnet_0910_smiles_beams10.json")
 # NMR-Solver: 64 阳性的真实逐样本 top-10 (task_pos64_<4438+idx> 与 april18peak 序对齐)
-solver = json.load(open(BEAM / "nmrsolver_top10/pos64_top10.json"))
+solver = json.load(open(BEAM / "nmrsolver_pos64_top10.json"))
 
 # 跨家族 6 分子: N1-乙基+哌嗪 / N1-环丙+稠合手性吡咯烷+8-OMe / 乙酯+双F /
 # 三环手性(氧氟沙星型)+N-甲基哌嗪 / 三环+双F无7-氨基 / 萘啶酸(aza)+7-甲基
 PICK = [
     (54, "N-ethyl / 7-piperazine"),
     (55, "N1-cyclopropyl / fused pyrrolidine / 8-OMe"),
-    (57, "ethyl ester / 6,8-diF"),
+    (57, "3-carboxylic acid / 6,8-diF"),
     (58, "tricyclic (ofloxacin-type) / 7-NMe-piperazine"),
     (60, "tricyclic / diF, no 7-amino"),
     (63, "naphthyridine (aza) / 7-Me"),

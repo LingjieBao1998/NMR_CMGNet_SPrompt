@@ -42,16 +42,32 @@ sys.path.insert(0, ROOT)
 
 from infer import ModelInference  # noqa: E402
 
-TRAIN_LMDB = "data/nmrmind_cmgnet_1004/train.lmdb"
-VALID_JSON = "data/nmrmind_cmgnet_1004/validation.json"
-TEST_JSON = "data/nmrmind_cmgnet_1004/test.json"
-EXT_JSON = "data/nmrmind_cmgnet_1004/external_test.json"
-CRESS_CONFIG = "models/2_5_w_model/8.json"
-CRESS_WEIGHTS = "models/2_5_w_model/8.pth"
+TRAIN_LMDB = "data/nmrmind/train.lmdb"
+VALID_JSON = "data/nmrmind/validation.json"
+TEST_JSON = "data/nmrmind/test.json"
+EXT_JSON = "data/external_test/external_test.json"
+CRESS_DIR = os.environ.get("CRESS_DIR", "checkpoints/cress")
+CRESS_CONFIG = os.path.join(CRESS_DIR, "2_5_w_model/8.json")
+CRESS_WEIGHTS = os.path.join(CRESS_DIR, "2_5_w_model/8.pth")
 OUT_DIR = "output/xgb_cress_nmrmind"
 SEEDS = [0, 2006, 42]
 EMB_BATCH = 512
-XGB_DEVICE = "cuda:0"   # 4090 when CUDA_VISIBLE_DEVICES=0
+XGB_DEVICE = os.environ.get("XGB_DEVICE", "cuda:0")  # e.g. XGB_DEVICE=cpu when the GPU is busy
+
+
+def build_cress_config():
+    """Copy of the CReSS config with tokenizer paths resolved against CRESS_DIR."""
+    cfg = json.load(open(CRESS_CONFIG))
+    tok = os.path.abspath(os.path.join(CRESS_DIR, "tokenizer-smiles-roberta-1e"))
+    for section, key in (("model_config", "roberta_tokenizer_path"),
+                         ("dataset_config", "smiles_tokenizer"),
+                         ("trainer_config", "roberta_tokenizer_path")):
+        if section in cfg and key in cfg[section]:
+            cfg[section][key] = tok
+    os.makedirs("viz_tmp", exist_ok=True)
+    out = os.path.join("viz_tmp", "_cress_cfg_runtime.json")
+    json.dump(cfg, open(out, "w"))
+    return out
 
 
 def log(msg):
@@ -191,7 +207,7 @@ def main():
 
     # ---- embeddings (CReSS frozen, CPU is fast) ----
     torch.set_num_threads(32)
-    mi = ModelInference(config_path=CRESS_CONFIG, pretrain_model_path=CRESS_WEIGHTS, device="cpu")
+    mi = ModelInference(config_path=build_cress_config(), pretrain_model_path=CRESS_WEIGHTS, device="cpu")
     X_train = encode(mi, nmrs, tag="train")
     del nmrs
     gc.collect()

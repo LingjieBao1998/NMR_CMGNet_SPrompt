@@ -8,6 +8,10 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import os
+from pathlib import Path
+
+ROOT = Path(os.environ.get("NMR_ROOT", str(Path(__file__).resolve().parent.parent)))
 
 TEXT = "#262626"
 plt.rcParams.update({
@@ -81,6 +85,6 @@ ax.legend(handles=h, loc="lower right", fontsize=6.2, handletextpad=0.4,
           borderaxespad=0.4)
 
 for e in ("pdf", "png"):
-    fig.savefig(f"/mnt/data2/NMR_Core_Mol_Detection/reports/fig_hit_rate_summary.{e}",
+    fig.savefig(str(ROOT / "reports") + f"/fig_hit_rate_summary.{e}",
                 dpi=600 if e == "png" else None)
 print("saved dumbbell hit-rate figure")

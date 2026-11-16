@@ -17,7 +17,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 BLUE, ORANGE, RED, GREEN, GREY, LIGHT = ("#0072B2", "#E69F00", "#D55E00",
                                          "#009E73", "#8C8C8C", "#C9CCD4")
 TEXT = "#262626"

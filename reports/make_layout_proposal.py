@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Wireframe proposals for merging the embedding figure with the model-analysis
 panels. No data; layout only."""
+import os
+from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, FancyBboxPatch
+
+ROOT = Path(os.environ.get("NMR_ROOT", str(Path(__file__).resolve().parent.parent)))
 
 TEXT = "#262626"
 plt.rcParams.update({"font.family": "sans-serif",
@@ -92,6 +96,6 @@ ax.text(0.5, 0.35, "review workflow, MC-Dropout and ring-system\n"
         ha="center", fontsize=5.8, color="#666666")
 
 for ext in ("pdf", "png"):
-    fig.savefig(f"/mnt/data2/NMR_Core_Mol_Detection/reports/fig_layout_proposal.{ext}",
+    fig.savefig(str(ROOT / "reports") + f"/fig_layout_proposal.{ext}",
                 dpi=600 if ext == "png" else None)
 print("saved layout proposal")

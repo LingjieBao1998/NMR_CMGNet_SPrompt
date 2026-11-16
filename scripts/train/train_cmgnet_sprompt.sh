@@ -19,6 +19,7 @@ GPU_ID=${2:-0}
 
 PY=${PY:-/home/lingjiebao/anaconda3/envs/py312/bin/python}
 CKPT=${CKPT:-checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt}
+BASE=${BASE:-checkpoints/bart_base_0910}
 TRAIN_LMDB=${TRAIN_LMDB:-data/experimental/exp_lit.lmdb,data/synthetic/synth_predicted.lmdb,data/pubchem/pubchem_1209.lmdb}
 EXTRA_TRAIN=${EXTRA_TRAIN:-data/experimental/ex_train.ring.json}
 VALID=${VALID:-data/validation/validation.json}
@@ -27,7 +28,7 @@ TEST=${TEST:-data/external_test/external_test.json}
 SAVE_PATH=${SAVE_PATH:-output/train_cmgnet_sprompt_seed${SEED}}
 LOG=${LOG:-logs/train_cmgnet_sprompt_seed${SEED}.log}
 
-for f in "$CKPT" "$EXTRA_TRAIN" "$VALID" "$TEST"; do
+for f in "$CKPT" "$BASE" "$EXTRA_TRAIN" "$VALID" "$TEST"; do
     [ -e "$f" ] || { echo "missing: $f"; exit 1; }
 done
 IFS=',' read -ra LMDB_ARR <<< "$TRAIN_LMDB"
@@ -43,6 +44,7 @@ echo "==== train CMGNet-SPrompt seed=$SEED gpu=$GPU_ID start $(date '+%F %T') ==
 NCCL_P2P_DISABLE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" -u main_cmgnet.py \
     --save_path "$SAVE_PATH" \
     --ckpt "$CKPT" \
+    --model_dir "$BASE" \
     --train_file "$EXTRA_TRAIN" \
     --valid_file "$VALID" \
     --test_file "$TEST" \
@@ -60,7 +62,8 @@ NCCL_P2P_DISABLE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" -u mai
     --smiles_aug_proba 0.5 \
     --nmr_aug_proba 0.5 \
     --nmr_aug_scale 3.0 \
-    --use_ring_system >> "$LOG" 2>&1
+    --use_ring_system \
+    ${DEBUG:+--debug} >> "$LOG" 2>&1
 
 STATUS=$?
 echo "==== exit=$STATUS $(date '+%F %T') ====" | tee -a "$LOG"

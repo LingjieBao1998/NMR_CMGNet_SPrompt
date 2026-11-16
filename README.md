@@ -46,10 +46,17 @@ candidates contains the quinolone core; mean ± s.d. over seeds 0/2006/42):
 
 ![Model analysis](results/figures/fig_model_analysis_v5.png)
 
-*Figure 2. (A) CReSS embedding of the external test set with 90 % bootstrap credible
-intervals; (B–D) calibrated probability landscape; (E–F) per-molecule calibrated
-probability and interval; (G–H) ring-system detection accuracy. See
-`results/figures/fig_model_analysis_v5_caption.md` for the full caption.*
+*Figure 2. Error analysis and model behaviour at the decision threshold τ = 0.50.
+(A) CReSS embedding of the full training set with the 4,502 external-test spectra
+overlaid; the four false positives (diamonds) and the single false negative #12
+(star) are marked. (B) Local UMAP of the 41,961 training molecules within R = 0.78
+of FN #12. (C) FN #12 and its three nearest neighbours. (D) Classifier probability
+along the embedding path from FN #12 to its nearest positive analogue; the
+boundary is crossed at α ≈ 0.20. (E–F) Every external-test spectrum coloured by the
+width of its 90 % calibration-bootstrap interval, and the per-molecule intervals of
+the 64 positives and 4 false positives. (G–H) Ring-system detection accuracy. See
+`results/figures/fig_model_analysis_v5_caption.md` for the full caption and
+`reports/README.md` for how the intervals are computed.*
 
 ![Calibration intervals](results/figures/fig_ci_external.png)
 
@@ -223,10 +230,40 @@ bash scripts/infer/infer_cmgnet_sprompt.sh data/external_test/external_test.json
 | `results/table2_last10_hits.csv` | per-candidate hits for the last 10 positives |
 | `results/figures/fig_model_analysis_v5.pdf` | Figure 2 (A–H) |
 | `results/figures/fig_ci_external.pdf` | calibrated probability + 90 % CI |
+| `results/figures/fig_xgb_pr_roc.pdf` | PR / ROC curves with 95 % bootstrap bands (τ = 0.50) |
+| `results/figures/fig_calibration_reliability.pdf` | reliability curve, ECE / Brier / NLL |
+| `results/figures/fig_hit_rate_summary.pdf` | top-10 hit rate and Exact@10, all models |
+| `results/figures/fig_xgb_uncertainty.pdf` | 3-seed spread and 90 % conformal sets |
+| `results/figures/fig_fn12_case.png` | FN #12 case study |
+| `results/figures/fig_r2_qualitative.png` | qualitative comparison of six cross-substituent families |
 | `results/figures/fig_64_positives.pdf` | structure grid of all 64 positives |
 
-Figure-generation code lives in `reports/` (`make_figure_model_analysis_v5.py`,
-`make_ci_external_figure.py`).
+All figures are regenerated with one command (CPU only, ~5 min):
+
+```bash
+bash scripts/plot/make_all_figures.sh
+```
+
+The scripts read only the cached artefacts shipped in `reports/calib_data/`,
+`reports/*.json`, `viz_tmp/` and `results/predictions/`. `reports/README.md`
+contains the full figure inventory and the exact protocol used for every
+confidence interval.
+
+### Confidence intervals in one paragraph
+
+XGBoost gives a point score only, so every interval is resampling-based. Raw
+`predict_proba` scores are mapped to calibrated probabilities by a Platt map
+fitted **only on the reserved validation split** (40,667 spectra, 37 positives;
+Platt vs. isotonic chosen by 5-fold cross-fitted NLL). The per-molecule 90 %
+interval refits that Platt map on **200 stratified bootstrap resamples of the
+validation split** and reports the 5th/95th percentiles; it therefore measures
+uncertainty of the calibration map, not measurement noise. Validation prevalence
+(0.09 %) makes the operating threshold τ = 0.50 equal **0.0235** on the calibrated
+scale. Model instability is measured as the spread over three independently
+trained seeds (0 / 42 / 2006), prediction sets use Mondrian conformal calibration
+at 90 % coverage with 5-fold cross-fitted scores, and curve-level bands (PR/ROC,
+ECE/Brier/NLL, reliability) come from 1,000 bootstrap resamples. Full details,
+including the regeneration commands, are in `reports/README.md`.
 
 ---
 

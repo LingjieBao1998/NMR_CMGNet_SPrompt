@@ -17,7 +17,17 @@ docker/*.tar.gz
 # runtime artefacts
 output/
 logs/
-viz_tmp/
+viz_tmp/*
+# small cached arrays required to regenerate the figures (coords, labels,
+# 41,961-row embedding subset) are tracked; the 4.8 GB train_emb.npy is not
+!viz_tmp/coords_fit.npy
+!viz_tmp/coords_rest.npy
+!viz_tmp/fit_idx.npy
+!viz_tmp/rest_idx.npy
+!viz_tmp/train_labels.npy
+!viz_tmp/test_labels.npy
+!viz_tmp/train_emb_subset.npz
+!viz_tmp/f48_pred.npz
 __pycache__/
 *.pyc
 *.log

@@ -20,7 +20,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.stats import mannwhitneyu
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 RED, GREY, BLUE = "#D55E00", "#A6A6A6", "#0072B2"
 TEXT = "#262626"
 rng = np.random.default_rng(0)

@@ -6,7 +6,9 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D  # noqa
 from matplotlib import cm
 
-B="/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 D={o["idx"]:o for o in json.load(open(B+"reports/last10_models_summary.json"))}
 ids=list(range(54,64))
 models=[("CMGNet 0910","orig0910"),("Frag","Frag"),("SMILES","SMILES"),

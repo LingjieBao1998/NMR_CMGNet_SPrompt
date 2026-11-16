@@ -19,7 +19,9 @@ from rdkit.Chem.Draw import rdMolDraw2D
 import joblib
 
 RDLogger.DisableLog('rdApp.*')
-B = '/mnt/data2/NMR_Core_Mol_Detection/'
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 R_OUT = B + 'reports/'
 NV = 3_298_042
 
@@ -41,9 +43,14 @@ R = 0.78
 loc = np.where(np.linalg.norm(XY - q, axis=1) < R)[0]
 P = XY[loc]; L = y[loc]
 
-emb_tr = np.memmap(B + 'viz_tmp/train_emb.npy', dtype=np.float16, mode='r', shape=(3_300_000, 768))
-E = np.asarray(emb_tr[loc], dtype=np.float32)
-model = joblib.load(B + 'output/xgb_cress_new_dataset_ex_train_seed42/model_xgb_cress_new_dataset_seed42.pkl')
+_Z = np.load(B + 'viz_tmp/train_emb_subset.npz')
+_SUB_IDX, _SUB_EMB = _Z['idx'], _Z['emb']
+def emb_rows(ids):
+    ids = np.asarray(ids)
+    pos = np.clip(np.searchsorted(_SUB_IDX, ids), 0, len(_SUB_IDX) - 1)
+    return _SUB_EMB[pos].astype(np.float32)
+E = np.asarray(emb_rows(loc), dtype=np.float32)
+model = joblib.load(B + 'models/xgboost/model_xgb_cress_ex_train_seed42.pkl')
 p_loc = model.predict_proba(E)[:, 1]
 
 H = 130
@@ -76,9 +83,9 @@ def mol_img(s, w=720, h=430):
 
 
 # ---------- embedding path ----------
-emb_te = np.load('/tmp/apr18_cress_emb.npy').astype(np.float32)
+emb_te = np.load(B + 'reports/calib_data/apr18_cress_emb.npy').astype(np.float32)
 qv = emb_te[12]
-p1_emb = np.asarray(emb_tr[3263827], dtype=np.float32)
+p1_emb = np.asarray(emb_rows(np.array([3263827]))[0], dtype=np.float32)
 p1_emb = p1_emb / np.linalg.norm(p1_emb)
 alphas = np.linspace(0, 1, 101)
 path = []

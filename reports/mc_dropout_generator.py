@@ -31,7 +31,9 @@ from rdkit.Chem.Scaffolds import MurckoScaffold
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 RDLogger.DisableLog("rdApp.*")
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 sys.path.insert(0, B)
 MODEL_DIR = B + "checkpoints/saved_hf_model_0910"
 OUT = B + "reports/"

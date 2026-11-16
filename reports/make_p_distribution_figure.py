@@ -8,7 +8,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 z = np.load(B + "reports/calib_data/external_apr18peak.npz", allow_pickle=True)
 p, y = z["p_raw"], z["y"]
 pos, neg = p[y == 1], p[y == 0]

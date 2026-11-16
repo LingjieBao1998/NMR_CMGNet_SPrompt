@@ -7,7 +7,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 BLUE, GREEN, RED, ORANGE, GREY = "#0072B2", "#009E73", "#D55E00", "#E69F00", "#999999"
 GROUP_ORDER = ["FN #12 (p=0.012)", "borderline positive", "confident positive",
                "borderline negative (FP)", "confident negative"]

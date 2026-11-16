@@ -17,7 +17,7 @@ import time
 
 import numpy as np
 
-ROOT = "/mnt/data2/NMR_Core_Mol_Detection"
+ROOT = os.environ.get('NMR_ROOT', str(Path(__file__).resolve().parent.parent))
 os.chdir(ROOT)
 sys.path.insert(0, ROOT)
 
@@ -35,7 +35,7 @@ SPLITS = {
     "internal_test": "data/new_dataset/test.json",
     "external_test": "data/new_dataset/external_test.json",
 }
-MODEL = "output/xgb_cress_new_dataset_ex_train_seed42/model_xgb_cress_new_dataset_seed42.pkl"
+MODEL = "models/xgboost/model_xgb_cress_ex_train_seed42.pkl"
 BATCH = 512
 
 

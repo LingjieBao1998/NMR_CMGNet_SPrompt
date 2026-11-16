@@ -29,14 +29,16 @@ from scipy.special import expit, logit
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 sys.path.insert(0, B)
 OUT = B + "reports/"
 D = OUT + "calib_data/"
 SETS = ["validation", "internal_test", "external_apr18peak"]
 MODELS = [
     "output/xgb_cress_new_dataset_ex_train/model_xgb_cress_new_dataset_seed0.pkl",
-    "output/xgb_cress_new_dataset_ex_train_seed42/model_xgb_cress_new_dataset_seed42.pkl",
+    "models/xgboost/model_xgb_cress_ex_train_seed42.pkl",
     "output/xgb_cress_new_dataset_ex_train/model_xgb_cress_new_dataset_seed2006.pkl",
 ]
 N_BOOT_CAL = 200
@@ -178,7 +180,8 @@ def main():
         U = np.percentile(np.stack(ups), 95, axis=0)
         boot[s] = {"interval_width_median": float(np.median(U - L)),
                    "interval_width_mean": float(np.mean(U - L))}
-        np.savez(D + f"{s}_p_interval.npz", lo=L, hi=U, p=p_cal)        print(f"  boot {s}: median 90% width on calibrated p = "
+        np.savez(D + f"{s}_p_interval.npz", lo=L, hi=U, p=p_cal)
+        print(f"  boot {s}: median 90% width on calibrated p = "
               f"{boot[s]['interval_width_median']:.4f}", flush=True)
 
     res = {

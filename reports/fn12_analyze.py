@@ -8,7 +8,9 @@ import numpy as np
 import torch
 import lmdb, pickle
 
-B = '/mnt/data2/NMR_Core_Mol_Detection/'
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 VT = B + 'viz_tmp/'
 NV = 3_298_042
 CUT1 = 3_196_194          # new_db valid rows
@@ -23,7 +25,7 @@ def log(m):
 
 y = np.load(VT + 'train_labels.npy')
 emb = np.memmap(VT + 'train_emb.npy', dtype=np.float16, mode='r', shape=(3_300_000, D))
-te = np.load('/tmp/apr18_cress_emb.npy').astype(np.float32)
+te = np.load(B + 'reports/calib_data/apr18_cress_emb.npy').astype(np.float32)
 q = torch.tensor(te[12] / np.linalg.norm(te[12])).cuda().half()
 
 vals, inds = [], []

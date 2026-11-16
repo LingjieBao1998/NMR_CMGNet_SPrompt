@@ -9,7 +9,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 r = json.load(open(B + "reports/calibration_review_metrics.json"))
 SETS = [("validation", "A  Validation (reserved)"),
         ("internal_test", "B  Internal test (natural prevalence)"),

@@ -40,7 +40,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, log_loss
 from sklearn.model_selection import StratifiedKFold
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 OUT = B + "reports/calib_data/"
 SETS = ["validation", "internal_test", "external_apr18peak"]
 LABELS = {"validation": "Validation (reserved)", "internal_test": "Internal test",

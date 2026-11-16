@@ -12,7 +12,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-B = "/mnt/data2/NMR_Core_Mol_Detection/"
+import os as _os
+B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+B = B.rstrip('/') + '/'
 BLUE, RED, ORANGE, GREY, LIGHT = "#0072B2", "#D55E00", "#E69F00", "#8C8C8C", "#C9CCD4"
 TEXT = "#262626"
 plt.rcParams.update({
