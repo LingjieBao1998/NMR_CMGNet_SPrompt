@@ -24,6 +24,10 @@ CKPT=${CKPT:-checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt}
 BASE=${BASE:-checkpoints/bart_base_0910}
 BEAMS=${BEAMS:-10}
 CORE=${CORE:-"O=C(O)c1c[nH]c2ccccc2c1=O"}
+# SPrompt = `nmr+frag` decoding with the core prompt injected only for gated
+# spectra.  `sprompt` is accepted as an alias by main_cmgnet.py (same branch),
+# but `nmr+frag` matches the output names of the published runs.
+MODE=${MODE:-nmr+frag}
 
 for f in "$TEST_JSON" "$CKPT" "$BASE"; do
     [ -e "$f" ] || { echo "missing: $f"; exit 1; }
@@ -31,14 +35,18 @@ done
 
 export CUDA_VISIBLE_DEVICES=$GPU_ID
 mkdir -p "$OUT_DIR" logs
-VOTES="$OUT_DIR/sprompt_votes.json"
+VOTES=${VOTES:-"$OUT_DIR/sprompt_votes.json"}
 LOG="$OUT_DIR/infer.log"
 
-echo "==== [1/3] XGBoost-CReSS gate $(date '+%F %T') ====" | tee -a "$LOG"
-"$PY" -u scripts/infer/make_sprompt_votes.py \
-    --test_json "$TEST_JSON" \
-    --out_json "$VOTES" \
-    --device cuda >> "$LOG" 2>&1 || exit 1
+if [ -s "$VOTES" ]; then
+    echo "==== [1/3] reuse gate votes: $VOTES ====" | tee -a "$LOG"
+else
+    echo "==== [1/3] XGBoost-CReSS gate $(date '+%F %T') ====" | tee -a "$LOG"
+    "$PY" -u scripts/infer/make_sprompt_votes.py \
+        --test_json "$TEST_JSON" \
+        --out_json "$VOTES" \
+        --device cuda >> "$LOG" 2>&1 || exit 1
+fi
 
 echo "==== [2/3] CMGNet-SPrompt generation $(date '+%F %T') ====" | tee -a "$LOG"
 NCCL_P2P_DISABLE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" -u main_cmgnet.py \
@@ -50,14 +58,14 @@ NCCL_P2P_DISABLE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" -u mai
     --num_workers 8 --batch_size 48 \
     --do_test --gpus 1 \
     --num_beams "$BEAMS" \
-    --decode_mode sprompt \
+    --decode_mode "$MODE" \
     --sprompt_votes "$VOTES" \
     --sprompt_core "$CORE" \
     --smiles_aug_proba 0.5 --nmr_aug_proba 0.5 --nmr_aug_scale 3.0 \
     --use_ring_system >> "$LOG" 2>&1 || exit 1
 
 echo "==== [3/3] core-hit summary $(date '+%F %T') ====" | tee -a "$LOG"
-PRED=$(ls -t "$OUT_DIR"/test_sprompt_beams${BEAMS}_samples*.json 2>/dev/null | head -1)
+PRED=$(ls -t "$OUT_DIR"/test_${MODE}_beams${BEAMS}_samples*.json 2>/dev/null | head -1)
 if [ -n "$PRED" ]; then
     "$PY" -u summarize_core_smiles.py "$OUT_DIR/summary.md" "CMGNet-SPrompt" "$PRED" >> "$LOG" 2>&1
     echo "prediction: $PRED"

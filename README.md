@@ -81,7 +81,10 @@ molecule; the raw-score threshold τ = 0.50 corresponds to 0.0235 on this calibr
 │   └── infer/                      # CMGNet-SPrompt inference (gate + generation)
 ├── data/                           # rebuilt LMDB / JSON splits (see data/README.md)
 ├── checkpoints/
-│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # CMGNet-SPrompt weights
+│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # base / reproduction weights
+│   ├── sprompt_ex1209_1ep_seed0.ckpt                    # CMGNet-SPrompt, seed 0
+│   ├── sprompt_ex1209_1ep_seed2006.ckpt                 # CMGNet-SPrompt, seed 2006
+│   ├── sprompt_ex1209_5ep_seed42.ckpt                   # CMGNet-SPrompt, seed 42
 │   ├── 1220_last.ckpt
 │   ├── bart_base_0910/             # BART backbone
 │   └── cress/                      # CReSS encoder + SMILES tokenizer
@@ -103,7 +106,7 @@ commands are in [`data/README.md`](data/README.md).
 |---|---|---:|---:|
 | Experimental literature | `data/experimental/exp_lit.lmdb` | 49,984 | 55 |
 | Extra experimental train (nmrshiftdb) | `data/experimental/ex_train.lmdb` | 24,520 | 11 |
-| Synthetic / predicted | `data/synthetic/synth_predicted.lmdb` | 1,488,432 | — |
+| Synthetic / predicted | `data/synthetic/synth_predicted.lmdb` | 1,488,432 | 2,461 |
 | PubChem positives | `data/pubchem/pubchem_1209.lmdb` | 77,328 | 77,328 |
 | NMRMind train | `data/nmrmind/train.lmdb` | 2,137,771 | 3,288 |
 | NMRMind validation | `data/nmrmind/validation.lmdb` | 55,167 | 81 |
@@ -188,14 +191,26 @@ bash scripts/infer/infer_cmgnet_sprompt.sh \
 Three stages:
 
 1. **Gate** — CReSS embedding → XGBoost probability → 0/1 vote at 0.5
-   (`scripts/infer/make_sprompt_votes.py`).
-2. **Generation** — `main_cmgnet.py --decode_mode sprompt --sprompt_votes ...`
+   (`scripts/infer/make_sprompt_votes.py`). Pre-computed votes for the published
+   external-test runs are shipped in `data/external_test/sprompt_votes/`
+   (e.g. `sprompt_votes_apr18.json`); point `VOTES=...` at one of them to skip this
+   step and reproduce a published run exactly.
+2. **Generation** — `main_cmgnet.py --decode_mode nmr+frag --sprompt_votes ...`
    injects the fixed core prompt (`--sprompt_core`) only for gated spectra and
    decodes 10 beams; non-gated spectra fall back to plain NMR→SMILES.
 3. **Summary** — `summarize_core_smiles.py` reports top-k core hits and ExactMatch.
 
 A single spectrum can also be scored through the web service
 (`docker/my-nmr-service_v1.0-web.tar.gz`, `nmr_core_system/`).
+
+To reproduce a specific seed reported in the top-10 table, override `CKPT`:
+
+```bash
+CKPT=checkpoints/sprompt_ex1209_1ep_seed0.ckpt \
+VOTES=data/external_test/sprompt_votes/sprompt_votes_apr18.json \
+bash scripts/infer/infer_cmgnet_sprompt.sh data/external_test/external_test.json \
+     output/infer_sprompt_seed0 0
+```
 
 ---
 

@@ -37,7 +37,7 @@ data/
 | Category | Source | Records | Positives |
 |---|---|---:|---:|
 | `experimental/exp_lit.lmdb` | `new_db.lmdb` records with `source ∈ {NMR BANK, c13_naproc, bmrb, Spektraris_NMR, GlycoNMR, hmdb}` | 49,984 | 55 |
-| `synthetic/synth_predicted.lmdb` | `new_db.lmdb` records with `source ∈ {multi, napacd, acd_lotusv9, pnmrnp2}` | 1,488,432 | — |
+| `synthetic/synth_predicted.lmdb` | `new_db.lmdb` records with `source ∈ {multi, napacd, acd_lotusv9, pnmrnp2}` | 1,488,432 | 2,461 |
 | `pubchem/pubchem_1209.lmdb` | PubChem positive corpus `new_data_1209.filtered` after removal of 90 evaluation overlaps | 77,328 | 77,328 |
 | `nmrmind/*` | original NMRMind splits (unchanged) | 2,137,771 / 55,167 / 55,150 | 3,288 / 81 / 87 |
 | `validation/*` | clean `new_dataset` validation split | 40,667 | 37 |

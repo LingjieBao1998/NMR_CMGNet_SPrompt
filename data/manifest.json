@@ -1,0 +1,56 @@
+{
+ "generated": "2026-11-16",
+ "source_corpus_records": 3196326,
+ "excluded": {
+  "NMRium": 1657910
+ },
+ "splits": {
+  "experimental/exp_lit.lmdb": {
+   "entries": 49984,
+   "pos": 55
+  },
+  "experimental/ex_train.lmdb": {
+   "entries": 24520,
+   "pos": 11
+  },
+  "synthetic/synth_predicted.lmdb": {
+   "entries": 1488432,
+   "pos": 2461
+  },
+  "pubchem/pubchem_1209.lmdb": {
+   "entries": 77328,
+   "pos": 77328
+  },
+  "nmrmind/train.lmdb": {
+   "entries": 2137771,
+   "pos": 3288
+  },
+  "nmrmind/validation.lmdb": {
+   "entries": 55167,
+   "pos": 81
+  },
+  "nmrmind/test.lmdb": {
+   "entries": 55150,
+   "pos": 87
+  },
+  "validation/validation.lmdb": {
+   "entries": 40667,
+   "pos": 37
+  },
+  "external_test/external_test.lmdb": {
+   "entries": 4502,
+   "pos": 64
+  }
+ },
+ "json_splits": {
+  "data/external_test/external_test.json": 4502,
+  "data/external_test/external_test_pos_only.json": 64,
+  "data/validation/validation.json": 40667,
+  "data/experimental/ex_train.json": 24520,
+  "data/experimental/ex_train.ring.json": 24520,
+  "data/nmrmind/validation.json": 55167,
+  "data/nmrmind/test.json": 55150,
+  "data/f_split/with_f_split.json": 48,
+  "data/f_split/without_f_split.json": 48
+ }
+}
