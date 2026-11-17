@@ -75,18 +75,32 @@ scale (0.0235; see `reports/README.md` for the exact mapping).*
 ```
 .
 ├── main_cmgnet.py                  # CMGNet training / inference entry point
+├── train_xgb_cress_new_dataset.py  # XGBoost-CReSS training (multi-seed)
+├── train_xgb_cress_nmrmind.py      # shared CReSS/XGBoost helpers (imported by the trainer)
 ├── infer.py                        # CReSS ModelInference wrapper (XGBoost head)
 ├── new_RingSystemFinder.py         # ring-system extraction used by CMGNet
-├── train_xgb_cress_new_dataset.py  # XGBoost-CReSS training (multi-seed)
-├── summarize_core_smiles.py        # generated candidates -> core-hit / ExactMatch
-├── calculate_cmgnet_metrics.py
 ├── model/                          # CReSS model definition
 ├── utils/                          # shared helpers
+├── lib/                            # optional nmrshiftdb2 predictor jars (git-ignored)
+├── .opencode/skills/               # agent skills: nmr-postanalysis, nmr-synthesis
+├── analysis/                       # post-hoc analysis (not needed for training)
+│   ├── metrics/                    # top-N, aggregate, compare, XGBoost reports
+│   ├── errors/                     # error cases, attention-head and core-matching analysis
+│   ├── embedding/                  # CReSS embeddings, UMAP, retrieval, similarity
+│   ├── inference/                  # inference examples and one-off reruns
+│   └── legacy/                     # superseded model variants and prototypes
+├── legacy/                         # archived, non-release material
+│   ├── runs/                       # original run_*.sh experiment launchers
+│   ├── tests/                      # ad-hoc test_*.py scripts
+│   ├── data_scripts/               # old parsers/scrapers (see data_process/README.md)
+│   └── plot/                       # old notebooks and enumeration plots
 ├── data_process/                   # raw-source parsers (nmrshiftdb, BMRB, HMDB, PubChem, ...)
 ├── scripts/
 │   ├── build_lmdb/                 # dataset rebuild utilities (see data/README.md)
 │   ├── train/                      # CMGNet-SPrompt + XGBoost training
-│   └── infer/                      # CMGNet-SPrompt inference (gate + generation)
+│   │   └── runs/                   # historical run_*.sh launchers
+│   ├── infer/                      # CMGNet-SPrompt inference (gate + generation)
+│   └── plot/                       # one-command figure regeneration
 ├── data/                           # rebuilt LMDB / JSON splits (see data/README.md)
 ├── checkpoints/
 │   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # base / reproduction weights
@@ -100,8 +114,12 @@ scale (0.0235; see `reports/README.md` for the exact mapping).*
 ├── nmr_core_system/                # Django web service (inference UI)
 ├── docker/my-nmr-service_v1.0-web.tar.gz     # prebuilt service image
 ├── results/                        # figures + result tables used above
-└── reports/                        # figure-generation scripts and captions
-```
+└── reports/                        # paper/SI figures and CI analysis
+    └── legacy_calibration/         # archived calibration/reliability analysis```
+
+The root contains only the CMGNet and XGBoost training entry points (plus their
+imports).  Plotting lives in `reports/` and `scripts/plot/`; post-hoc analysis in
+`analysis/`; one-off launchers and old tests in `legacy/`.
 
 ---
 
@@ -206,7 +224,7 @@ Three stages:
 2. **Generation** — `main_cmgnet.py --decode_mode nmr+frag --sprompt_votes ...`
    injects the fixed core prompt (`--sprompt_core`) only for gated spectra and
    decodes 10 beams; non-gated spectra fall back to plain NMR→SMILES.
-3. **Summary** — `summarize_core_smiles.py` reports top-k core hits and ExactMatch.
+3. **Summary** — `analysis.metrics.summarize_core_smiles` reports top-k core hits and ExactMatch.
 
 A single spectrum can also be scored through the web service
 (`docker/my-nmr-service_v1.0-web.tar.gz`, `nmr_core_system/`).
@@ -230,9 +248,8 @@ bash scripts/infer/infer_cmgnet_sprompt.sh data/external_test/external_test.json
 | `results/hit_rate_summary.md` | top-10 / Exact@10 summary |
 | `results/table2_last10_hits.csv` | per-candidate hits for the last 10 positives |
 | `results/figures/fig_model_analysis_v5.pdf` | Figure 2 (A–H) |
-| `results/figures/fig_ci_external.pdf` | calibrated probability + 90 % CI |
+| `results/figures/fig_ci_external.pdf` | probability + 90 % CI |
 | `results/figures/fig_xgb_pr_roc.pdf` | PR / ROC curves with 95 % bootstrap bands (τ = 0.50) |
-| `results/figures/fig_calibration_reliability.pdf` | reliability curve, ECE / Brier / NLL |
 | `results/figures/fig_hit_rate_summary.pdf` | top-10 hit rate and Exact@10, all models |
 | `results/figures/fig_xgb_uncertainty.pdf` | 3-seed spread and 90 % conformal sets |
 | `results/figures/fig_fn12_case.png` | FN #12 case study |

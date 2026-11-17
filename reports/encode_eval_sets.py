@@ -2,8 +2,9 @@
 """Encode the reserved development (validation) and evaluation sets with the
 frozen CReSS encoder, and store raw XGBoost probabilities.
 
-The calibration / review analysis in reports/calibrate_and_review.py only needs
-these cached arrays, so the expensive CReSS forward pass is done once.
+The calibration / review analysis in
+reports/legacy_calibration/calibrate_and_review.py only needs these cached
+arrays, so the expensive CReSS forward pass is done once.
 
 Outputs (reports/calib_data/):
   <split>_emb.npy   float32 (n, 768), L2-normalised CReSS embeddings
@@ -26,7 +27,7 @@ import joblib  # noqa: E402
 import torch  # noqa: E402
 
 from infer import ModelInference  # noqa: E402
-from train_xgb_cress_new_dataset_seed42 import load_json  # noqa: E402
+from train_xgb_cress_new_dataset import load_json  # noqa: E402
 from train_xgb_cress_nmrmind import build_cress_config, CRESS_WEIGHTS  # noqa: E402
 
 OUT = os.path.join(ROOT, "reports", "calib_data")

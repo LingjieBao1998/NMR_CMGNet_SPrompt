@@ -17,9 +17,8 @@ Individual scripts resolve paths relative to the repository root (override with
 | Script | Output | Content |
 |---|---|---|
 | `make_figure_model_analysis_v5.py` | `fig_model_analysis_v5.png/.pdf` | **Figure 2**: (A) global CReSS embedding (training negatives/positives + 4,502 external spectra, FP diamonds, FN star); (B) local UMAP within R = 0.78 of FN #12; (C) FN #12 and its nearest neighbours; (D) probability along the embedding path (boundary at α ≈ 0.20); (E) test set coloured by 90 % CI width; (F) per-molecule 90 % intervals for the 64 positives and 4 FP; (G) accuracy per ring system; (H) representative ring systems |
-| `make_ci_external_figure.py` | `fig_ci_external.png/.pdf` | calibrated probability with its 90 % bootstrap interval for every external-test molecule (forest plot, log scale) |
+| `make_ci_external_figure.py` | `fig_ci_external.png/.pdf` | probability with its 90 % bootstrap interval for every external-test molecule (forest plot, log scale) |
 | `make_xgb_pr_roc.py` | `fig_xgb_pr_roc.png/.pdf/.svg`, `xgb_pr_roc_metrics.json`, `fig_xgb_pr_roc_curves.npz` | PR and ROC curves with 95 % bootstrap bands; operating point τ = 0.50 (TP 63 / FP 4 / FN 1 / TN 4,434, F1 = 0.9618) |
-| `make_calibration_figure.py` | `fig_calibration_reliability.png/.pdf` | reliability curve with 95 % bootstrap CI, ECE / Brier / NLL |
 | `make_hit_rate_figure.py` | `fig_hit_rate_summary.png/.pdf` | top-10 core-hit rate and exact@10 for all models (dumbbell) |
 | `make_3d_hit_chart.py` | `fig_hit_rate_3d.png/.pdf` | 3-D view of top-10 hit rate |
 | `make_nhetero_systems_figure.py` | `fig_nhetero_systems.png/.pdf` | accuracy per N-hetero ring system |
@@ -33,6 +32,12 @@ Individual scripts resolve paths relative to the repository root (override with
 | `make_r2_qualitative_figure.py` | `fig_r2_qualitative.png` | qualitative comparison of six cross-substituent families |
 | `make_model_analysis_figure.py`, `make_figure_model_analysis_v3/v4.py` | `fig_model_analysis*.png/.pdf` | earlier layouts of Figure 2 (v5 is the published one) |
 | `make_layout_proposal.py` | `fig_layout_proposal.png/.pdf` | wireframe layout proposal (no data) |
+
+The standalone calibration/reliability figure and the calibration-review
+metrics are **not part of the default pipeline**; they are archived in
+`reports/legacy_calibration/`.  The CI figure still uses the Platt map internally
+(the interval is a calibration-map bootstrap), but no separate calibration
+figure is produced.
 | `make_fn12_report_assets.py` | `fn12_peak_ablation.png` | peak-ablation panel for the FN #12 report |
 
 ## Cached artefacts
@@ -102,9 +107,10 @@ with a Wilson 95 % interval.
 **6. Curve-level intervals.**
 `make_xgb_pr_roc.py` uses 1,000 percentile bootstrap resamples of the external
 test set for the PR/ROC bands and the AUPRC/AUROC intervals (AUPRC 0.9891,
-95 % CI 0.9713–0.9996).  `calibrate_and_review.py` uses 1,000 stratified
-bootstrap resamples (2.5/97.5 percentiles) for ECE / Brier / NLL and the
-reliability curve.
+95 % CI 0.9713–0.9996).  `legacy_calibration/calibrate_and_review.py` uses 1,000
+stratified bootstrap resamples (2.5/97.5 percentiles) for ECE / Brier / NLL and
+the reliability curve; that analysis is archived and not part of the default
+pipeline.
 
 **Regenerating the figures and the intervals**
 
@@ -122,7 +128,6 @@ CReSS encoder and the 768-d embedding caches for the 40,667 validation and
 
 ```bash
 python reports/encode_eval_sets.py     # embeddings + raw probabilities
-python reports/calibrate_and_review.py # calibration metrics, reliability
 python reports/uncertainty_ci.py       # per-sample intervals, conformal, seeds
 ```
 

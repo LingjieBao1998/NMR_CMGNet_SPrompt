@@ -8,10 +8,13 @@
 | `build_lmdb/relabel_source.py` | rewrite the `source` field into a new LMDB |
 | `build_lmdb/export_source_index.py` | export key/source/SMILES/label without spectra, for restricted corpora |
 | `train/train_cmgnet_sprompt.sh` | fine-tune CMGNet-SPrompt on experimental + synthetic + PubChem |
+| `train/runs/` | historical `run_*.sh` experiment launchers (archived recipes) |
 | `train/train_xgb_cress.sh` | train the CReSS → XGBoost core classifier |
 | `infer/infer_cmgnet_sprompt.sh` | full CMGNet-SPrompt inference (XGB gate + prompt + 10 beams) |
 | `infer/make_sprompt_votes.py` | XGBoost gate only (writes 0/1 votes per spectrum) |
 | `infer/infer_cmgnet_frag_smiles.sh` | baseline frag / smiles generation without gating |
+| `synthesize/predict_c_nmr.py` | SMILES → predicted ¹³C peak list (optional nmrshiftdb2 jars) |
+| `fetch_predictor.sh` | copy and checksum the optional predictor jars into `lib/` |
 
 Typical order:
 

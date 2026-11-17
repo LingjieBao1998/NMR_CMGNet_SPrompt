@@ -70,6 +70,10 @@ checkpoints/**/*.safetensors
 docker/*.tar
 docker/*.tar.gz
 
+# ------------------------------------------------------------------ optional predictor
+# nmrshiftdb2 + CDK jars are third-party (AGPL-3.0 / nmrshiftdb2 DB License)
+lib/*.jar
+
 # ------------------------------------------------------------------ generated
 output/
 logs/

@@ -42,5 +42,5 @@ NCCL_P2P_DISABLE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" -u mai
 
 PRED=$(ls -t "$OUT_DIR"/test_${MODE}_beams${BEAMS}_samples*.json 2>/dev/null | head -1)
 if [ -n "$PRED" ]; then
-    "$PY" -u summarize_core_smiles.py "$OUT_DIR/summary.md" "CMGNet-${MODE}" "$PRED"
+    "$PY" -u -m analysis.metrics.summarize_core_smiles "$OUT_DIR/summary.md" "CMGNet-${MODE}" "$PRED"
 fi

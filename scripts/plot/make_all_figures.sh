@@ -21,7 +21,6 @@ FIG_SCRIPTS=(
     make_figure_model_analysis_v5.py     # Figure 2 (A-H): embedding, FN#12, CI, ring systems
     make_ci_external_figure.py           # calibrated p + 90% bootstrap CI (forest plot)
     make_xgb_pr_roc.py                   # PR / ROC curves with 95% bootstrap bands
-    make_calibration_figure.py           # reliability curve with bootstrap CI
     make_hit_rate_figure.py              # top-10 hit rate / exact@10 dumbbell
     make_3d_hit_chart.py                 # 3-D hit-rate chart
     make_nhetero_systems_figure.py       # accuracy per N-hetero ring system

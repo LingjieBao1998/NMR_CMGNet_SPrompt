@@ -68,7 +68,7 @@ NCCL_P2P_DISABLE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True "$PY" -u mai
 echo "==== [3/3] core-hit summary $(date '+%F %T') ====" | tee -a "$LOG"
 PRED=$(ls -t "$OUT_DIR"/test_${MODE}_beams${BEAMS}_samples*.json 2>/dev/null | head -1)
 if [ -n "$PRED" ]; then
-    "$PY" -u summarize_core_smiles.py "$OUT_DIR/summary.md" "CMGNet-SPrompt" "$PRED" >> "$LOG" 2>&1
+    "$PY" -u -m analysis.metrics.summarize_core_smiles "$OUT_DIR/summary.md" "CMGNet-SPrompt" "$PRED" >> "$LOG" 2>&1
     echo "prediction: $PRED"
     echo "summary:    $OUT_DIR/summary.md"
 else

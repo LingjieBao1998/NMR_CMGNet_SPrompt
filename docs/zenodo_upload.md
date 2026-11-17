@@ -31,7 +31,7 @@ Contents (everything tracked by git):
 
 | Path | Size | Note |
 |---|---:|---|
-| `main_cmgnet.py`, `infer.py`, `train_xgb_cress_new_dataset.py`, `summarize_core_smiles.py` | ~200 KB | entry points |
+| `main_cmgnet.py`, `infer.py`, `train_xgb_cress_new_dataset.py`, `analysis/metrics/summarize_core_smiles.py` | ~200 KB | entry points |
 | `scripts/` | 44 KB | train / infer / plot / build_lmdb |
 | `data_process/` | 188 KB | raw-source parsers |
 | `model/`, `utils/`, `plot/` | ~4 MB | model + helpers |
