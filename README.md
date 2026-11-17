@@ -99,11 +99,11 @@ scale (0.0235; see `reports/README.md` for the exact mapping).*
 │   └── plot/                       # one-command figure regeneration
 ├── data/                           # rebuilt LMDB / JSON splits (see data/README.md)
 ├── checkpoints/
-│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # reference checkpoint
-│   ├── sprompt_ex1209_1ep_seed0.ckpt                    # CMGNet-SPrompt, seed 0
-│   ├── sprompt_ex1209_1ep_seed2006.ckpt                 # CMGNet-SPrompt, seed 2006
-│   ├── sprompt_ex1209_5ep_seed42.ckpt                   # CMGNet-SPrompt, seed 42
-│   ├── 1220_last.ckpt
+│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # best by val/score in its run
+│   ├── sprompt_ex1209_1ep_seed0.ckpt                    # CMGNet-SPrompt, 1 epoch, seed 0
+│   ├── sprompt_ex1209_1ep_seed2006.ckpt                 # CMGNet-SPrompt, 1 epoch, seed 2006
+│   ├── sprompt_ex1209_5ep_seed42.ckpt                   # seed 42; metadata records epochs=1
+│   ├── 1220_last.ckpt              # last (epoch 99); best (epoch 25) not shipped
 │   ├── bart_base_0910/             # 0910 base model (default training start)
 │   └── cress/                      # CReSS encoder + SMILES tokenizer
 ├── models/xgboost/model_xgb_cress_1220.pkl   # XGBoost core classifier
