@@ -55,6 +55,21 @@ The separate validation split (`validation/validation.lmdb`, 40,667 records /
 It is used **only for calibration and validation**, never for training, so the
 `NMRium` exclusion above applies to the training corpora, not to this dev split.
 
+### Which validation split?
+
+These are different datasets with different roles; the counts are not expected
+to match:
+
+| File | Records | Positives | Source | Role |
+|---|---:|---:|---|---|
+| `nmrmind/validation.lmdb` | 55,167 | 81 | NMRMind | NMRMind's own validation split, copied unchanged from the upstream release |
+| `nmrmind/test.lmdb` | 55,150 | 87 | NMRMind | NMRMind's own test split |
+| `validation/validation.lmdb` | 40,667 | 37 | NMRium | project calibration/validation split used by CMGNet and XGBoost |
+
+The 40,667-record split is **not** a subset of the 55,167-record NMRMind split.
+The 17-record difference between `nmrmind/validation` and `nmrmind/test` is also
+upstream (the NMRMind release ships those two sizes), not a filtering artefact.
+
 ## Licensing and availability
 
 | `source` | Records | Terms |
