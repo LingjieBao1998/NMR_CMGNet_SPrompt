@@ -6,6 +6,7 @@
 #
 # Usage:
 #   bash scripts/train/train_xgb_cress.sh [out_dir] [gpu_id]
+# Seeds default to 0,42,2006.
 # Set INCLUDE_SYNTH=1 to add the 1.49 M synthetic corpus to the base training set.
 # ---------------------------------------------------------------------------
 set -u
@@ -45,5 +46,5 @@ mkdir -p "$OUT_DIR" logs
     --external_json "$EXTERNAL" \
     --f_split_json "$F_SPLIT" \
     --f_without_json "$F_WO" \
-    --seeds "${SEEDS:-42,0,2006}" \
+    --seeds "${SEEDS:-0,42,2006}" \
     --out_dir "$OUT_DIR" 2>&1 | tee "logs/$(basename "$OUT_DIR").log"

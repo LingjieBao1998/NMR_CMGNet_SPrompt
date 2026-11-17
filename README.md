@@ -93,19 +93,18 @@ scale (0.0235; see `reports/README.md` for the exact mapping).*
 ├── scripts/
 │   ├── build_lmdb/                 # dataset rebuild utilities (see data/README.md)
 │   ├── train/                      # CMGNet-SPrompt + XGBoost training
-│   │   └── runs/                   # five representative run_*.sh recipes
 │   ├── infer/                      # CMGNet-SPrompt inference (gate + generation)
 │   ├── crawl/                      # Zakodium carbon-API scraper
 │   ├── synthesize/                 # optional nmrshiftdb2 SMILES -> 13C workflow
 │   └── plot/                       # one-command figure regeneration
 ├── data/                           # rebuilt LMDB / JSON splits (see data/README.md)
 ├── checkpoints/
-│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # base / reproduction weights
+│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # reference checkpoint
 │   ├── sprompt_ex1209_1ep_seed0.ckpt                    # CMGNet-SPrompt, seed 0
 │   ├── sprompt_ex1209_1ep_seed2006.ckpt                 # CMGNet-SPrompt, seed 2006
 │   ├── sprompt_ex1209_5ep_seed42.ckpt                   # CMGNet-SPrompt, seed 42
 │   ├── 1220_last.ckpt
-│   ├── bart_base_0910/             # BART backbone
+│   ├── bart_base_0910/             # 0910 base model (default training start)
 │   └── cress/                      # CReSS encoder + SMILES tokenizer
 ├── models/xgboost/model_xgb_cress_1220.pkl   # XGBoost core classifier
 ├── nmr_core_system/                # Django web service (inference UI)
@@ -182,13 +181,15 @@ Set `PY=...` when calling the scripts below.
 ### 1. CMGNet-SPrompt (generative core detection)
 
 ```bash
-bash scripts/train/train_cmgnet_sprompt.sh 42 0
-# seed=42, GPU 0; override EPOCHS/BATCH_SIZE/ACCUM via env vars
+bash scripts/train/train_cmgnet_sprompt.sh 0,42,2006 0
+# seeds 0/42/2006, GPU 0; override EPOCHS/BATCH_SIZE/ACCUM via env vars
 ```
 
-The script fine-tunes `checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt` on the
-three training corpora (experimental + synthetic + PubChem) with ring-system prompting,
-5 epochs, batch 48 × grad-accum 2, lr 1e-4, NMR/SMILES augmentation.
+The script starts from the **0910 base model**
+(`checkpoints/bart_base_0910`) and fine-tunes on the three training corpora
+(experimental + synthetic + PubChem) with ring-system prompting, 5 epochs,
+batch 48 × grad-accum 2, lr 1e-4, NMR/SMILES augmentation.  Set
+`CKPT=/path/to/checkpoint.ckpt` to resume from a full Lightning checkpoint.
 
 ### 2. XGBoost-CReSS classifier
 
@@ -200,7 +201,7 @@ python train_xgb_cress_new_dataset.py \
     --valid_json data/validation/validation.json \
     --test_json  data/validation/validation.json \
     --external_json data/external_test/external_test.json \
-    --seeds 42,0,2006 --out_dir output/xgb_cress_sprompt
+    --seeds 0,42,2006 --out_dir output/xgb_cress_sprompt
 ```
 
 Add `data/synthetic/synth_predicted.lmdb` to the training mix for the full baseline.

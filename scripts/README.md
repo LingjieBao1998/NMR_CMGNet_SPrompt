@@ -8,7 +8,6 @@
 | `build_lmdb/relabel_source.py` | rewrite the `source` field into a new LMDB |
 | `build_lmdb/export_source_index.py` | export key/source/SMILES/label without spectra, for restricted corpora |
 | `train/train_cmgnet_sprompt.sh` | fine-tune CMGNet-SPrompt on experimental + synthetic + PubChem |
-| `train/runs/` | historical `run_*.sh` experiment launchers (archived recipes) |
 | `train/train_xgb_cress.sh` | train the CReSS → XGBoost core classifier |
 | `infer/infer_cmgnet_sprompt.sh` | full CMGNet-SPrompt inference (XGB gate + prompt + 10 beams) |
 | `infer/make_sprompt_votes.py` | XGBoost gate only (writes 0/1 votes per spectrum) |
@@ -27,7 +26,7 @@ python scripts/build_lmdb/json_to_lmdb.py --json data/validation/validation.json
 
 # 2. training
 bash scripts/train/train_xgb_cress.sh output/xgb_cress_sprompt 0
-bash scripts/train/train_cmgnet_sprompt.sh 42 0
+bash scripts/train/train_cmgnet_sprompt.sh 0,42,2006 0
 
 # 3. inference + evaluation
 bash scripts/infer/infer_cmgnet_sprompt.sh data/external_test/external_test.json \
