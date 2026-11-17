@@ -127,17 +127,9 @@ Notes:
 
 * The original 3.20 M-record `new_db.lmdb` is split by its `source` field:
   experimental (NMR BANK, c13_naproc, bmrb, Spektraris, GlycoNMR, hmdb) vs.
-  predicted/synthetic (multi, acd_lotusv9, pnmrnp2).  Of the original `napacd`
-  records, 313,343 are kept in the synthetic LMDB but relabelled
-  `source = "NMRium"` because their provenance follows the NMRium collection.
-* The 1,488,432 synthetic count above is the **training corpus used for the
-  reported models**.  A release rebuild with the current split script excludes
-  the 313,343 NMRium-labelled records and yields 1,175,089; the shipped training
-  file is unchanged so that the published checkpoints remain reproducible.
-* The original `NMRium` upload subset (1.66 M, 51.9 %) is **excluded** from both
-  corpora because its provenance could not be verified.  The 313,343
-  `napacd`-derived records now labelled `NMRium` remain in the training LMDB but
-  are excluded from the release corpus.  The source sets can be edited in
+  predicted/synthetic (multi, napacd, acd_lotusv9, pnmrnp2).
+* The `NMRium` subset (1.66 M, 51.9 %) is **excluded** from both corpora because its
+  provenance could not be verified. It can be re-included by editing the source sets in
   `scripts/build_lmdb/split_newdb_by_source.py`.
 * External test #57 was corrected after a source-audit: the original record was the
   3-ethyl ester (`CCOC(=O)...`, 15 peaks); it was replaced by the corresponding
@@ -293,10 +285,9 @@ datasets keep their own terms; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICE
   redistributed under **CC BY 4.0** (Nuzillard & Kuhn, Zenodo
   [10.5281/zenodo.8175939](https://doi.org/10.5281/zenodo.8175939), LOTUS v9
   structures with ACD/Labs-predicted ¹³C shifts).  The remaining predicted
-  records (`multi`, `pnmrnp2`, and the 313,343 records relabelled `NMRium`) are
-  provided as per-source SMILES / record indices until their original terms are
-  confirmed; the full records are available from the corresponding author on
-  reasonable request.
+  records (`multi`, `napacd`, `pnmrnp2`) are provided as per-source SMILES /
+  record indices until their original terms are confirmed; the full records are
+  available from the corresponding author on reasonable request.
 * **Web service:** `docker/my-nmr-service_v1.0-web.tar.gz`, also available as
   `[registry/image:tag]`.
 

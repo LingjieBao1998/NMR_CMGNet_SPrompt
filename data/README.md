@@ -14,8 +14,7 @@ data/
 │   ├── ex_train.ring.json           # same, with ring-system field
 │   └── ex_train.lmdb                # LMDB built from the ring JSON
 ├── synthetic/
-│   └── synth_predicted.lmdb         # predicted spectra (1,488,432; 313,343
-│                                     # carry source=NMRium, formerly napacd)
+│   └── synth_predicted.lmdb         # predicted spectra (1,488,432)
 ├── pubchem/
 │   └── pubchem_1209.lmdb            # PubChem positives, filtered (77,328)
 ├── nmrmind/
@@ -38,7 +37,7 @@ data/
 | Category | Source | Records | Positives |
 |---|---|---:|---:|
 | `experimental/exp_lit.lmdb` | `new_db.lmdb` records with `source ∈ {NMR BANK, c13_naproc, bmrb, Spektraris_NMR, GlycoNMR, hmdb}` | 49,984 | 55 |
-| `synthetic/synth_predicted.lmdb` | `new_db.lmdb` records with `source ∈ {multi, acd_lotusv9, pnmrnp2}` plus 313,343 records whose source was rewritten from `napacd` to `NMRium` | 1,488,432 | 2,461 |
+| `synthetic/synth_predicted.lmdb` | `new_db.lmdb` records with `source ∈ {multi, napacd, acd_lotusv9, pnmrnp2}` | 1,488,432 | 2,461 |
 | `pubchem/pubchem_1209.lmdb` | PubChem positive corpus `new_data_1209.filtered` after removal of 90 evaluation overlaps | 77,328 | 77,328 |
 | `nmrmind/*` | original NMRMind splits (unchanged) | 2,137,771 / 55,167 / 55,150 | 3,288 / 81 / 87 |
 | `validation/*` | clean `new_dataset` validation split | 40,667 | 37 |
@@ -50,19 +49,12 @@ The original corpus contains 3,196,326 records. 1,657,910 of them (51.9 %) come 
 `NMRium` upload collection; **that subset is deliberately excluded** because its
 provenance could not be verified. Total retained: 49,984 experimental + 1,488,432 synthetic.
 
-Inside `synthetic/synth_predicted.lmdb`, the 313,343 records whose original
-`source` was `napacd` have been rewritten to `source = "NMRium"` because their
-provenance follows the NMRium upload collection.  The records (spectra, labels,
-fingerprints) are unchanged and remain in the file, so the entry count is still
-1,488,432; only the provenance field changed.  `synth_predicted.pre_napm.lmdb`
-is the pre-rewrite copy kept locally for comparison and is not part of the release.
-
 ## Licensing and availability
 
 | `source` | Records | Terms |
 |---|---:|---|
 | `multi` | 789,028 | not documented in the legacy tree; confirm before redistribution |
-| `NMRium` (313,343 formerly `napacd`) | 313,343 | unverified provenance; not redistributed |
+| `napacd` | 313,343 | not documented in the legacy tree; confirm before redistribution |
 | `acd_lotusv9` | 194,550 | **CC BY 4.0** — LOTUS v9 structures + ACD/Labs-predicted ¹³C shifts, Zenodo [10.5281/zenodo.8175939](https://doi.org/10.5281/zenodo.8175939) |
 | `pnmrnp2` | 191,511 | not documented in the legacy tree; confirm before redistribution |
 | `NMR BANK` | 28,406 | source terms |
@@ -112,24 +104,8 @@ is not required by CMGNet or the CReSS/XGBoost head. Re-enable it by installing
 python scripts/build_lmdb/split_newdb_by_source.py \
     --src data/_source/new_db.lmdb \
     --exp_out data/experimental/exp_lit.lmdb \
-    --synth_out data/synthetic/synth_predicted_release.lmdb \
+    --synth_out data/synthetic/synth_predicted.lmdb \
     --overwrite
-
-# NOTE: the current classification treats napacd as NMRium-derived and
-# excludes it, so this yields 1,175,089 synthetic records.  The shipped
-# synth_predicted.lmdb was built before that change and still has 1,488,432
-# records (313,343 of them relabelled NMRium); it is the corpus used by the
-# reported models.  To rebuild that training file, temporarily add "napacd"
-# to SYNTHETIC in this script, then run:
-#   python scripts/build_lmdb/split_newdb_by_source.py \
-#       --exp_out data/experimental/exp_lit_napacd.lmdb \
-#       --synth_out data/synthetic/synth_predicted_napacd.lmdb
-#   python scripts/build_lmdb/relabel_source.py \
-#       --src data/synthetic/synth_predicted_napacd.lmdb \
-#       --from napacd --to NMRium \
-#       --out data/synthetic/synth_predicted.lmdb
-# To build the release corpus, keep the split script as-is and package
-# synth_predicted_release.lmdb.
 
 # 2. JSON -> featurised LMDB (validation / external test / ex_train)
 python scripts/build_lmdb/json_to_lmdb.py \

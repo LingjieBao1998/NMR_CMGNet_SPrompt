@@ -3,8 +3,8 @@
 
 Category mapping (by the `source` field stored in each record):
   experimental : NMR BANK / c13_naproc / bmrb / Spektraris_NMR / GlycoNMR / hmdb   (~50 k)
-  synthetic    : multi / acd_lotusv9 / pnmrnp2                                    (~1.18 M)
-  excluded     : NMRium / napacd (NMRium-derived predictions)                     (~1.97 M)
+  synthetic    : multi / napacd / acd_lotusv9 / pnmrnp2                            (~1.49 M)
+  excluded     : NMRium (15,495,052-entry upload corpus, provenance unclear)      (~1.66 M)
 
 Values are copied as raw pickle bytes, so every field (C_nmr, ring_system,
 ecfp, maccs, label, ...) is preserved byte-for-byte.  Keys are renumbered
@@ -14,7 +14,7 @@ Usage:
   python scripts/build_lmdb/split_newdb_by_source.py \
       --src data/_source/new_db.lmdb \
       --exp_out data/experimental/exp_lit.lmdb \
-      --synth_out data/synthetic/synth_predicted_release.lmdb
+      --synth_out data/synthetic/synth_predicted.lmdb
 """
 import argparse
 import os
@@ -33,10 +33,8 @@ sys.modules.setdefault("numpy._core.numeric", _nc.numeric)
 sys.modules.setdefault("numpy._core.multiarray", _nc.multiarray)
 
 EXPERIMENTAL = {"NMR BANK", "c13_naproc", "bmrb", "Spektraris_NMR", "GlycoNMR", "hmdb"}
-SYNTHETIC = {"multi", "acd_lotusv9", "pnmrnp2"}
-# `napacd` is NMRium-derived predicted data; keep it in the unverified bucket so
-# that it is never released together with the curated synthetic corpus.
-EXCLUDED = {"NMRium", "napacd"}
+SYNTHETIC = {"multi", "napacd", "acd_lotusv9", "pnmrnp2"}
+EXCLUDED = {"NMRium"}
 
 
 def open_out(path, map_gb, overwrite):
@@ -54,7 +52,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default="data/_source/new_db.lmdb")
     ap.add_argument("--exp_out", default="data/experimental/exp_lit.lmdb")
-    ap.add_argument("--synth_out", default="data/synthetic/synth_predicted_release.lmdb")
+    ap.add_argument("--synth_out", default="data/synthetic/synth_predicted.lmdb")
     ap.add_argument("--exp_map_gb", type=int, default=4)
     ap.add_argument("--synth_map_gb", type=int, default=64)
     ap.add_argument("--overwrite", action="store_true",

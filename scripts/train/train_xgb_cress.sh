@@ -6,8 +6,7 @@
 #
 # Usage:
 #   bash scripts/train/train_xgb_cress.sh [out_dir] [gpu_id]
-# Set INCLUDE_SYNTH=1 to add the 1.49 M synthetic corpus (including the 313,343
-# NMRium-labelled records) to the base training set.
+# Set INCLUDE_SYNTH=1 to add the 1.49 M synthetic corpus to the base training set.
 # ---------------------------------------------------------------------------
 set -u
 set -o pipefail
