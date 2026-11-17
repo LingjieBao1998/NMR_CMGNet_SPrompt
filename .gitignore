@@ -11,6 +11,7 @@
 .env.*
 !**/.env.example
 !**/.env.docker
+nmr_core_system/encryption_key.key
 
 # ------------------------------------------------------------------ Python
 __pycache__/

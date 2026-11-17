@@ -28,12 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-di^$srpy@hjy!7me_0fpj)b+f4_+m!p3tdkx_4*23!&a21ohe$'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-development-only-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',') if h.strip()]
 
 
 # Application definition
@@ -193,11 +193,11 @@ EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.163.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 465))
 EMAIL_USE_SSL = True  # 465端口需要SSL
 EMAIL_USE_TLS = False  # SSL与TLS互斥
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '15857612673@163.com')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 # 注意：EMAIL_HOST_PASSWORD 应该是163邮箱的客户端授权码，不是登录密码
 # 请在 .env 文件中设置真实的授权码
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', '15857612673@163.com')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', '')
 EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', 30))
 EMAIL_SUBJECT_PREFIX = os.getenv('EMAIL_SUBJECT_PREFIX', '[NMR检测系统] ')
 

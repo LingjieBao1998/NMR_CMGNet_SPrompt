@@ -172,7 +172,7 @@ nmr_core_system/
 
 ## Email Configuration (邮箱授权与域名)
 
-系统邮件(注册验证、任务通知)通过 **网易 163 SMTP** 发送,当前发件账号为 `15857612673@163.com`。
+系统邮件(注册验证、任务通知)通过 **网易 163 SMTP** 发送,发件账号在 `.env` 中配置。
 
 ### 1. 邮箱授权码的获取与配置
 
@@ -192,9 +192,9 @@ EMAIL_HOST=smtp.163.com
 EMAIL_PORT=465
 EMAIL_USE_SSL=True
 EMAIL_USE_TLS=False
-EMAIL_HOST_USER=15857612673@163.com
+EMAIL_HOST_USER=your_account@163.com
 EMAIL_HOST_PASSWORD=<你的客户端授权码>      # 不是邮箱登录密码!
-DEFAULT_FROM_EMAIL=15857612673@163.com    # 必须与 EMAIL_HOST_USER 完全一致(163不允许代发)
+DEFAULT_FROM_EMAIL=your_account@163.com    # 必须与 EMAIL_HOST_USER 完全一致(163不允许代发)
 EMAIL_TIMEOUT=30
 EMAIL_SUBJECT_PREFIX=[NMR检测系统]
 ```
