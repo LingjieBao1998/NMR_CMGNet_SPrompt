@@ -25,8 +25,8 @@ VALID=${VALID:-data/validation/validation.json}
 # of the report duplicate `valid`. Point TEST=... at any other JSON to evaluate.
 TEST=${TEST:-data/validation/validation.json}
 EXTERNAL=${EXTERNAL:-data/external_test/external_test.json}
-F_SPLIT=${F_SPLIT:-data/f_split/with_f_split.json}
-F_WO=${F_WO:-data/f_split/without_f_split.json}
+F_SPLIT=${F_SPLIT:-data/f_split/clean_data.json}
+F_WO=${F_WO:-data/f_split/raw_data.json}
 
 EXTRA_ARGS=()
 if [ "${INCLUDE_SYNTH:-0}" = "1" ]; then

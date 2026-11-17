@@ -60,7 +60,7 @@
   "data/experimental/ex_train.ring.json": 24520,
   "data/nmrmind/validation.json": 55167,
   "data/nmrmind/test.json": 55150,
-  "data/f_split/with_f_split.json": 48,
-  "data/f_split/without_f_split.json": 48
+  "data/f_split/raw_data.json": 48,
+  "data/f_split/clean_data.json": 48
  }
 }

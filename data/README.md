@@ -28,8 +28,8 @@ data/
 │   ├── external_test.lmdb
 │   └── external_test_pos_only.json  # 64 positives only
 └── f_split/
-    ├── with_f_split.json            # 48 positives, C–F splitting retained
-    └── without_f_split.json         # 48 positives, splitting merged
+    ├── raw_data.json               # 48 positives, more peaks (nmr_type=without_f_split)
+    └── clean_data.json             # 48 positives, fewer peaks (nmr_type=with_f_split)
 ```
 
 ## Category provenance
@@ -42,7 +42,7 @@ data/
 | `nmrmind/*` | original NMRMind splits (unchanged) | 2,137,771 / 55,167 / 55,150 | 3,288 / 81 / 87 |
 | `validation/*` | clean `new_dataset` validation split; all records carry `source = NMRium`; used only for calibration/validation | 40,667 | 37 |
 | `external_test/*` | April-18 external test set | 4,502 | 64 |
-| `f_split/*` | positive subset re-processed with/without C–F splitting | 48 + 48 | 48 |
+| `f_split/*` | raw vs C–F-merged peak lists (48 each) | 48 + 48 | 48 |
 | `experimental/ex_train.*` | `nmrshiftdb` extra training split (0 overlap with evaluation sets) | 24,520 | 11 |
 
 The original corpus contains 3,196,326 records. 1,657,910 of them (51.9 %) come from the

@@ -59,8 +59,8 @@ if [[ "$INCLUDE_DATA" == "1" ]]; then
         data/nmrmind/test.lmdb \
         data/nmrmind/validation.json \
         data/nmrmind/test.json \
-        data/f_split/with_f_split.json \
-        data/f_split/without_f_split.json \
+        data/f_split/raw_data.json \
+        data/f_split/clean_data.json \
         data/manifest.json \
         data/README.md
 fi

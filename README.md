@@ -138,7 +138,7 @@ commands are in [`data/README.md`](data/README.md).
 | NMRMind test | `data/nmrmind/test.lmdb` | 55,150 | 87 |
 | Validation (clean, new_dataset) | `data/validation/validation.lmdb` | 40,667 | 37 |
 | External test | `data/external_test/external_test.lmdb` | 4,502 | 64 |
-| F-splitting subset | `data/f_split/*.json` | 48 + 48 | 48 |
+| F-splitting subset (raw + C–F-merged) | `data/f_split/*.json` | 48 + 48 | 48 |
 
 Notes:
 
