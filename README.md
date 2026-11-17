@@ -89,17 +89,14 @@ scale (0.0235; see `reports/README.md` for the exact mapping).*
 │   ├── embedding/                  # CReSS embeddings, UMAP, retrieval, similarity
 │   ├── inference/                  # inference examples and one-off reruns
 │   └── legacy/                     # superseded model variants and prototypes
-├── legacy/                         # archived, non-release material
-│   ├── runs/                       # original run_*.sh experiment launchers
-│   ├── tests/                      # ad-hoc test_*.py scripts
-│   ├── data_scripts/               # old parsers/scrapers (see data_process/README.md)
-│   └── plot/                       # old notebooks and enumeration plots
 ├── data_process/                   # raw-source parsers (nmrshiftdb, BMRB, HMDB, PubChem, ...)
 ├── scripts/
 │   ├── build_lmdb/                 # dataset rebuild utilities (see data/README.md)
 │   ├── train/                      # CMGNet-SPrompt + XGBoost training
-│   │   └── runs/                   # historical run_*.sh launchers
+│   │   └── runs/                   # five representative run_*.sh recipes
 │   ├── infer/                      # CMGNet-SPrompt inference (gate + generation)
+│   ├── crawl/                      # Zakodium carbon-API scraper
+│   ├── synthesize/                 # optional nmrshiftdb2 SMILES -> 13C workflow
 │   └── plot/                       # one-command figure regeneration
 ├── data/                           # rebuilt LMDB / JSON splits (see data/README.md)
 ├── checkpoints/
@@ -115,11 +112,13 @@ scale (0.0235; see `reports/README.md` for the exact mapping).*
 ├── docker/my-nmr-service_v1.0-web.tar.gz     # prebuilt service image
 ├── results/                        # figures + result tables used above
 └── reports/                        # paper/SI figures and CI analysis
-    └── legacy_calibration/         # archived calibration/reliability analysis```
+    └── legacy_calibration/         # archived calibration/reliability analysis
+```
 
 The root contains only the CMGNet and XGBoost training entry points (plus their
 imports).  Plotting lives in `reports/` and `scripts/plot/`; post-hoc analysis in
-`analysis/`; one-off launchers and old tests in `legacy/`.
+`analysis/`; the two optional data helpers in `scripts/crawl/` and
+`scripts/synthesize/`.
 
 ---
 

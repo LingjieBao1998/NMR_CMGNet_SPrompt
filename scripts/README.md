@@ -14,6 +14,7 @@
 | `infer/make_sprompt_votes.py` | XGBoost gate only (writes 0/1 votes per spectrum) |
 | `infer/infer_cmgnet_frag_smiles.sh` | baseline frag / smiles generation without gating |
 | `synthesize/predict_c_nmr.py` | SMILES → predicted ¹³C peak list (optional nmrshiftdb2 jars) |
+| `crawl/nmr_scraper_improved.py` | batch Zakodium carbon-API predictor (resume + rate limit) |
 | `fetch_predictor.sh` | copy and checksum the optional predictor jars into `lib/` |
 
 Typical order:

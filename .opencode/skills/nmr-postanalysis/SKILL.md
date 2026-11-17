@@ -18,10 +18,12 @@ paper/SI figures.  Training entry points are `main_cmgnet.py` and
 | `analysis/embedding/` | CReSS embeddings, UMAP, cosine / Wasserstein |
 | `analysis/inference/` | forward-pass examples and reruns |
 | `reports/` | paper/SI figures, CI analysis, cached calibration arrays |
-| `scripts/plot/make_all_figures.sh` | one-command figure regeneration |
+| `scripts/train/runs/` | five representative historical `run_*.sh` recipes |
+| `scripts/crawl/` | Zakodium carbon-API batch predictor |
+| `scripts/synthesize/` | optional nmrshiftdb2 SMILES → ¹³C workflow |
+| `analysis/` | post-hoc analysis; `reports/` holds paper/SI figures |
 | `data/` | LMDB/JSON splits (see `data/README.md`) |
 | `results/` | shipped tables, figures and predictions |
-| `legacy/` | archived launchers/tests; do not use for release runs |
 
 ## Common commands
 
