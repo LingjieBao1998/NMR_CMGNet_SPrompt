@@ -22,6 +22,22 @@ python scripts/crawl/nmr_scraper_improved.py \
 Defaults: 60 s request timeout, 10 retries, 2 s base interval (+0–1 s jitter),
 5 s wait on HTTP 429.  Use `--limit N` for a smoke test.
 
-This is the predecessor of `scripts/synthesize/predict_c_nmr.py`: the API is
-hosted and rate-limited, whereas `lib/` runs the nmrshiftdb2 PredictionTool
-locally.  Neither is used by the released models.
+The predecessor of `scripts/synthesize/predict_c_nmr.py`: the API is hosted and
+rate-limited, whereas `lib/` runs the nmrshiftdb2 PredictionTool locally.
+Neither is used by the released models.
+
+## Public-release notes
+
+The Python code is original and released under Apache-2.0.  The endpoint is a
+third-party service, so:
+
+* check the service's terms/robots policy before publishing or running a large
+  batch;
+* keep the default 2–3 s interval and the 429 backoff — do not remove them;
+* identify your client with `--user-agent "Name (contact)"`;
+* do not redistribute the API's model or bulk prediction outputs unless the
+  service terms allow it;
+* no API keys or credentials are stored in this script.
+
+The old website-specific scrapers were removed from the release; do not
+re-introduce them without checking each site's terms and `robots.txt`.

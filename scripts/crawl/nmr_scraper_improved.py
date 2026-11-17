@@ -40,7 +40,8 @@ def predict(smiles, args):
         "to": 230,
         "maxSphereSize": 5,
     }
-    headers = {"accept": "*/*", "Content-Type": "application/json"}
+    headers = {"accept": "*/*", "Content-Type": "application/json",
+               "User-Agent": args.user_agent}
 
     for attempt in range(1, args.retries + 1):
         try:
@@ -105,6 +106,8 @@ def main():
                     help="base seconds between requests (0-1 s jitter added)")
     ap.add_argument("--rate-limit-wait", type=float, default=5.0)
     ap.add_argument("--retry-wait", type=float, default=2.0)
+    ap.add_argument("--user-agent", default="CMGNet-SPrompt/1.0 (academic research)",
+                    help="identify your client to the API")
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
 
