@@ -62,7 +62,7 @@ itself covered by the nmrshiftdb2 Database License (share-alike).
 | `multi` | `synthetic` | no licence recorded in the legacy tree | confirm before release |
 | `pnmrnp2` | `synthetic` | no licence recorded in the legacy tree | confirm before release |
 | NMRMind | `nmrmind/*` | upstream release terms | no |
-| NMRium | excluded | provenance unverified | no |
+| NMRium | `validation` (40,667) | provenance recorded; used only for calibration/validation, excluded from training | validation split only |
 
 The `acd_lotusv9` component (194,550 records) is derived from LOTUS version 9
 structures with ACD/Labs-predicted 13C shifts, published by Nuzillard & Kuhn on

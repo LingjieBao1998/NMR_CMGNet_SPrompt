@@ -89,7 +89,9 @@ before publishing the full 29 GB LMDB.
 | `data/manifest.json`, `data/README.md` | 8 KB | — |
 
 Check `exp_lit` (HMDB / scraped sources), `validation` and `nmrmind` separately;
-they are not covered by the ACD/Lotus CC BY 4.0 licence.
+they are not covered by the ACD/Lotus CC BY 4.0 licence.  The 40,667 validation
+records all carry `source = NMRium` and are used only for calibration/validation
+(never training); confirm their redistribution terms before including the split.
 
 ### Scenario B — only ACD/Lotus cleared (recommended default, ~5.5 GB)
 

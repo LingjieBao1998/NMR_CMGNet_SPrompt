@@ -40,14 +40,20 @@ data/
 | `synthetic/synth_predicted.lmdb` | `new_db.lmdb` records with `source ∈ {multi, napacd, acd_lotusv9, pnmrnp2}` | 1,488,432 | 2,461 |
 | `pubchem/pubchem_1209.lmdb` | PubChem positive corpus `new_data_1209.filtered` after removal of 90 evaluation overlaps | 77,328 | 77,328 |
 | `nmrmind/*` | original NMRMind splits (unchanged) | 2,137,771 / 55,167 / 55,150 | 3,288 / 81 / 87 |
-| `validation/*` | clean `new_dataset` validation split | 40,667 | 37 |
+| `validation/*` | clean `new_dataset` validation split; all records carry `source = NMRium`; used only for calibration/validation | 40,667 | 37 |
 | `external_test/*` | April-18 external test set | 4,502 | 64 |
 | `f_split/*` | positive subset re-processed with/without C–F splitting | 48 + 48 | 48 |
 | `experimental/ex_train.*` | `nmrshiftdb` extra training split (0 overlap with evaluation sets) | 24,520 | 11 |
 
 The original corpus contains 3,196,326 records. 1,657,910 of them (51.9 %) come from the
-`NMRium` upload collection; **that subset is deliberately excluded** because its
-provenance could not be verified. Total retained: 49,984 experimental + 1,488,432 synthetic.
+`NMRium` upload collection; **that subset is excluded from the experimental and
+synthetic training corpora** because its provenance is not independently
+verified. Total retained for training: 49,984 experimental + 1,488,432 synthetic.
+
+The separate validation split (`validation/validation.lmdb`, 40,667 records /
+37 positives) is drawn from the NMRium upload collection (`source = NMRium`).
+It is used **only for calibration and validation**, never for training, so the
+`NMRium` exclusion above applies to the training corpora, not to this dev split.
 
 ## Licensing and availability
 
@@ -57,6 +63,7 @@ provenance could not be verified. Total retained: 49,984 experimental + 1,488,43
 | `napacd` | 313,343 | not documented in the legacy tree; confirm before redistribution |
 | `acd_lotusv9` | 194,550 | **CC BY 4.0** — LOTUS v9 structures + ACD/Labs-predicted ¹³C shifts, Zenodo [10.5281/zenodo.8175939](https://doi.org/10.5281/zenodo.8175939) |
 | `pnmrnp2` | 191,511 | not documented in the legacy tree; confirm before redistribution |
+| `NMRium` | 40,667 (validation only) | derived from the NMRium upload collection; used for calibration/validation, excluded from training; redistribution status to confirm |
 | `NMR BANK` | 28,406 | source terms |
 | `c13_naproc` | 20,340 | source terms |
 | `bmrb` | 894 | BMRB data-use terms (cite) |

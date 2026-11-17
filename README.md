@@ -145,9 +145,11 @@ Notes:
 * The original 3.20 M-record `new_db.lmdb` is split by its `source` field:
   experimental (NMR BANK, c13_naproc, bmrb, Spektraris, GlycoNMR, hmdb) vs.
   predicted/synthetic (multi, napacd, acd_lotusv9, pnmrnp2).
-* The `NMRium` subset (1.66 M, 51.9 %) is **excluded** from both corpora because its
-  provenance could not be verified. It can be re-included by editing the source sets in
-  `scripts/build_lmdb/split_newdb_by_source.py`.
+* The `NMRium` subset (1.66 M, 51.9 %) is **excluded from the experimental and
+  synthetic training corpora** because its provenance is not independently
+  verified.  The separate 40,667-record validation split is NMRium-derived and
+  is used only for calibration/validation, never for training.  The source sets
+  can be edited in `scripts/build_lmdb/split_newdb_by_source.py`.
 * External test #57 was corrected after a source-audit: the original record was the
   3-ethyl ester (`CCOC(=O)...`, 15 peaks); it was replaced by the corresponding
   carboxylic acid (`COc1c(F)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12`, 14 peaks) from the

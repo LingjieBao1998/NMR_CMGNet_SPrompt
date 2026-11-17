@@ -4,6 +4,10 @@
  "excluded": {
   "NMRium": 1657910
  },
+ "provenance_notes": {
+  "excluded_nmrium": "1,657,910 NMRium source records are excluded from the experimental and synthetic training corpora",
+  "validation": "40,667 records with source=NMRium; used only for calibration/validation, never for training"
+ },
  "synthetic_source_counts": {
   "multi": 789028,
   "napacd": 313343,
