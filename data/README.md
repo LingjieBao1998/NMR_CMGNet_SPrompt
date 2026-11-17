@@ -108,10 +108,28 @@ is not required by CMGNet or the CReSS/XGBoost head. Re-enable it by installing
 
 ```bash
 # 1. split the 3.20 M source corpus by source category (~10 min)
+#    (add --overwrite to replace existing output LMDBs)
 python scripts/build_lmdb/split_newdb_by_source.py \
     --src data/_source/new_db.lmdb \
     --exp_out data/experimental/exp_lit.lmdb \
-    --synth_out data/synthetic/synth_predicted.lmdb
+    --synth_out data/synthetic/synth_predicted_release.lmdb \
+    --overwrite
+
+# NOTE: the current classification treats napacd as NMRium-derived and
+# excludes it, so this yields 1,175,089 synthetic records.  The shipped
+# synth_predicted.lmdb was built before that change and still has 1,488,432
+# records (313,343 of them relabelled NMRium); it is the corpus used by the
+# reported models.  To rebuild that training file, temporarily add "napacd"
+# to SYNTHETIC in this script, then run:
+#   python scripts/build_lmdb/split_newdb_by_source.py \
+#       --exp_out data/experimental/exp_lit_napacd.lmdb \
+#       --synth_out data/synthetic/synth_predicted_napacd.lmdb
+#   python scripts/build_lmdb/relabel_source.py \
+#       --src data/synthetic/synth_predicted_napacd.lmdb \
+#       --from napacd --to NMRium \
+#       --out data/synthetic/synth_predicted.lmdb
+# To build the release corpus, keep the split script as-is and package
+# synth_predicted_release.lmdb.
 
 # 2. JSON -> featurised LMDB (validation / external test / ex_train)
 python scripts/build_lmdb/json_to_lmdb.py \

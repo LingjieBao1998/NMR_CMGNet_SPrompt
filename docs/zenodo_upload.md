@@ -1,16 +1,18 @@
 # Zenodo upload plan
 
 Status: draft for the v1.0.0 submission. Sizes are from the release tree on
-2026-11-16.
+2026-11-17.
 
-Zenodo allows **50 GB per record**.  The release tree is ~37.5 GB once the
-Docker image and runtime outputs are excluded, so the upload is split into
-records with different licences and different citation roles:
+Zenodo allows **50 GB per record**.  The release payload is ~31.5 GB in the
+recommended split (code 0.4 GB + weights 4.1 GB + data 27 GB); the 33 GB data
+figure applies only to the full corpus before the NMRium-labelled records are
+filtered out.  The local `synth_predicted.pre_napm.lmdb` backup (29 GB) is not
+part of any record.  The upload uses three records:
 
 | Record | Contents | Size | Role |
 |---|---|---:|---|
 | **1. Software** | code, configs, docs, result tables, figures, figure caches, prediction JSON | ~400 MB | `[Software]` citation |
-| **2. Data** | processed LMDB corpora + JSON splits + manifest | 1.6–33 GB (see below) | `[Data]` citation |
+| **2. Data** | processed LMDB corpora + JSON splits + manifest | 1.6–27 GB (see below) | `[Data]` citation |
 | **3. Weights** | CMGNet / BART / CReSS checkpoints + XGBoost heads | ~4.1 GB | can be merged into Record 1 if a single DOI is preferred |
 
 `docker/my-nmr-service_v1.0-web.tar.gz` (6.8 GB) is **not** uploaded to Zenodo;
@@ -45,7 +47,7 @@ Contents (everything tracked by git):
 Excluded by `.gitignore` and therefore absent from the archive:
 
 ```
-data/**/*.lmdb/        (33 GB)
+data/**/*.lmdb/        (33 GB full; ~27 GB clean release)
 checkpoints/*.ckpt     (4.1 GB)
 docker/*.tar.gz        (6.8 GB)
 output/                (2.8 GB)
@@ -74,7 +76,7 @@ the **dataset** is published under CC BY 4.0, so it can be redistributed with
 attribution.  The 313,343 `NMRium`-labelled records are NMRium-derived and are
 excluded from release; `multi` and `pnmrnp2` have no documented licence.
 
-### Scenario A — all remaining sources cleared (33 GB)
+### Scenario A — all remaining sources cleared (~27 GB)
 
 The full file is published only after `multi` and `pnmrnp2` are cleared **and**
 the 313,343 `NMRium`-labelled records are filtered out.  Rebuild with:

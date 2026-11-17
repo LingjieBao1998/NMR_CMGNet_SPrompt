@@ -17,7 +17,7 @@ cd "$(dirname "$0")/../.." || exit 1
 SEED=${1:-42}
 GPU_ID=${2:-0}
 
-PY=${PY:-/home/lingjiebao/anaconda3/envs/py312/bin/python}
+PY=${PY:-python}
 CKPT=${CKPT:-checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt}
 BASE=${BASE:-checkpoints/bart_base_0910}
 TRAIN_LMDB=${TRAIN_LMDB:-data/experimental/exp_lit.lmdb,data/synthetic/synth_predicted.lmdb,data/pubchem/pubchem_1209.lmdb}

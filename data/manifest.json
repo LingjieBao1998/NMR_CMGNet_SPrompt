@@ -1,14 +1,21 @@
 {
- "generated": "2026-11-16",
+ "generated": "2026-11-17",
  "source_corpus_records": 3196326,
  "excluded": {
   "NMRium": 1657910
  },
+ "excluded_note": "313,343 further NMRium-labelled records remain in synthetic/synth_predicted.lmdb (relabelled from napacd); see source_relabel",
  "source_relabel": {
   "from": "napacd",
   "to": "NMRium",
   "records": 313343,
   "note": "source field rewritten inside synthetic/synth_predicted.lmdb; spectra, labels and keys are unchanged, so the file still has 1488432 entries"
+ },
+ "synthetic_source_counts": {
+  "multi": 789028,
+  "NMRium": 313343,
+  "acd_lotusv9": 194550,
+  "pnmrnp2": 191511
  },
  "splits": {
   "experimental/exp_lit.lmdb": {

@@ -130,8 +130,14 @@ Notes:
   predicted/synthetic (multi, acd_lotusv9, pnmrnp2).  Of the original `napacd`
   records, 313,343 are kept in the synthetic LMDB but relabelled
   `source = "NMRium"` because their provenance follows the NMRium collection.
-* The `NMRium` subset (1.66 M, 51.9 %) is **excluded** from both corpora because its
-  provenance could not be verified. It can be re-included by editing the source sets in
+* The 1,488,432 synthetic count above is the **training corpus used for the
+  reported models**.  A release rebuild with the current split script excludes
+  the 313,343 NMRium-labelled records and yields 1,175,089; the shipped training
+  file is unchanged so that the published checkpoints remain reproducible.
+* The original `NMRium` upload subset (1.66 M, 51.9 %) is **excluded** from both
+  corpora because its provenance could not be verified.  The 313,343
+  `napacd`-derived records now labelled `NMRium` remain in the training LMDB but
+  are excluded from the release corpus.  The source sets can be edited in
   `scripts/build_lmdb/split_newdb_by_source.py`.
 * External test #57 was corrected after a source-audit: the original record was the
   3-ethyl ester (`CCOC(=O)...`, 15 peaks); it was replaced by the corresponding

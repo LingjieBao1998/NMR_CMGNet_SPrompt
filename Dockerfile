@@ -1,5 +1,12 @@
 FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
+# ---------------------------------------------------------------------------
+# Base environment only.  The web service code is mounted at run time by
+# nmr_core_system/docker-compose.yml; the prebuilt service image is
+# docker/my-nmr-service_v1.0-web.tar.gz.  This file rebuilds the CUDA/conda
+# base and is not a one-command service image by itself.
+# ---------------------------------------------------------------------------
+
 # 设置环境变量
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
@@ -26,10 +33,11 @@ RUN apt-get update && apt-get install -y \
     redis-server \
     && rm -rf /var/lib/apt/lists/*
 
-# 安装 Miniforge
-COPY Miniforge3-Linux-x86_64.sh ./miniforge.sh
-RUN bash miniforge.sh -b -p /opt/conda && \
-    rm miniforge.sh
+# 安装 Miniforge（不再依赖仓库里缺失的本地安装包）
+RUN wget -q https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
+      -O /tmp/miniforge.sh && \
+    bash /tmp/miniforge.sh -b -p /opt/conda && \
+    rm /tmp/miniforge.sh
 
 # 设置 conda 环境变量
 ENV PATH=/opt/conda/bin:${PATH}

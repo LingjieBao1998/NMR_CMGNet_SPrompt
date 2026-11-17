@@ -1,4 +1,8 @@
 #!/bin/bash
+# LEGACY installer pinned for the original training machine.
+# The versions below differ from requirements.txt / Dockerfile; use
+# `pip install -r requirements.txt` for the released environment, and keep this
+# script only as a record of the original setup.
 # install_dependencies.sh
 
 echo "=== 开始安装所有依赖包 ==="

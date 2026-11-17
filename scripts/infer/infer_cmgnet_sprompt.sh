@@ -19,7 +19,7 @@ TEST_JSON=${1:-data/external_test/external_test.json}
 OUT_DIR=${2:-output/infer_sprompt_external}
 GPU_ID=${3:-0}
 
-PY=${PY:-/home/lingjiebao/venvs/py312_tf457/bin/python}
+PY=${PY:-python}
 CKPT=${CKPT:-checkpoints/sprompt_ex1209_1ep_seed0.ckpt}
 BASE=${BASE:-checkpoints/bart_base_0910}
 BEAMS=${BEAMS:-10}

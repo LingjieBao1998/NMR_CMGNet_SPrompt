@@ -1,0 +1,29 @@
+# Keep the Docker build context small. The prebuilt service image is shipped
+# as docker/*.tar.gz; this file is for rebuilding the base environment.
+.git
+.gitignore
+__pycache__/
+*.py[cod]
+*.log
+
+# local data and weights (mounted at run time, not baked into the image)
+data/
+checkpoints/
+models/
+viz_tmp/
+output/
+logs/
+docker/
+
+# secrets and local environments
+.env
+.env.*
+!.env.example
+!.env.docker
+.venv/
+venv/
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store

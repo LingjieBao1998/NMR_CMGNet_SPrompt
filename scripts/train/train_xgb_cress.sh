@@ -6,7 +6,8 @@
 #
 # Usage:
 #   bash scripts/train/train_xgb_cress.sh [out_dir] [gpu_id]
-# Set INCLUDE_SYNTH=1 to add the 1.49 M synthetic corpus to the base training set.
+# Set INCLUDE_SYNTH=1 to add the 1.49 M synthetic corpus (including the 313,343
+# NMRium-labelled records) to the base training set.
 # ---------------------------------------------------------------------------
 set -u
 set -o pipefail
@@ -14,7 +15,7 @@ cd "$(dirname "$0")/../.." || exit 1
 
 OUT_DIR=${1:-output/xgb_cress_sprompt}
 GPU_ID=${2:-0}
-PY=${PY:-/home/lingjiebao/anaconda3/envs/py312/bin/python}
+PY=${PY:-python}
 
 TRAIN_LMDB=${TRAIN_LMDB:-data/experimental/exp_lit.lmdb}
 EXTRA_LMDB=${EXTRA_LMDB:-data/pubchem/pubchem_1209.lmdb}

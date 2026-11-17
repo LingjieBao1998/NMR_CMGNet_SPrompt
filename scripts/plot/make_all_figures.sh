@@ -14,7 +14,7 @@
 set -u
 cd "$(dirname "$0")/../.." || exit 1
 
-PY=${PY:-/home/lingjiebao/venvs/py312_tf457/bin/python}
+PY=${PY:-python}
 export NMR_ROOT=${NMR_ROOT:-$(pwd)}
 
 FIG_SCRIPTS=(

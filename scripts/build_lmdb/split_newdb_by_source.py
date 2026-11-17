@@ -14,11 +14,12 @@ Usage:
   python scripts/build_lmdb/split_newdb_by_source.py \
       --src data/_source/new_db.lmdb \
       --exp_out data/experimental/exp_lit.lmdb \
-      --synth_out data/synthetic/synth_predicted.lmdb
+      --synth_out data/synthetic/synth_predicted_release.lmdb
 """
 import argparse
 import os
 import pickle
+import shutil
 import sys
 import time
 
@@ -38,7 +39,13 @@ SYNTHETIC = {"multi", "acd_lotusv9", "pnmrnp2"}
 EXCLUDED = {"NMRium", "napacd"}
 
 
-def open_out(path, map_gb):
+def open_out(path, map_gb, overwrite):
+    if os.path.exists(os.path.join(path, "data.mdb")):
+        if not overwrite:
+            raise SystemExit(
+                f"{path} already exists; pass --overwrite to replace it"
+            )
+        shutil.rmtree(path)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     return lmdb.open(path, map_size=map_gb * (1024 ** 3), subdir=True)
 
@@ -47,15 +54,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default="data/_source/new_db.lmdb")
     ap.add_argument("--exp_out", default="data/experimental/exp_lit.lmdb")
-    ap.add_argument("--synth_out", default="data/synthetic/synth_predicted.lmdb")
+    ap.add_argument("--synth_out", default="data/synthetic/synth_predicted_release.lmdb")
     ap.add_argument("--exp_map_gb", type=int, default=4)
     ap.add_argument("--synth_map_gb", type=int, default=64)
+    ap.add_argument("--overwrite", action="store_true",
+                    help="replace existing output LMDBs")
     args = ap.parse_args()
 
     src = lmdb.open(args.src, readonly=True, lock=False, subdir=True,
                     readahead=False, meminit=False)
-    exp_env = open_out(args.exp_out, args.exp_map_gb)
-    syn_env = open_out(args.synth_out, args.synth_map_gb)
+    exp_env = open_out(args.exp_out, args.exp_map_gb, args.overwrite)
+    syn_env = open_out(args.synth_out, args.synth_map_gb, args.overwrite)
 
     counts, kept_exp, kept_syn, skipped = {}, 0, 0, 0
     t0 = time.time()

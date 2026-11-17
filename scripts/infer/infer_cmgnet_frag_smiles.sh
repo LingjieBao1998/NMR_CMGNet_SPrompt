@@ -14,7 +14,7 @@ OUT_DIR=${2:-output/infer_frag_external}
 MODE=${3:-frag}
 GPU_ID=${4:-0}
 
-PY=${PY:-/home/lingjiebao/venvs/py312_tf457/bin/python}
+PY=${PY:-python}
 CKPT=${CKPT:-checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt}
 BASE=${BASE:-checkpoints/bart_base_0910}
 BEAMS=${BEAMS:-10}
