@@ -476,7 +476,7 @@ def get_args(notebook=False):
     parser.add_argument('--debug', action='store_true')
 
     ## model_dir 
-    parser.add_argument('--model_dir', default="./checkpoints/saved_hf_model_0910",type=str)
+    parser.add_argument('--model_dir', default="./checkpoints/bart_base_0910",type=str)
 
     # Training
     parser.add_argument('--use_lora', action='store_true')
@@ -1437,7 +1437,7 @@ class CustomDataModule(pl.LightningDataModule):
                 collate_fn=self.test_dataset.collate_fn,
             )
 
-def get_model(model_dir="./checkpoints/saved_hf_model_0910", use_lora=False, device = "cpu"):
+def get_model(model_dir="./checkpoints/bart_base_0910", use_lora=False, device = "cpu"):
     # flash-attn v2 可用时用 flash_attention_2, 否则退回 PyTorch 原生 sdpa (均支持训练/生成, 速度接近)
     attn_implementation = "flash_attention_2" if FLASH_ATTN_AVAILABLE else "sdpa"
     if attn_implementation != "flash_attention_2":
@@ -1446,7 +1446,7 @@ def get_model(model_dir="./checkpoints/saved_hf_model_0910", use_lora=False, dev
     model.to(device)
     return model
 
-def get_tokenizer(model_dir="./checkpoints/saved_hf_model_0910"):
+def get_tokenizer(model_dir="./checkpoints/bart_base_0910"):
     tokenizer = AutoTokenizer.from_pretrained(model_dir)
     return tokenizer
 

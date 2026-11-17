@@ -35,7 +35,7 @@ import os as _os
 B = _os.environ.get('NMR_ROOT', _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 B = B.rstrip('/') + '/'
 sys.path.insert(0, B)
-MODEL_DIR = B + "checkpoints/saved_hf_model_0910"
+MODEL_DIR = B + "checkpoints/bart_base_0910"
 OUT = B + "reports/"
 T = 20
 BEAMS = 5

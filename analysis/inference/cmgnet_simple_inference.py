@@ -126,7 +126,7 @@ class CMGNetPredictor:
         # 设置默认路径
         project_dir = Path(__file__).parent
         if model_path is None:
-            model_path = str(project_dir / "checkpoints/saved_hf_model_0910")
+            model_path = str(project_dir / "checkpoints/bart_base_0910")
 
         print("初始化CMGNet预测器")
         print(f"模型路径: {model_path}")
