@@ -38,6 +38,7 @@ from pathlib import Path
 
 import numpy as np
 from rdkit import Chem, RDLogger
+from sklearn.metrics import average_precision_score, roc_auc_score
 
 from analysis.metrics.topk_external_4502 import (  # noqa: F401  (同口径复用)
     N_NEG,
@@ -82,11 +83,18 @@ def mode_files(corpus, mode):
                                      "test_smiles_beams10_samples4502.json")
                 for s in (0, 42, 2006)]
     elif mode == "sprompt":
-        ## ZCode 2026-11-21：ex1209 的 SPrompt 只留下 seed0/seed2006 两个
-        ## 原始 dump(seed42 缺失),无法凑 3 种子;这里用已入仓的释放版权重
-        ## 单种子 dump,与 results/table_topk_external_4502.md 同源。
-        spec = [("seed0", ROOT, "results/predictions/"
-                                "sprompt_seed0_external4502_beams10.json")]
+        ## ZCode 2026-11-21：论文里的 SPrompt 是 ex1209 5ep 的 3 次运行;
+        ## seed42 那次输出目录被误命名成 apr18_sprompt_ex1209_beams10
+        ## (hparams.ckpt = train_newdb_1209_extrain_5ep_seed42),此处按 ckpt
+        ## 认作 seed42,不再重复跑。
+        spec = [
+            ("seed0", corpus, "apr18_sprompt_ex1209_s0/"
+                              "test_nmr+frag_beams10_samples4502.json"),
+            ("seed42", corpus, "apr18_sprompt_ex1209_beams10/"
+                               "test_nmr+frag_beams10_samples4502.json"),
+            ("seed2006", corpus, "apr18_sprompt_ex1209_s2006/"
+                                 "test_nmr+frag_beams10_samples4502.json"),
+        ]
     else:
         raise ValueError(f"unknown mode: {mode}")
     out = []
@@ -182,17 +190,63 @@ def aggregate(results):
 
 
 def fmt(pair, digits=4):
-    """mean±sd 渲染;sd 为 0(单 seed 或三 seed 完全一致)时只显示均值。"""
+    """mean±sd 渲染;sd 为 0(单 seed 或种子间完全一致)时只显示均值。
+
+    ## ZCode 2026-11-21：np.std 对三个相同值会留 ~1e-16 的浮点残差,
+    ## 直接用 sd==0 判断会输出 "±0.0000",故用 1e-9 作容差。
+    """
     mean, sd = pair
-    return f"{mean:.{digits}f}" if sd == 0 else f"{mean:.{digits}f}±{sd:.{digits}f}"
+    return f"{mean:.{digits}f}" if sd < 1e-9 else f"{mean:.{digits}f}±{sd:.{digits}f}"
 
 
 def fmt_count(pair):
     """计数类字段(TP/FP/FN/TN/exact)的渲染:整数不带小数,否则 2 位小数。"""
     mean, sd = pair
-    if sd == 0:
+    if sd < 1e-9:
         return f"{mean:.0f}"
     return f"{mean:.2f}±{sd:.2f}"
+
+
+def eval_xgb_seeds(labels_npz, probs_npz, threshold=0.5):
+    """评测 XGBoost-CReSS 的 3 个种子(判别式模型,无 top-k)。
+
+    Args:
+        labels_npz: reports/calib_data/external_apr18peak.npz,含 y(int)。
+        probs_npz: reports/calib_data/seed_probs.npz,含
+            external_apr18peak_p(shape [3, 4502]),行序 = 种子 0 / 42 / 2006。
+        threshold: 决策阈值,默认 0.50(与正文 τ 一致)。
+
+    Returns:
+        dict: {"threshold": float, "seeds": [0,42,2006],
+               "per_seed": [ {tp,fp,fn,tn,precision,...,auprc,auroc} ],
+               "agg": {指标名: (mean, sd)}};sd 为 3 种子的样本标准差。
+    """
+    y = np.load(labels_npz, allow_pickle=True)["y"]
+    probs = np.load(probs_npz, allow_pickle=True)["external_apr18peak_p"]
+    if len(y) != N_POS + N_NEG or probs.shape != (3, N_POS + N_NEG):
+        raise ValueError(f"XGBoost 形状不符: y={y.shape}, probs={probs.shape}")
+
+    per_seed = []
+    for row in probs:
+        pred = row >= threshold
+        tp = int(np.sum((y == 1) & pred))
+        fp = int(np.sum((y == 0) & pred))
+        fn = int(np.sum((y == 1) & ~pred))
+        tn = int(np.sum((y == 0) & ~pred))
+        per_seed.append({
+            "tp": tp, "fp": fp, "fn": fn, "tn": tn,
+            **metrics_from_counts(tp, fp, fn, tn),
+            "auprc": float(average_precision_score(y == 1, row)),
+            "auroc": float(roc_auc_score(y == 1, row)),
+        })
+
+    keys = tuple(per_seed[0].keys())
+    agg = {}
+    for key in keys:
+        vals = np.array([r[key] for r in per_seed], dtype=float)
+        agg[key] = (float(vals.mean()), float(vals.std(ddof=1)))
+    return {"threshold": threshold, "seeds": [0, 42, 2006],
+            "per_seed": per_seed, "agg": agg}
 
 
 def run(corpus, out_md, out_csv):
@@ -209,6 +263,9 @@ def run(corpus, out_md, out_csv):
         results = [eval_dump(p) for _label, p in files]
         per_mode.append((name, mode, files, results, aggregate(results)))
 
+    xgb = eval_xgb_seeds(ROOT / "reports/calib_data/external_apr18peak.npz",
+                         ROOT / "reports/calib_data/seed_probs.npz")
+
     lines = []
     ap = lines.append
     ap("# CMGNet 各模式 top-k 指标 — 外部集 4,502(64 正 / 4,438 负)")
@@ -222,12 +279,13 @@ def run(corpus, out_md, out_csv):
     ap("> **SPrompt 行是生成侧**(模型自己吐的 10 个候选)。部署管线里的阳性/阴性"
        "判决由 CReSS 嵌入 + XGBoost 分类器门控,与 k 无关:"
        "TP 63 / FP 4 / FN 1 / TN 4,434 → P 0.9403、R 0.9844、F1 0.9618、"
-       "Spec 0.9991、Acc 0.9989(3 种子完全一致,见 "
-       "`results/table_topk_external_4502.md`)。")
+       "Spec 0.9991、Acc 0.9989(3 种子完全一致,见下方 XGBoost 段)。")
     ap("")
-    ap("> SPrompt 只有释放版权重的 seed0 dump 入仓(ex1209 原始 dump 缺 seed42),"
-       "故本表 SPrompt 行无 sd;SI 里 SPrompt 的 3 种子 SA 为 "
-       "0.146±0.024 / 0.219±0.027 / 0.240±0.018 / 0.292±0.009。")
+    ap("> SPrompt 的 3 次运行 = ex1209 5ep 的 seed0 / seed42 / seed2006。"
+       "其中 seed42 的输出目录被误命名为 `apr18_sprompt_ex1209_beams10`"
+       "(以 hparams 里的 ckpt 为准)。注意与 `results/predictions/"
+       "sprompt_seed0_external4502_beams10.json`(2026-11-16 用释放权重"
+       "重跑的单次推理)不是同一次运行,后者数值不应与本表混用。")
     ap("")
     ap("| 模型 | Top-k | TP | FP | FN | TN | Precision | Recall | F1 | Specificity | Accuracy | SA (exact@k) |")
     ap("|---|---|---|---|---|---|---|---|---|---|---|---|")
@@ -238,6 +296,25 @@ def run(corpus, out_md, out_csv):
                f"| {fmt_count(a['fn'])} | {fmt_count(a['tn'])} "
                f"| {fmt(a['precision'])} | {fmt(a['recall'])} | {fmt(a['f1'])} "
                f"| {fmt(a['specificity'])} | {fmt(a['accuracy'])} | {fmt(a['sa'])} |")
+    ap("")
+    ap("## XGBoost-CReSS(分类器,与 k 无关,τ=0.50)")
+    ap("")
+    ap("输入是 CReSS 嵌入,不生成候选,因此没有 top-k;3 个种子的混淆矩阵"
+       "完全相同,只有 AUPRC/AUROC 有细微差别。")
+    ap("")
+    ap("| seed | TP | FP | FN | TN | Precision | Recall | F1 | Specificity | Accuracy | AUPRC | AUROC |")
+    ap("|---|---|---|---|---|---|---|---|---|---|---|---|")
+    for seed, m in zip(xgb["seeds"], xgb["per_seed"]):
+        ap(f"| seed{seed} | {m['tp']} | {m['fp']} | {m['fn']} | {m['tn']} "
+           f"| {m['precision']:.4f} | {m['recall']:.4f} "
+           f"| {m['f1']:.4f} | {m['specificity']:.4f} "
+           f"| {m['accuracy']:.4f} | {m['auprc']:.4f} | {m['auroc']:.6f} |")
+    a = xgb["agg"]
+    ap(f"| **mean±sd** | {fmt_count(a['tp'])} | {fmt_count(a['fp'])} "
+       f"| {fmt_count(a['fn'])} | {fmt_count(a['tn'])} "
+       f"| {fmt(a['precision'])} | {fmt(a['recall'])} | {fmt(a['f1'])} "
+       f"| {fmt(a['specificity'])} | {fmt(a['accuracy'])} "
+       f"| {fmt(a['auprc'])} | {fmt(a['auroc'], 6)} |")
     ap("")
     ap("## 逐 seed 明细(可审计)")
     ap("")
@@ -257,6 +334,8 @@ def run(corpus, out_md, out_csv):
     for name, _mode, files, _res, _agg in per_mode:
         for label, p in files:
             ap(f"| {name} | {label} | `{p}` |")
+    ap("| XGBoost-CReSS | 0/42/2006 | `reports/calib_data/external_apr18peak.npz` (y) "
+       "+ `reports/calib_data/seed_probs.npz` (external_apr18peak_p) |")
     ap("")
     ap("复算命令: `PYTHONPATH=. python analysis/metrics/topk_cmgnet_modes_4502.py`")
     md = "\n".join(lines) + "\n"
@@ -265,7 +344,8 @@ def run(corpus, out_md, out_csv):
     with open(out_csv, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["model", "top_k", "tp", "fp", "fn", "tn", "precision",
-                    "recall", "f1", "specificity", "accuracy", "exact", "sa"])
+                    "recall", "f1", "specificity", "accuracy", "exact", "sa",
+                    "auprc", "auroc"])
         for name, _mode, _files, _res, agg in per_mode:
             for k in TOP_KS:
                 a = agg[k]
@@ -274,7 +354,20 @@ def run(corpus, out_md, out_csv):
                             fmt_count(a["fn"]), fmt_count(a["tn"])]
                            + [fmt(a[c]) for c in ("precision", "recall", "f1",
                                                   "specificity", "accuracy")]
-                           + [fmt_count(a["exact"]), fmt(a["sa"])])
+                           + [fmt_count(a["exact"]), fmt(a["sa"]), "", ""])
+        for seed, m in zip(xgb["seeds"], xgb["per_seed"]):
+            w.writerow(["XGBoost-CReSS", "-", m["tp"], m["fp"], m["fn"], m["tn"],
+                        f"{m['precision']:.4f}", f"{m['recall']:.4f}",
+                        f"{m['f1']:.4f}", f"{m['specificity']:.4f}",
+                        f"{m['accuracy']:.4f}", "-", "-",
+                        f"{m['auprc']:.4f}", f"{m['auroc']:.6f}"])
+        a = xgb["agg"]
+        w.writerow(["XGBoost-CReSS (mean±sd)", "-",
+                    fmt_count(a["tp"]), fmt_count(a["fp"]),
+                    fmt_count(a["fn"]), fmt_count(a["tn"]),
+                    fmt(a["precision"]), fmt(a["recall"]), fmt(a["f1"]),
+                    fmt(a["specificity"]), fmt(a["accuracy"]), "-", "-",
+                    fmt(a["auprc"]), fmt(a["auroc"], 6)])
     return md
 
 
