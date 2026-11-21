@@ -281,11 +281,18 @@ def run(corpus, out_md, out_csv):
        "TP 63 / FP 4 / FN 1 / TN 4,434 → P 0.9403、R 0.9844、F1 0.9618、"
        "Spec 0.9991、Acc 0.9989(3 种子完全一致,见下方 XGBoost 段)。")
     ap("")
-    ap("> SPrompt 的 3 次运行 = ex1209 5ep 的 seed0 / seed42 / seed2006。"
-       "其中 seed42 的输出目录被误命名为 `apr18_sprompt_ex1209_beams10`"
-       "(以 hparams 里的 ckpt 为准)。注意与 `results/predictions/"
-       "sprompt_seed0_external4502_beams10.json`(2026-11-16 用释放权重"
-       "重跑的单次推理)不是同一次运行,后者数值不应与本表混用。")
+    ap("> SPrompt 的 3 次运行 = ex1209 5ep 的 seed0 / seed42 / seed2006"
+       "(`train_newdb_1209_extrain_5ep_seed*`),即论文/SI 口径;其中 seed42 的"
+       "输出目录被误命名为 `apr18_sprompt_ex1209_beams10`(以 hparams 的 ckpt 为准)。"
+       "**以下两组不能与本表混用**:")
+    ap(">")
+    ap("> (a) `output/test_sprompt_seed0`(= `results/predictions/"
+       "sprompt_seed0_external4502_beams10.json`,2026-11-16)用的是释放版 1-epoch "
+       "权重 `checkpoints/sprompt_ex1209_1ep_seed0.ckpt`,单次运行给出 "
+       "TP@10 64 / FP@10 24、SA@10 21/64;")
+    ap(">")
+    ap("> (b) `output/infer_sprompt_external`(2026-11-16)用的是 1029v2 base "
+       "权重,TP@10 62 / FP@10 24。")
     ap("")
     ap("| 模型 | Top-k | TP | FP | FN | TN | Precision | Recall | F1 | Specificity | Accuracy | SA (exact@k) |")
     ap("|---|---|---|---|---|---|---|---|---|---|---|---|")
