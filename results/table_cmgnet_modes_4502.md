@@ -1,8 +1,12 @@
-# CMGNet 三模式 top-k 指标 — 外部集 4,502(64 正 / 4,438 负)
+# CMGNet 各模式 top-k 指标 — 外部集 4,502(64 正 / 4,438 负)
 
 阈值/判定: top-k 内任一候选含全母核(4-喹诺酮-3-羧酸及其氮杂类似物)即判阳;P=TP/(TP+FP), R=TP/64, F1=2PR/(P+R), Spec=TN/4,438, Acc=(TP+TN)/4,502。SA=参考结构 canonical 完全匹配 / 64(正例)。
 
 多 seed 行写成 mean±sd(样本标准差 ddof=1,3 个种子)。
+
+> **SPrompt 行是生成侧**(模型自己吐的 10 个候选)。部署管线里的阳性/阴性判决由 CReSS 嵌入 + XGBoost 分类器门控,与 k 无关:TP 63 / FP 4 / FN 1 / TN 4,434 → P 0.9403、R 0.9844、F1 0.9618、Spec 0.9991、Acc 0.9989(3 种子完全一致,见 `results/table_topk_external_4502.md`)。
+
+> SPrompt 只有释放版权重的 seed0 dump 入仓(ex1209 原始 dump 缺 seed42),故本表 SPrompt 行无 sd;SI 里 SPrompt 的 3 种子 SA 为 0.146±0.024 / 0.219±0.027 / 0.240±0.018 / 0.292±0.009。
 
 | 模型 | Top-k | TP | FP | FN | TN | Precision | Recall | F1 | Specificity | Accuracy | SA (exact@k) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -18,6 +22,10 @@
 | CMGNet-SMILES (smiles) | 3 | 61.33±0.58 | 9.33±0.58 | 2.67±0.58 | 4428.67±0.58 | 0.8680±0.0060 | 0.9583±0.0090 | 0.9109±0.0008 | 0.9979±0.0001 | 0.9973 | 0.2344±0.0156 |
 | CMGNet-SMILES (smiles) | 5 | 62.33±0.58 | 11.00±2.00 | 1.67±0.58 | 4427.00±2.00 | 0.8503±0.0242 | 0.9740±0.0090 | 0.9079±0.0174 | 0.9975±0.0005 | 0.9972±0.0006 | 0.2865±0.0090 |
 | CMGNet-SMILES (smiles) | 10 | 62.33±0.58 | 13.67±2.08 | 1.67±0.58 | 4424.33±2.08 | 0.8206±0.0227 | 0.9740±0.0090 | 0.8906±0.0150 | 0.9969±0.0005 | 0.9966±0.0005 | 0.3021±0.0361 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | 1 | 63 | 11 | 1 | 4427 | 0.8514 | 0.9844 | 0.9130 | 0.9975 | 0.9973 | 0.2031 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | 3 | 63 | 15 | 1 | 4423 | 0.8077 | 0.9844 | 0.8873 | 0.9966 | 0.9964 | 0.2500 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | 5 | 63 | 21 | 1 | 4417 | 0.7500 | 0.9844 | 0.8514 | 0.9953 | 0.9951 | 0.2656 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | 10 | 64 | 24 | 0 | 4414 | 0.7273 | 1.0000 | 0.8421 | 0.9946 | 0.9947 | 0.3281 |
 
 ## 逐 seed 明细(可审计)
 
@@ -51,6 +59,10 @@
 | CMGNet-SMILES (smiles) | seed2006 | 3 | 62 | 10 | 2 | 4428 | 14/64 |
 | CMGNet-SMILES (smiles) | seed2006 | 5 | 62 | 13 | 2 | 4425 | 19/64 |
 | CMGNet-SMILES (smiles) | seed2006 | 10 | 62 | 16 | 2 | 4422 | 22/64 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | seed0 | 1 | 63 | 11 | 1 | 4427 | 13/64 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | seed0 | 3 | 63 | 15 | 1 | 4423 | 16/64 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | seed0 | 5 | 63 | 21 | 1 | 4417 | 17/64 |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | seed0 | 10 | 64 | 24 | 0 | 4414 | 21/64 |
 
 ## 数据来源(逐样本 dump,非表格)
 
@@ -63,5 +75,6 @@
 | CMGNet-SMILES (smiles) | seed0 | `/mnt/data2/NMR_Core_Mol_Detection/output/apr18_ex1209_s0_smiles_beams10/test_smiles_beams10_samples4502.json` |
 | CMGNet-SMILES (smiles) | seed42 | `/mnt/data2/NMR_Core_Mol_Detection/output/apr18_ex1209_s42_smiles_beams10/test_smiles_beams10_samples4502.json` |
 | CMGNet-SMILES (smiles) | seed2006 | `/mnt/data2/NMR_Core_Mol_Detection/output/apr18_ex1209_s2006_smiles_beams10/test_smiles_beams10_samples4502.json` |
+| CMGNet-SPrompt (nmr+frag, 生成侧) | seed0 | `/mnt/data2/NMR_CMGNet_SPrompt/results/predictions/sprompt_seed0_external4502_beams10.json` |
 
 复算命令: `PYTHONPATH=. python analysis/metrics/topk_cmgnet_modes_4502.py`

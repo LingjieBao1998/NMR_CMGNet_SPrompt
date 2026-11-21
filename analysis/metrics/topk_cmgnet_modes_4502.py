@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""CMGNet 三种模式 × top-k 指标复算(外部集 4,502 = 64 正 / 4,438 负)。
+"""CMGNet 各模式 × top-k 指标复算(外部集 4,502 = 64 正 / 4,438 负)。
 
-三种模式(论文 Table 2 / SI Table S1 的分组口径):
+模式分组(论文 Table 2 / SI Table S1 的口径):
 
     CMGNet-0910      : 0910 基础 checkpoint,decode_mode=smiles,单模型
     CMGNet-SCAFFOLD  : 全量语料重训(1209 extrain 5ep),decode_mode=frag
                        (骨架/片段拼接路径,故称 SCAFFOLD),3 seeds
     CMGNet-SMILES    : 同一批重训权重,decode_mode=smiles(整串直出),3 seeds
+    CMGNet-SPrompt   : 同一批重训权重 + 谱峰提示投票,decode_mode=nmr+frag;
+                       本表给**生成侧** 10 候选,部署时的判决另由分类器门控
+                       (TP63/FP4/FN1/TN4434,k 无关),仅 seed0 dump 入仓。
 
 输入是逐样本预测 dump(list,长度 4,502,每条含 canonical_reference_smiles
 与 predictions[10] 的 rank/smiles)。**本模块不读任何已表格化的结果**,
@@ -58,24 +61,37 @@ def mode_files(corpus, mode):
 
     Args:
         corpus: 预测语料根目录(含 apr18_* 子目录)。
-        mode: "0910" | "scaffold" | "smiles"。
+        mode: "0910" | "scaffold" | "smiles" | "sprompt"。
 
     Returns:
         list[(seed_label, Path)];目录或文件缺失时抛 FileNotFoundError。
+
+    Note:
+        SPrompt 的释放版 dump 已复制进本仓库(results/predictions/),
+        其余模式仍指向兄弟仓库的原始输出目录。
     """
     if mode == "0910":
-        spec = [("0910", "apr18_base0910_smiles_beams10/test_smiles_beams10_samples4502.json")]
+        spec = [("0910", corpus, "apr18_base0910_smiles_beams10/"
+                                 "test_smiles_beams10_samples4502.json")]
     elif mode == "scaffold":
-        spec = [(f"seed{s}", f"apr18_ex1209_s{s}_frag_beams10/test_frag_beams10_samples4502.json")
+        spec = [(f"seed{s}", corpus, f"apr18_ex1209_s{s}_frag_beams10/"
+                                     "test_frag_beams10_samples4502.json")
                 for s in (0, 42, 2006)]
     elif mode == "smiles":
-        spec = [(f"seed{s}", f"apr18_ex1209_s{s}_smiles_beams10/test_smiles_beams10_samples4502.json")
+        spec = [(f"seed{s}", corpus, f"apr18_ex1209_s{s}_smiles_beams10/"
+                                     "test_smiles_beams10_samples4502.json")
                 for s in (0, 42, 2006)]
+    elif mode == "sprompt":
+        ## ZCode 2026-11-21：ex1209 的 SPrompt 只留下 seed0/seed2006 两个
+        ## 原始 dump(seed42 缺失),无法凑 3 种子;这里用已入仓的释放版权重
+        ## 单种子 dump,与 results/table_topk_external_4502.md 同源。
+        spec = [("seed0", ROOT, "results/predictions/"
+                                "sprompt_seed0_external4502_beams10.json")]
     else:
         raise ValueError(f"unknown mode: {mode}")
     out = []
-    for label, rel in spec:
-        p = Path(corpus) / rel
+    for label, base, rel in spec:
+        p = Path(base) / rel
         if not p.is_file():
             raise FileNotFoundError(f"{mode}/{label}: 找不到逐样本 dump {p}")
         out.append((label, p))
@@ -180,11 +196,12 @@ def fmt_count(pair):
 
 
 def run(corpus, out_md, out_csv):
-    """跑三模式、打印/落盘 Markdown 与 CSV。"""
+    """跑四模式、打印/落盘 Markdown 与 CSV。"""
     modes = [
         ("CMGNet-0910 (base, SMILES)", "0910"),
         ("CMGNet-SCAFFOLD (frag)", "scaffold"),
         ("CMGNet-SMILES (smiles)", "smiles"),
+        ("CMGNet-SPrompt (nmr+frag, 生成侧)", "sprompt"),
     ]
     per_mode = []
     for name, mode in modes:
@@ -194,13 +211,23 @@ def run(corpus, out_md, out_csv):
 
     lines = []
     ap = lines.append
-    ap("# CMGNet 三模式 top-k 指标 — 外部集 4,502(64 正 / 4,438 负)")
+    ap("# CMGNet 各模式 top-k 指标 — 外部集 4,502(64 正 / 4,438 负)")
     ap("")
     ap("阈值/判定: top-k 内任一候选含全母核(4-喹诺酮-3-羧酸及其氮杂类似物)"
        "即判阳;P=TP/(TP+FP), R=TP/64, F1=2PR/(P+R), "
        "Spec=TN/4,438, Acc=(TP+TN)/4,502。SA=参考结构 canonical 完全匹配 / 64(正例)。")
     ap("")
     ap("多 seed 行写成 mean±sd(样本标准差 ddof=1,3 个种子)。")
+    ap("")
+    ap("> **SPrompt 行是生成侧**(模型自己吐的 10 个候选)。部署管线里的阳性/阴性"
+       "判决由 CReSS 嵌入 + XGBoost 分类器门控,与 k 无关:"
+       "TP 63 / FP 4 / FN 1 / TN 4,434 → P 0.9403、R 0.9844、F1 0.9618、"
+       "Spec 0.9991、Acc 0.9989(3 种子完全一致,见 "
+       "`results/table_topk_external_4502.md`)。")
+    ap("")
+    ap("> SPrompt 只有释放版权重的 seed0 dump 入仓(ex1209 原始 dump 缺 seed42),"
+       "故本表 SPrompt 行无 sd;SI 里 SPrompt 的 3 种子 SA 为 "
+       "0.146±0.024 / 0.219±0.027 / 0.240±0.018 / 0.292±0.009。")
     ap("")
     ap("| 模型 | Top-k | TP | FP | FN | TN | Precision | Recall | F1 | Specificity | Accuracy | SA (exact@k) |")
     ap("|---|---|---|---|---|---|---|---|---|---|---|---|")
