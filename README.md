@@ -11,6 +11,10 @@ OC(C1=C([R2])N([R1])C2=[R]([R8])C([R7])=C([R6])C([R5])=C2C1=O)=O     R = C or N
 
 Chromone/coumarin analogues are treated as negatives; the aza (R = N) variant is a positive.
 
+![CMGNet-SPrompt framework](results/figures/fig_framework.png)
+
+*Figure 1. CMGNet-SPrompt framework for quinolone scaffold identification and conditional molecular generation from 13C NMR spectra.*
+
 ---
 
 ## Headline results
