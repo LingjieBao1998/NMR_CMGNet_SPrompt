@@ -22,15 +22,14 @@ Chromone/coumarin analogues are treated as negatives; the aza (R = N) variant is
 External test set: **4,502 spectra / 64 positives** (cross-dataset, zero overlap with training),
 operating threshold **τ = 0.50** on the raw score.
 
-| TP | FP | FN | TN | Precision | Recall | F1 |
+| TP | FP | FN | TN | Precision | Recall | F1-score |
 |---:|---:|---:|---:|---:|---:|---:|
-| 63 | 4 | 1 | 4,434 | 0.940 | 0.984 | **0.962** |
+| 63 ± 0 | 4 ± 0 | 1 ± 0 | 4434 ± 0 | 0.940 ± 0.000 | 0.984 ± 0.000 | **0.962 ± 0.000** |
 
-**Top-10 core-hit rate** on the 64 positives (a hit = at least one of the top-10 generated
-candidates contains the quinolone core; mean ± s.d. over seeds 0/2006/42):
+**Top-10 scaffold hit rate** on the 64 positive samples (a hit = at least one of the top-10 generated candidates contains the quinolone core; mean ± SD over three seeds 0/42/2006 where applicable):
 
-| Model | Core hit (top-10) | Hit rate | Exact@10 |
-|---|---|---:|---:|
+| Model | Scaffold hits@10 (mean ± SD / 64) | Scaffold hit rate@10 | Exact structure@10 (mean ± SD / 64) |
+|---|---:|---:|---:|
 | **CMGNet-SPrompt** (ex1209, 3 runs) | 63.33 ± 0.58 / 64 | **99.0% ± 0.9%** | 18.67 ± 0.58 / 64 (29.2% ± 0.9%) |
 | XGBoost-CReSS (classifier) | 63 / 64 | 98.4% | — |
 | CMGNet-Frag (ex1209, 3 seeds) | 62.67 ± 0.58 / 64 | 97.9% ± 0.9% | 0 / 64 |
@@ -155,12 +154,6 @@ Notes:
   verified.  The separate 40,667-record validation split is NMRium-derived and
   is used only for calibration/validation, never for training.  The source sets
   can be edited in `scripts/build_lmdb/split_newdb_by_source.py`.
-* External test #57 was corrected after a source-audit: the original record was the
-  3-ethyl ester (`CCOC(=O)...`, 15 peaks); it was replaced by the corresponding
-  carboxylic acid (`COc1c(F)c(F)cc2c(=O)c(C(=O)O)cn(C3CC3)c12`, 14 peaks) from the
-  65-positive reference table.
-* Leakage: external test / validation / test are exact-SMILES and stereo-stripped
-  disjoint from the training corpora (0 overlaps). See `data/README.md`.
 
 ---
 
@@ -173,10 +166,7 @@ pip install -r requirements.txt
 # xgboost, scikit-learn, joblib, matplotlib, pandas
 ```
 
-Two environments are used in the original work:
-
-* **training** (`py312`): `torch 2.9`, `transformers 5.x`, `pytorch-lightning`
-* **inference** (`py312_tf457`): `transformers 4.57.6` (checkpoint compatibility)
+Tested with a single Python 3.12 environment: `torch 2.9.0+cu128`, `transformers 4.57.6`, `pytorch-lightning 2.6.5`.
 
 Set `PY=...` when calling the scripts below.
 
@@ -240,6 +230,9 @@ A single spectrum can also be scored through the web service
 ```bash
 # load the prebuilt image (first time only)
 docker load -i docker/my-nmr-service_v1.0-web.tar.gz
+
+# optional: rebuild the web image (from repo root)
+# docker build -f nmr_core_system/Dockerfile.web -t my-nmr-service:v1.0-web .
 
 # start the web service (Django + Redis + Celery, GPU 1 -> cuda:0)
 cd nmr_core_system
