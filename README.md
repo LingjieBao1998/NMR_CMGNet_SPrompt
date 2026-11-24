@@ -24,19 +24,19 @@ operating threshold **τ = 0.50** on the raw score.
 
 | TP | FP | FN | TN | Precision | Recall | F1-score |
 |---:|---:|---:|---:|---:|---:|---:|
-| 63 ± 0 | 4 ± 0 | 1 ± 0 | 4434 ± 0 | 0.940 ± 0.000 | 0.984 ± 0.000 | **0.962 ± 0.000** |
+| 63.000 ± 0.000 | 4.000 ± 0.000 | 1.000 ± 0.000 | 4434.000 ± 0.000 | 0.940 ± 0.000 | 0.984 ± 0.000 | **0.962 ± 0.000** |
 
 **Top-10 scaffold hit rate** on the 64 positive samples (a hit = at least one of the top-10 generated candidates contains the quinolone core; mean ± SD over three seeds 0/42/2006 where applicable):
 
 | Model | Scaffold hits@10 (mean ± SD / 64) | Scaffold hit rate@10 | Exact structure@10 (mean ± SD / 64) |
 |---|---:|---:|---:|
-| **CMGNet-SPrompt** (ex1209, 3 runs) | 63.33 ± 0.58 / 64 | **99.0% ± 0.9%** | 18.67 ± 0.58 / 64 (29.2% ± 0.9%) |
-| XGBoost-CReSS (classifier) | 63 / 64 | 98.4% | — |
-| CMGNet-Frag (ex1209, 3 seeds) | 62.67 ± 0.58 / 64 | 97.9% ± 0.9% | 0 / 64 |
-| CMGNet-SMILES (ex1209, 3 seeds) | 62.33 ± 0.58 / 64 | 97.4% ± 0.9% | 19.33 ± 2.31 / 64 (30.2% ± 3.6%) |
-| CMGNet 0910 (original) | 52 / 64 | 81.2% | 6 / 64 (9.4%) |
-| NMRMind | 48 / 64 | 75.0% | 1 / 64 (1.6%) |
-| NMR-Solver | 41 / 64 | 64.1% | 16 / 64 (25.0%) |
+| **CMGNet-SPrompt** (ex1209, 3 runs) | 63.330 ± 0.580 / 64 | **99.000% ± 0.900%** | 18.670 ± 0.580 / 64 (29.200% ± 0.900%) |
+| XGBoost-CReSS (classifier) | 63.000 / 64 | 98.400% | — |
+| CMGNet-Frag (ex1209, 3 seeds) | 62.670 ± 0.580 / 64 | 97.900% ± 0.900% | 0.000 / 64 |
+| CMGNet-SMILES (ex1209, 3 seeds) | 62.330 ± 0.580 / 64 | 97.400% ± 0.900% | 19.330 ± 2.310 / 64 (30.200% ± 3.600%) |
+| CMGNet 0910 (original) | 52.000 / 64 | 81.200% | 6.000 / 64 (9.400%) |
+| NMRMind | 48.000 / 64 | 75.000% | 1.000 / 64 (1.600%) |
+| NMR-Solver | 41.000 / 64 | 64.100% | 16.000 / 64 (25.000%) |
 
 **XGBoost-CReSS classifier at τ = 0.50** (external set, 3 seeds where applicable):
 
