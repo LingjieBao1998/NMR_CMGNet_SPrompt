@@ -58,10 +58,6 @@ the 64 positives and 4 false positives. (G–H) Ring-system detection accuracy. 
 molecule; the dashed reference marks the τ = 0.50 operating point on this calibrated
 scale (0.0235; see `reports/README.md` for the exact mapping).*
 
-![64 positives](results/figures/fig_64_positives.png)
-
-*Figure S2. Predicted probabilities for all 64 external positive samples (raw p, τ = 0.50). FN #12 is highlighted.*
-
 ---
 
 ## Repository layout
