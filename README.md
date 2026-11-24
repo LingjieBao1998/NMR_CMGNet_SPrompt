@@ -26,9 +26,9 @@ operating threshold **τ = 0.50** on the raw score.
 |---:|---:|---:|---:|---:|---:|---:|
 | 63.000 ± 0.000 | 4.000 ± 0.000 | 1.000 ± 0.000 | 4434.000 ± 0.000 | 0.940 ± 0.000 | 0.984 ± 0.000 | **0.962 ± 0.000** |
 
-**Top-10 scaffold hit rate** on the 64 positive samples (a hit = at least one of the top-10 generated candidates contains the quinolone core; mean ± SD over three seeds 0/42/2006 where applicable):
+**Top-10 scaffold recall** on the 64 positive samples (a hit = at least one of the top-10 generated candidates contains the quinolone core; mean ± SD over three seeds 0/42/2006 where applicable):
 
-| Model | Scaffold hits@10 (mean ± SD / 64) | Scaffold hit rate@10 | Exact structure@10 (mean ± SD / 64) |
+| Model | Scaffold hits@10 (mean ± SD / 64) | Recall@10 (scaffold) | Exact structure@10 (mean ± SD / 64) |
 |---|---:|---:|---:|
 | **CMGNet-SPrompt** (ex1209, 3 runs) | 63.330 ± 0.580 / 64 | **99.000% ± 0.900%** | 18.670 ± 0.580 / 64 (29.200% ± 0.900%) |
 | XGBoost-CReSS (classifier) | 63.000 / 64 | 98.400% | — |
@@ -63,13 +63,13 @@ the 64 positives and 4 false positives. (G–H) Ring-system detection accuracy. 
 
 ![Calibration intervals](results/figures/fig_ci_external.png)
 
-*Figure S-x. Calibrated probability with 90 % bootstrap interval for every external-test
+*Figure S1. Calibrated probability with 90 % bootstrap interval for every external-test
 molecule; the dashed reference marks the τ = 0.50 operating point on this calibrated
 scale (0.0235; see `reports/README.md` for the exact mapping).*
 
 ![64 positives](results/figures/fig_64_positives.png)
 
-*Figure S-y. All 64 external positives (raw p at τ = 0.50). FN #12 is highlighted.*
+*Figure S2. Predicted probabilities for all 64 external positive samples (raw p, τ = 0.50). FN #12 is highlighted.*
 
 ---
 
@@ -268,18 +268,18 @@ bash scripts/infer/infer_cmgnet_sprompt.sh data/external_test/external_test.json
 | `results/figures/fig_xgb_uncertainty.pdf` | 3-seed spread and 90 % conformal sets |
 | `results/figures/fig_fn12_case.png` | FN #12 case study |
 | `results/figures/fig_r2_qualitative.png` | qualitative comparison of six cross-substituent families |
-| `results/figures/fig_64_positives.pdf` | structure grid of all 64 positives |
+| `results/figures/fig_64_positives.pdf` | predicted probabilities for all 64 external positives (τ = 0.50) |
 
-All figures are regenerated with one command (CPU only, ~5 min):
+Most figures can be regenerated with one command (CPU only):
 
 ```bash
 bash scripts/plot/make_all_figures.sh
 ```
 
-The scripts read only the cached artefacts shipped in `reports/calib_data/`,
-`reports/*.json`, `viz_tmp/` and `results/predictions/`. `reports/README.md`
-contains the full figure inventory and the exact protocol used for every
-confidence interval.
+The scripts read cached artefacts shipped in `reports/calib_data/`, `reports/*.json`,
+`viz_tmp/` and `results/predictions/`. Some scripts write to `reports/`, others to
+`results/figures/`; see `reports/README.md` for the full figure inventory and the
+exact protocol used for every confidence interval.
 
 ### Confidence intervals in one paragraph
 
@@ -321,8 +321,7 @@ datasets keep their own terms; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICE
   records (`multi`, `napacd`, `pnmrnp2`) are provided as per-source SMILES /
   record indices until their original terms are confirmed; the full records are
   available from the corresponding author on reasonable request.
-* **Web service:** `docker/my-nmr-service_v1.0-web.tar.gz`, also available as
-  `[registry/image:tag]`.
+* **Web service:** `docker/my-nmr-service_v1.0-web.tar.gz`.
 
 See [`docs/zenodo_upload.md`](docs/zenodo_upload.md) for the exact upload
 manifest and [`data/README.md`](data/README.md) for per-source provenance.

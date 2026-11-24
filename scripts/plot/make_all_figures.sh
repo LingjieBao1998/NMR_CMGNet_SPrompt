@@ -4,9 +4,10 @@
 #
 #   bash scripts/plot/make_all_figures.sh
 #
-# Outputs go to `reports/` (all figure scripts resolve paths relative to the
-# repository root).  Inputs are the pre-computed artefacts shipped in
-# `reports/calib_data/`, `reports/*.json`, `viz_tmp/*` and `results/predictions/`.
+# Most figure scripts write to `reports/`; a few write to `results/figures/`.
+# All scripts resolve paths relative to the repository root. Inputs are the
+# pre-computed artefacts shipped in `reports/calib_data/`, `reports/*.json`,
+# `viz_tmp/*` and `results/predictions/`.
 #
 # Requires: matplotlib, numpy, scipy, scikit-learn, rdkit, pillow, joblib,
 #           xgboost (used for the Figure 2 / PR-ROC / FN#12 panels).
@@ -32,6 +33,7 @@ FIG_SCRIPTS=(
     make_fn12_local_figure.py            # FN #12 local decision boundary
     make_paper_figure_fn12.py            # FN #12 composite (paper layout)
     make_r2_qualitative_figure.py        # qualitative model comparison (6 families)
+    make_fig_64_positives.py             # predicted probabilities for all 64 external positives
 )
 
 fail=0
