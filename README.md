@@ -38,15 +38,6 @@ operating threshold **τ = 0.50** on the raw score.
 | NMRMind | 48.000 / 64 | 75.000% | 1.000 / 64 (1.600%) |
 | NMR-Solver | 41.000 / 64 | 64.100% | 16.000 / 64 (25.000%) |
 
-**XGBoost-CReSS classifier at τ = 0.50** (external set, 3 seeds where applicable):
-
-| Training corpus | Precision | Recall | F1 |
-|---|---:|---:|---:|
-| experimental only (`exp_lit`, 66 pos) | 0.797 ± 0.292 | 0.255 ± 0.118 | 0.350 ± 0.067 |
-| synthetic + experimental, no PubChem | 1.000 ± 0.000 | 0.662 ± 0.050 | 0.796 ± 0.036 |
-| full + ex_train + PubChem 1209 | 0.940 ± 0.000 | 0.984 ± 0.000 | 0.962 ± 0.000 |
-| NMRMind training split | 0.979 ± 0.018 | 0.469 ± 0.027 | 0.634 ± 0.023 |
-
 ![Model analysis](results/figures/fig_model_analysis_v5.png)
 
 *Figure 2. Error analysis and model behaviour at the decision threshold τ = 0.50.
