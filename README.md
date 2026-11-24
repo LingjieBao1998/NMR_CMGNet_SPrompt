@@ -20,7 +20,7 @@ operating threshold **τ = 0.50** on the raw score.
 
 | TP | FP | FN | TN | Precision | Recall | F1 |
 |---:|---:|---:|---:|---:|---:|---:|
-| 63 | 4 | 1 | 4,434 | 0.940 | 0.984 | **0.9618** |
+| 63 | 4 | 1 | 4,434 | 0.940 | 0.984 | **0.962** |
 
 **Top-10 core-hit rate** on the 64 positives (a hit = at least one of the top-10 generated
 candidates contains the quinolone core; mean ± s.d. over seeds 0/2006/42):
@@ -39,10 +39,10 @@ candidates contains the quinolone core; mean ± s.d. over seeds 0/2006/42):
 
 | Training corpus | Precision | Recall | F1 |
 |---|---:|---:|---:|
-| experimental only (`exp_lit`, 66 pos) | 1.000 ± 0.000 | 0.193 ± 0.033 | 0.322 ± 0.046 |
-| synthetic + experimental, no PubChem | 0.993 ± 0.013 | 0.688 ± 0.016 | 0.812 ± 0.012 |
-| full + ex_train + PubChem 1209 | 0.934 ± 0.000 | 0.891 ± 0.000 | 0.912 ± 0.000 |
-| NMRMind training split | 0.974 ± 0.023 | 0.385 ± 0.009 | 0.552 ± 0.012 |
+| experimental only (`exp_lit`, 66 pos) | 0.797 ± 0.292 | 0.255 ± 0.118 | 0.350 ± 0.067 |
+| synthetic + experimental, no PubChem | 1.000 ± 0.000 | 0.662 ± 0.050 | 0.796 ± 0.036 |
+| full + ex_train + PubChem 1209 | 0.940 ± 0.000 | 0.984 ± 0.000 | 0.962 ± 0.000 |
+| NMRMind training split | 0.979 ± 0.018 | 0.469 ± 0.027 | 0.634 ± 0.023 |
 
 ![Model analysis](results/figures/fig_model_analysis_v5.png)
 
@@ -99,14 +99,16 @@ scale (0.0235; see `reports/README.md` for the exact mapping).*
 │   └── plot/                       # one-command figure regeneration
 ├── data/                           # rebuilt LMDB / JSON splits (see data/README.md)
 ├── checkpoints/
-│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # best by val/score in its run
-│   ├── sprompt_ex1209_1ep_seed0.ckpt                    # CMGNet-SPrompt, 1 epoch, seed 0
-│   ├── sprompt_ex1209_1ep_seed2006.ckpt                 # CMGNet-SPrompt, 1 epoch, seed 2006
-│   ├── sprompt_ex1209_5ep_seed42.ckpt                   # seed 42; metadata records epochs=1
-│   ├── 1220_last.ckpt              # last (epoch 99); best (epoch 25) not shipped
-│   ├── bart_base_0910/             # 0910 base model (default training start)
+│   ├── train_cmgnet_ring_system_3.2_1029_v2_best.ckpt   # previous best CMGNet model (best by val/score in its run)
+│   ├── sprompt_ex1209_seed0.ckpt                    # CMGNet-SPrompt, ex1209 data, seed 0
+│   ├── sprompt_ex1209_seed2006.ckpt                 # CMGNet-SPrompt, ex1209 data, seed 2006
+│   ├── sprompt_ex1209_seed42.ckpt                   # CMGNet-SPrompt, ex1209 data, seed 42
+│   ├── 1220_last.ckpt              # last (epoch 99); best (epoch 25) not shipped; keep in place
+│   ├── bart_base_0910/             # original 0910 base model (default training start; path unchanged)
 │   └── cress/                      # CReSS encoder + SMILES tokenizer
-├── models/xgboost/model_xgb_cress_1220.pkl   # XGBoost core classifier
+├── models/xgboost/
+│   ├── model_xgb_cress_1220.pkl                     # XGBoost core classifier (1220, previous baseline)
+│   └── model_xgb_cress_new_dataset_seed{0,42,2006}.pkl # new_dataset 3-seed (Exp+Syn+PubChem)
 ├── nmr_core_system/                # Django web service (inference UI)
 ├── docker/my-nmr-service_v1.0-web.tar.gz     # prebuilt service image
 ├── results/                        # figures + result tables used above
@@ -231,10 +233,23 @@ Three stages:
 A single spectrum can also be scored through the web service
 (`docker/my-nmr-service_v1.0-web.tar.gz`, `nmr_core_system/`).
 
+```bash
+# load the prebuilt image (first time only)
+docker load -i docker/my-nmr-service_v1.0-web.tar.gz
+
+# start the web service (Django + Redis + Celery, GPU 1 -> cuda:0)
+cd nmr_core_system
+docker compose up -d
+
+# check logs / stop
+docker compose logs -f nmr-core-system
+# docker compose down
+```
+
 To reproduce a specific seed reported in the top-10 table, override `CKPT`:
 
 ```bash
-CKPT=checkpoints/sprompt_ex1209_1ep_seed0.ckpt \
+CKPT=checkpoints/sprompt_ex1209_seed0.ckpt \
 VOTES=data/external_test/sprompt_votes/sprompt_votes_apr18.json \
 bash scripts/infer/infer_cmgnet_sprompt.sh data/external_test/external_test.json \
      output/infer_sprompt_seed0 0
