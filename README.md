@@ -304,7 +304,9 @@ including the regeneration commands, are in `reports/README.md`.
 
 ---
 
-## License and availability
+## Data and code availability
+
+The data and code supporting this study are publicly available on GitHub (https://github.com/LingjieBao1998/NMR_CMGNet_SPrompt) and archived on Hugging Face (https://huggingface.co/datasets/LingjieBao1998/NMR_CMGNet_SPrompt), including model weights and data.
 
 Original code and the trained model weights are released under the
 **Apache License 2.0** (see [`LICENSE`](LICENSE)).  Third-party software and
