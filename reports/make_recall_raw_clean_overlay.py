@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+"""生成 Raw vs Clean 13C-19F 耦合条件下的 Recall 对比叠加柱状图。
+
+输入数据：reports/recall_raw_vs_clean_data.csv（同目录）
+输出：reports/recall_raw_vs_clean_overlay.png/.pdf
+
+作者：ZCode（Claude），2026-11-24
+修改：ZCode，2026-11-25，按用户提供的新版 C-F 指标更新 Recall 数值。
+"""
+import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -9,11 +19,11 @@ plt.rcParams['font.family'] = 'Arial'
 plt.rcParams['font.sans-serif'] = ['Arial']
 plt.rcParams['axes.unicode_minus'] = False
 
-models = ['NMR-Solver','NMRMind','XGBoost-CReSS','CMGNet','CMGNet-SPrompt']
-clean = np.array([0.833, 0.791, 0.969, 0.854, 0.969])
-raw   = np.array([0.604, 0.646, 0.861, 0.729, 0.861])
+models = ['NMR-Solver', 'NMRMind', 'XGBoost-CReSS', 'CMGNet', 'CMGNet-SPrompt']
+clean = np.array([0.833, 0.792, 0.958, 0.854, 0.958])
+raw   = np.array([0.604, 0.625, 0.861, 0.729, 0.861])
 
-colors = ['#c4c0dd','#fb8c80','#8cb8d7','#fdbb71','#bae178']
+colors = ['#c4c0dd', '#fb8c80', '#8cb8d7', '#fdbb71', '#bae178']
 x = np.arange(len(models))
 w = 0.55
 
@@ -35,10 +45,10 @@ for xi, r, c in zip(x, raw, clean):
 best_raw = raw.max()
 best_clean = clean.max()
 ax.axhline(best_raw, color='#d62728', linestyle='--', linewidth=1.2)
-ax.text(0.015, best_raw+0.010, f'Raw Best = {best_raw:.3f}', color='#d62728',
+ax.text(0.015, best_raw + 0.010, f'Raw Best = {best_raw:.3f}', color='#d62728',
         va='bottom', ha='left', fontsize=9, transform=ax.get_yaxis_transform())
 ax.axhline(best_clean, color='#2ca02c', linestyle='--', linewidth=1.2)
-ax.text(0.015, best_clean+0.010, f'Clean Best = {best_clean:.3f}', color='#2ca02c',
+ax.text(0.015, best_clean + 0.010, f'Clean Best = {best_clean:.3f}', color='#2ca02c',
         va='bottom', ha='left', fontsize=9, transform=ax.get_yaxis_transform())
 
 legend_elements = [
@@ -56,6 +66,9 @@ ax.grid(axis='y', alpha=0.25, linewidth=0.6)
 ax.legend(handles=legend_elements, frameon=False, ncol=2, loc='upper center')
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.savefig('/mnt/data2/NMR_Core_Mol_Detection/reports/recall_raw_vs_clean_overlay.png', dpi=200, bbox_inches='tight')
-plt.savefig('/mnt/data2/NMR_Core_Mol_Detection/reports/recall_raw_vs_clean_overlay.pdf', bbox_inches='tight')
-print('ok')
+
+out_dir = os.path.dirname(os.path.abspath(__file__))
+for ext in ('png', 'pdf'):
+    out = os.path.join(out_dir, f'recall_raw_vs_clean_overlay.{ext}')
+    plt.savefig(out, dpi=200, bbox_inches='tight')
+    print('saved', out)

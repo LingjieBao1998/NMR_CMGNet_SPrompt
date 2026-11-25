@@ -142,9 +142,9 @@ rebuild it from the per-source files.
 
 | Path | Size |
 |---|---:|
-| `checkpoints/sprompt_ex1209_1ep_seed0.ckpt` | 413 MB |
-| `checkpoints/sprompt_ex1209_1ep_seed2006.ckpt` | 413 MB |
-| `checkpoints/sprompt_ex1209_5ep_seed42.ckpt` | 413 MB |
+| `checkpoints/sprompt_ex1209_seed0.ckpt` | 413 MB |
+| `checkpoints/sprompt_ex1209_seed2006.ckpt` | 413 MB |
+| `checkpoints/sprompt_ex1209_seed42.ckpt` | 413 MB |
 | `checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt` | 1.24 GB |
 | `checkpoints/1220_last.ckpt` | 1.24 GB |
 | `checkpoints/bart_base_0910/` | 395 MB |

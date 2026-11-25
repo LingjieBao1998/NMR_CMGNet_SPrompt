@@ -20,7 +20,7 @@ OUT_DIR=${2:-output/infer_sprompt_external}
 GPU_ID=${3:-0}
 
 PY=${PY:-python}
-CKPT=${CKPT:-checkpoints/sprompt_ex1209_1ep_seed0.ckpt}
+CKPT=${CKPT:-checkpoints/sprompt_ex1209_seed0.ckpt}
 BASE=${BASE:-checkpoints/bart_base_0910}
 BEAMS=${BEAMS:-10}
 CORE=${CORE:-"O=C(O)c1c[nH]c2ccccc2c1=O"}

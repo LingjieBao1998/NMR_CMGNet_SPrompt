@@ -1,3 +1,4 @@
+import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -32,6 +33,8 @@ ax.set_title('F1 Score Comparison Across Models (Top-10)', fontsize=13, fontweig
 ax.grid(axis='y', alpha=0.25, linewidth=0.6)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.savefig('/mnt/data2/NMR_Core_Mol_Detection/reports/model_top10_f1_bar.png', dpi=200, bbox_inches='tight')
-plt.savefig('/mnt/data2/NMR_Core_Mol_Detection/reports/model_top10_f1_bar.pdf', bbox_inches='tight')
-print('ok')
+out_dir = os.path.dirname(os.path.abspath(__file__))
+for ext in ('png','pdf'):
+    out = os.path.join(out_dir, f'model_top10_f1_bar.{ext}')
+    plt.savefig(out, dpi=200, bbox_inches='tight')
+    print('saved', out)

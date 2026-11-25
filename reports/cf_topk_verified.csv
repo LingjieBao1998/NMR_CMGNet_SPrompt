@@ -1,0 +1,57 @@
+Data,Model,Top-k,Recall,Recall drop,Structure Accuracy,SA drop,Note
+Clean C-F,NMR-Solver,1,0.646,,,,"待核对: si_perk标注top-10按正文0.833,原表0.8542"
+Clean C-F,NMR-Solver,3,0.833,,,,"待核对: si_perk标注top-10按正文0.833,原表0.8542"
+Clean C-F,NMR-Solver,5,0.854,,,,"待核对: si_perk标注top-10按正文0.833,原表0.8542"
+Clean C-F,NMR-Solver,10,0.833,,,,"待核对: si_perk标注top-10按正文0.833,原表0.8542"
+Clean C-F,XGBoost-CReSS,1,0.969±0.000,,,,分类器k无关
+Clean C-F,XGBoost-CReSS,3,0.969±0.000,,,,分类器k无关
+Clean C-F,XGBoost-CReSS,5,0.969±0.000,,,,分类器k无关
+Clean C-F,XGBoost-CReSS,10,0.969±0.000,,,,分类器k无关
+Clean C-F,CMGNet,1,0.812,,,,fsplit 0910
+Clean C-F,CMGNet,3,0.812,,,,fsplit 0910
+Clean C-F,CMGNet,5,0.812,,,,fsplit 0910
+Clean C-F,CMGNet,10,0.854,,,,fsplit 0910
+Clean C-F,NMRMind,1,0.750,,,,si_perk原表保留
+Clean C-F,NMRMind,3,0.792,,,,si_perk原表保留
+Clean C-F,NMRMind,5,0.792,,,,si_perk原表保留
+Clean C-F,NMRMind,10,0.792,,,,si_perk原表保留
+Clean C-F,CMGNet-SCAFFOLD,1,0.951±0.012,,0.000±0.000,,fsplit 3种子
+Clean C-F,CMGNet-SCAFFOLD,3,0.979±0.000,,0.000±0.000,,fsplit 3种子
+Clean C-F,CMGNet-SCAFFOLD,5,0.979±0.000,,0.000±0.000,,fsplit 3种子
+Clean C-F,CMGNet-SCAFFOLD,10,0.979±0.000,,0.000±0.000,,fsplit 3种子
+Clean C-F,CMGNet-SMILES,1,待补,,待补,,si_perk:仅2种子可配
+Clean C-F,CMGNet-SMILES,3,待补,,待补,,si_perk:仅2种子可配
+Clean C-F,CMGNet-SMILES,5,待补,,待补,,si_perk:仅2种子可配
+Clean C-F,CMGNet-SMILES,10,0.979±0.008(正文top10),,待补,,si_perk:仅2种子可配
+Clean C-F,CMGNet-SPrompt,1,0.969±0.010,,0.181±0.012,,"Recall分类器k无关; SA重算自f48_ex1209_fsplit_s{0,2006,42}"
+Clean C-F,CMGNet-SPrompt,3,0.969±0.010,,0.222±0.024,,"Recall分类器k无关; SA重算自f48_ex1209_fsplit_s{0,2006,42}"
+Clean C-F,CMGNet-SPrompt,5,0.969±0.010,,0.250±0.021,,"Recall分类器k无关; SA重算自f48_ex1209_fsplit_s{0,2006,42}"
+Clean C-F,CMGNet-SPrompt,10,0.969±0.010,,0.313±0.021,,"Recall分类器k无关; SA重算自f48_ex1209_fsplit_s{0,2006,42}"
+Raw C-F,NMR-Solver,1,0.354,0.479,,,Recall drop相对Clean对应k
+Raw C-F,NMR-Solver,3,0.479,0.354,,,Recall drop相对Clean对应k
+Raw C-F,NMR-Solver,5,0.542,0.312,,,Recall drop相对Clean对应k
+Raw C-F,NMR-Solver,10,0.604,0.229,,,Recall drop相对Clean对应k
+Raw C-F,XGBoost-CReSS,1,0.861±0.012,0.108,,,分类器k无关; drop按正文top10
+Raw C-F,XGBoost-CReSS,3,0.861±0.012,0.108,,,分类器k无关; drop按正文top10
+Raw C-F,XGBoost-CReSS,5,0.861±0.012,0.108,,,分类器k无关; drop按正文top10
+Raw C-F,XGBoost-CReSS,10,0.861±0.012,0.108,,,分类器k无关; drop按正文top10
+Raw C-F,CMGNet,1,0.646,0.167,,,fwos 0910
+Raw C-F,CMGNet,3,0.667,0.146,,,fwos 0910
+Raw C-F,CMGNet,5,0.708,0.104,,,fwos 0910
+Raw C-F,CMGNet,10,0.729,0.125,,,fwos 0910
+Raw C-F,NMRMind,1,0.562,0.188,,,si_perk原表; top-10正文为0.646有冲突
+Raw C-F,NMRMind,3,0.583,0.208,,,si_perk原表; top-10正文为0.646有冲突
+Raw C-F,NMRMind,5,0.604,0.188,,,si_perk原表; top-10正文为0.646有冲突
+Raw C-F,NMRMind,10,0.625,0.167,,,si_perk原表; top-10正文为0.646有冲突
+Raw C-F,CMGNet-SCAFFOLD,1,待确认(现有fwos frag 0.958与正文0.896冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SCAFFOLD,3,待确认(现有fwos frag 0.958与正文0.896冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SCAFFOLD,5,待确认(现有fwos frag 0.958与正文0.896冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SCAFFOLD,10,待确认(现有fwos frag 0.958与正文0.896冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SMILES,1,待确认(现有fwos smiles 0.972与正文0.908冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SMILES,3,待确认(现有fwos smiles 0.972与正文0.908冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SMILES,5,待确认(现有fwos smiles 0.972与正文0.908冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SMILES,10,待确认(现有fwos smiles 0.972与正文0.908冲突),,待确认,,si_perk:数据源冲突
+Raw C-F,CMGNet-SPrompt,1,0.861±0.012,0.108,0.111±0.012,0.070,"Recall分类器k无关; SA重算自f48_ex1209_fwos_s{0,2006,42}"
+Raw C-F,CMGNet-SPrompt,3,0.861±0.012,0.108,0.139±0.024,0.083,"Recall分类器k无关; SA重算自f48_ex1209_fwos_s{0,2006,42}"
+Raw C-F,CMGNet-SPrompt,5,0.861±0.012,0.108,0.167±0.042,0.083,"Recall分类器k无关; SA重算自f48_ex1209_fwos_s{0,2006,42}"
+Raw C-F,CMGNet-SPrompt,10,0.861±0.012,0.108,0.215±0.043,0.098,"Recall分类器k无关; SA重算自f48_ex1209_fwos_s{0,2006,42}"

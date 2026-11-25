@@ -88,9 +88,9 @@ class XGBoostPredictor:
         if xgb_model_path is None:
             xgb_model_path = str(base_path / "models/xgboost/model_xgb_cress_1220.pkl")
         if cress_config_path is None:
-            cress_config_path = str(base_path / "models/2_5_w_model/8.json")
+            cress_config_path = str(base_path / "checkpoints/cress/2_5_w_model/8.json")
         if cress_model_path is None:
-            cress_model_path = str(base_path / "models/2_5_w_model/8.pth")
+            cress_model_path = str(base_path / "checkpoints/cress/2_5_w_model/8.pth")
 
         print("="*100)
         print("初始化XGBoost预测器")
@@ -108,7 +108,7 @@ class XGBoostPredictor:
             config = json.load(f)
         
         # 修改tokenizer路径为绝对路径
-        tokenizer_path = str(base_path / "models/tokenizer-smiles-roberta-1e")
+        tokenizer_path = str(base_path / "checkpoints/cress/tokenizer-smiles-roberta-1e")
         config["model_config"]["roberta_tokenizer_path"] = tokenizer_path
         config["dataset_config"]["smiles_tokenizer"] = tokenizer_path
         

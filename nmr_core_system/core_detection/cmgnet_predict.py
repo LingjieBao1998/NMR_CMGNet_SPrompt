@@ -237,11 +237,11 @@ class CMGNetPredictor:
         # 设置默认参数
         self.device = device
         if model_path is None:
-            model_path = str(project_dir / "checkpoints/saved_hf_model_0910")
+            model_path = str(project_dir / "checkpoints/bart_base_0910")
         if tokenizer_path is None:
-            tokenizer_path = str(project_dir / "checkpoints/saved_hf_model_0910")
+            tokenizer_path = str(project_dir / "checkpoints/bart_base_0910")
         if ckpt_path is None:
-            ckpt_path = str(project_dir / "models/cmgnet/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt")
+            ckpt_path = str(project_dir / "checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt")
 
         print("="*100)
         print("初始化CMGNet预测器")
@@ -252,7 +252,7 @@ class CMGNetPredictor:
 
         # 创建默认参数
         self.args = Namespace(
-            model_dir=str(project_dir / "checkpoints/saved_hf_model_0910"),
+            model_dir=str(project_dir / "checkpoints/bart_base_0910"),
             use_extra_encoder=False,
             use_ring_system=True,
             force_aligned=True,

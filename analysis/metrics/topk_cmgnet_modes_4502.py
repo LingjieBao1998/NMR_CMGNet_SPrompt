@@ -288,7 +288,7 @@ def run(corpus, out_md, out_csv):
     ap(">")
     ap("> (a) `output/test_sprompt_seed0`(= `results/predictions/"
        "sprompt_seed0_external4502_beams10.json`,2026-11-16)用的是释放版 1-epoch "
-       "权重 `checkpoints/sprompt_ex1209_1ep_seed0.ckpt`,单次运行给出 "
+       "权重 `checkpoints/sprompt_ex1209_seed0.ckpt`,单次运行给出 "
        "TP@10 64 / FP@10 24、SA@10 21/64;")
     ap(">")
     ap("> (b) `output/infer_sprompt_external`(2026-11-16)用的是 1029v2 base "

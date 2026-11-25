@@ -30,9 +30,9 @@ git archive --format=tar.gz --prefix="nmr-cmgnet-sprompt-${VERSION}/" \
 if [[ "$INCLUDE_WEIGHTS" == "1" ]]; then
     echo "==> weights archive (~4.1 GB)"
     "${TAR[@]}" -czf "$OUT/nmr-cmgnet-sprompt-${VERSION}-weights.tar.gz" \
-        checkpoints/sprompt_ex1209_1ep_seed0.ckpt \
-        checkpoints/sprompt_ex1209_1ep_seed2006.ckpt \
-        checkpoints/sprompt_ex1209_5ep_seed42.ckpt \
+        checkpoints/sprompt_ex1209_seed0.ckpt \
+        checkpoints/sprompt_ex1209_seed2006.ckpt \
+        checkpoints/sprompt_ex1209_seed42.ckpt \
         checkpoints/train_cmgnet_ring_system_3.2_1029_v2_best.ckpt \
         checkpoints/bart_base_0910 \
         checkpoints/cress \

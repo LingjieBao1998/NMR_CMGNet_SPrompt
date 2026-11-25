@@ -1,0 +1,17 @@
+Training data configuration,Size (M),Top-k,Precision,Recall,F1,Structure Accuracy,Note
+Experimental,0.745,1,0.917±0.000,0.172±0.000,0.290±0.000,0.000±0.000,"Verified: exp30_seed{0,42,2006}"
+Experimental,0.745,3,0.917±0.000,0.172±0.000,0.290±0.000,0.000±0.000,"Verified: exp30_seed{0,42,2006}"
+Experimental,0.745,5,0.917±0.000,0.172±0.000,0.290±0.000,0.000±0.000,"Verified: exp30_seed{0,42,2006}"
+Experimental,0.745,10,0.917±0.000,0.172±0.000,0.290±0.000,0.000±0.000,"Verified: exp30_seed{0,42,2006}; matches manuscript"
+Experimental + Synthetic,3.218,1,0.982±0.000,0.865±0.018,0.920±0.010,0.078±0.016,"Recomputed: apr18_sprompt_bex_s{0,42,2006} (extrain_5ep)"
+Experimental + Synthetic,3.218,3,0.982±0.000,0.865±0.018,0.920±0.010,0.130±0.033,"Recomputed: apr18_sprompt_bex_s{0,42,2006} (extrain_5ep)"
+Experimental + Synthetic,3.218,5,0.982±0.000,0.865±0.018,0.920±0.010,0.151±0.024,"Recomputed: apr18_sprompt_bex_s{0,42,2006} (extrain_5ep)"
+Experimental + Synthetic,3.218,10,0.982±0.000,0.865±0.018,0.920±0.010,0.172±0.016,Recomputed: bex/extrain_5ep; manuscript SA 0.175±0.015
+Experimental + Synthetic + NMR-PubChem,3.295,1,0.940±0.000,0.984±0.000,0.962±0.000,0.146±0.024,"Verified: apr18_sprompt_ex1209_{s0,beams10,s2006}"
+Experimental + Synthetic + NMR-PubChem,3.295,3,0.940±0.000,0.984±0.000,0.962±0.000,0.219±0.027,"Verified: apr18_sprompt_ex1209_{s0,beams10,s2006}"
+Experimental + Synthetic + NMR-PubChem,3.295,5,0.940±0.000,0.984±0.000,0.962±0.000,0.240±0.018,"Verified: apr18_sprompt_ex1209_{s0,beams10,s2006}"
+Experimental + Synthetic + NMR-PubChem,3.295,10,0.940±0.000,0.984±0.000,0.962±0.000,0.292±0.009,"Verified: apr18_sprompt_ex1209_{s0,beams10,s2006}; matches manuscript"
+NMRMind,2.137,1,0.970±0.026,0.682±0.050,0.801±0.040,0.005±0.009,Needs seed confirmation: m1010 s0/s2026/s42
+NMRMind,2.137,3,0.970±0.026,0.682±0.050,0.801±0.040,0.016±0.000,Needs seed confirmation: m1010 s0/s2026/s42
+NMRMind,2.137,5,0.970±0.026,0.682±0.050,0.801±0.040,0.036±0.024,Needs seed confirmation: m1010 s0/s2026/s42
+NMRMind,2.137,10,0.970±0.026,0.682±0.050,0.801±0.040,0.052±0.036,P/R/F1/Top10 SA match manuscript; SA SD differs (manuscript 0.053±0.015)

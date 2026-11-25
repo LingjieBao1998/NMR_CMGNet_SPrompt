@@ -8,7 +8,7 @@
                     (判别式模型,无 top-k;"top-1" 即 τ=0.50 的单次判决)
     CMGNet (0910) : results/predictions/cmgnet_0910_smiles_beams10.json
     CMGNet-SPrompt: results/predictions/sprompt_seed0_external4502_beams10.json
-                    (释放版权重 sprompt_ex1209_1ep_seed0.ckpt,decode_mode=nmr+frag)
+                    (释放版权重 sprompt_ex1209_seed0.ckpt,decode_mode=nmr+frag)
     NMRMind       : results/predictions/nmrmind_external4502_top10.json
                     (官方 200-epoch 权重,april18peak 峰表)
 
