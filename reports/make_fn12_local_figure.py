@@ -47,7 +47,7 @@ def emb_rows(ids):
     pos = np.clip(np.searchsorted(_SUB_IDX, ids), 0, len(_SUB_IDX) - 1)
     return _SUB_EMB[pos].astype(np.float32)
 E = np.asarray(emb_rows(loc), dtype=np.float32)
-model = joblib.load(B + 'models/xgboost/model_xgb_cress_ex_train_seed42.pkl')
+model = joblib.load(B + 'models/xgboost/model_xgb_cress_new_dataset_seed42.pkl')
 p_loc = model.predict_proba(E)[:, 1]
 
 H = 130

@@ -75,7 +75,7 @@ def emb_rows(ids):
     ids = np.asarray(ids)
     pos = np.clip(np.searchsorted(_SUB_IDX, ids), 0, len(_SUB_IDX) - 1)
     return _SUB_EMB[pos].astype(np.float32)
-model = joblib.load(B + 'models/xgboost/model_xgb_cress_ex_train_seed42.pkl')
+model = joblib.load(B + 'models/xgboost/model_xgb_cress_new_dataset_seed42.pkl')
 
 # ------------------------------------------------------------ molecules ----
 smi = dict(

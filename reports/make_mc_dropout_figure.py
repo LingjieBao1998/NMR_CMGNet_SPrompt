@@ -53,7 +53,7 @@ ax.annotate("FN #12", (0.012, 0.0), xytext=(0.02, 0.22),
             textcoords="data", color=RED, fontsize=6.0,
             arrowprops=dict(arrowstyle="-", lw=0.6, color=RED))
 ax.set_xscale("log")
-ax.set_xlabel("XGBoost score")
+ax.set_xlabel("XGBoost-CReSS score")
 ax.set_ylabel("Passes with quinolone core\n(in top-5, /20)")
 ax.set_ylim(-0.05, 1.12)
 ax.set_yticks([0, 0.25, 0.5, 0.75, 1.0])

@@ -1,4 +1,4 @@
-"""XGBoost on the external test set: PR curve (AUPRC) + ROC curve (AUROC).
+"""XGBoost-CReSS on the external test set: PR curve (AUPRC) + ROC curve (AUROC).
 
 Two-panel figure, no insets. Best-practice choices for a strongly imbalanced
 test set (64 positives / 4,438 negatives):
@@ -21,7 +21,7 @@ test set (64 positives / 4,438 negatives):
 Inputs
   /tmp/apr18_cress_emb.npy            4,502 x 768 CReSS embeddings (external test)
   viz_tmp/test_labels.npy             4,502 labels (64 positives)
-  models/xgboost/model_xgb_cress_ex_train_seed42.pkl
+  models/xgboost/model_xgb_cress_new_dataset_seed42.pkl
 
 Outputs
   reports/fig_xgb_pr_roc.pdf / .svg / .png
@@ -272,7 +272,7 @@ def plot_pr_roc(y_true, y_score, threshold=0.50, output="pr_roc",
 if __name__ == "__main__":
     emb_te = np.load(B + "reports/calib_data/apr18_cress_emb.npy").astype(np.float32)
     y_te = np.load(B + "viz_tmp/test_labels.npy").astype(int)
-    model = joblib.load(B + "models/xgboost/model_xgb_cress_ex_train_seed42.pkl")
+    model = joblib.load(B + "models/xgboost/model_xgb_cress_new_dataset_seed42.pkl")
     p_te = model.predict_proba(emb_te)[:, 1]
 
     fig, axes, m = plot_pr_roc(y_te, p_te, threshold=0.50,

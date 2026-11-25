@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Figure for the XGBoost confidence-interval analysis (reports/uncertainty_ci.py).
+"""Figure for the XGBoost-CReSS confidence-interval analysis (reports/uncertainty_ci.py).
 
 A. composition of the 90% class-conditional conformal prediction sets
 B. realized class coverage vs the nominal 90% (Wilson 95% CIs)

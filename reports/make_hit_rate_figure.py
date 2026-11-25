@@ -26,7 +26,7 @@ plt.rcParams.update({
 # model, hit%, hit sd, exact%, family
 rows = [
     ("CMGNet-SPrompt", 99.0, 0.9, 29.2, "sprompt"),
-    ("XGBoost",        98.4, 0.0, None, "xgb"),
+    ("XGBoost-CReSS",  98.4, 0.0, None, "xgb"),
     ("CMGNet-Frag",    97.9, 0.9, 0.0, "cmgnet"),
     ("CMGNet-SMILES",  97.4, 0.9, 30.2, "cmgnet"),
     ("CMGNet 0910",    81.2, 0.0, 9.4, "cmgnet"),
@@ -69,7 +69,7 @@ ax.set_xlabel("Rate among 64 external positives (%)")
 ax.set_title("Hit rate vs exact reconstruction", loc="left", fontweight="bold",
              fontsize=9.0, pad=14)
 ax.text(0.0, 1.035, "Filled: any one of top-10 candidates contains the "
-        "quinolone core. Open: exact match in top-10. XGBoost does not generate.",
+        "quinolone core. Open: exact match in top-10. XGBoost-CReSS does not generate.",
         transform=ax.transAxes, fontsize=5.8, color="#555555", ha="left")
 ax.grid(True, axis="x", lw=0.35, color="#EEEEEE", zorder=0)
 for sp in ("top", "right"):

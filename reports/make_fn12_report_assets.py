@@ -39,7 +39,7 @@ for yy, v in zip(y, p):
     ax.text(v + 0.012, yy, f'{v:.3f}', va='center', fontsize=13, fontweight='bold')
 ax.set_yticks(y); ax.set_yticklabels(labels, fontsize=12)
 ax.set_xlim(0, 1.08); ax.set_xlabel('Predicted probability of being positive', fontsize=12)
-ax.set_title('FN #12 — leave-peaks-out ablation (CReSS embedding + XGBoost)', fontsize=14)
+ax.set_title('FN #12 — leave-peaks-out ablation (XGBoost-CReSS)', fontsize=14)
 ax.grid(axis='x', alpha=0.25)
 for s in ['top', 'right']:
     ax.spines[s].set_visible(False)

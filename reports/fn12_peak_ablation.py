@@ -12,7 +12,7 @@ json.dump(cfg, open(B + 'viz_tmp/_cress_cfg_full.json', 'w'))
 cress = ModelInference(B + 'viz_tmp/_cress_cfg_full.json', B + 'checkpoints/cress/2_5_w_model/8.pth', device='cpu')
 
 import joblib
-m = joblib.load(B + 'models/xgboost/model_xgb_cress_ex_train_seed42.pkl')
+m = joblib.load(B + 'models/xgboost/model_xgb_cress_new_dataset_seed42.pkl')
 ext = json.load(open(B + 'data/nmrmind_cmgnet_1004/external_test_april18peak.json'))
 nmr = [float(x) for x in ext[12]['NMR']]
 

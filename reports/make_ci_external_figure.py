@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Visualise the 90% bootstrap CI of the calibrated XGBoost probability.
+"""Visualise the 90% bootstrap CI of the calibrated XGBoost-CReSS probability.
 
 A. External test set in the CReSS-UMAP, every point coloured by the width of
    its 90% CI (log colour scale); FP (diamond) and FN (star) follow the
